@@ -16,6 +16,7 @@ import { Route as ConciergeRouteImport } from './routes/concierge'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminScholarshipsRouteImport } from './routes/_authenticated/admin.scholarships'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -51,6 +52,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminScholarshipsRoute =
+  AuthenticatedAdminScholarshipsRouteImport.update({
+    id: '/admin/scholarships',
+    path: '/admin/scholarships',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
@@ -76,14 +85,28 @@ export interface FileRoutesById {
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/concierge' | '/how-it-works' | '/dashboard' | '/admin/'
+    | '/'
+    | '/auth'
+    | '/concierge'
+    | '/how-it-works'
+    | '/dashboard'
+    | '/admin/scholarships'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/concierge' | '/how-it-works' | '/dashboard' | '/admin'
+  to:
+    | '/'
+    | '/auth'
+    | '/concierge'
+    | '/how-it-works'
+    | '/dashboard'
+    | '/admin/scholarships'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -92,6 +115,7 @@ export interface FileRouteTypes {
     | '/concierge'
     | '/how-it-works'
     | '/_authenticated/dashboard'
+    | '/_authenticated/admin/scholarships'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -154,16 +178,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/scholarships': {
+      id: '/_authenticated/admin/scholarships'
+      path: '/admin/scholarships'
+      fullPath: '/admin/scholarships'
+      preLoaderRoute: typeof AuthenticatedAdminScholarshipsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedAdminScholarshipsRoute: typeof AuthenticatedAdminScholarshipsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedAdminScholarshipsRoute: AuthenticatedAdminScholarshipsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
