@@ -85,7 +85,11 @@ function PipelinePage() {
   });
 
   const updateApplication = useMutation({
-    mutationFn: async (patch: Partial<Application> & { id: string }) => {
+    mutationFn: async (
+      patch: { id: string } & Partial<
+        Pick<Application, "status" | "official_app_id" | "proof_url">
+      >,
+    ) => {
       const { id, ...rest } = patch;
       const { error } = await supabase.from("applications").update(rest).eq("id", id);
       if (error) throw error;
