@@ -23,10 +23,10 @@ export function SiteFooter() {
             </div>
           </div>
           <Link to="/concierge">
-            <Button size="sm" className="gap-2 bg-slate-900 text-xs text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200">
-              <Sparkles className="size-3.5 text-amber-400 dark:text-amber-600" />
-              Explore Managed Concierge
-            </Button>
+           <Button size="sm" variant="default" className="gap-2">
+  <Sparkles className="size-3.5 text-amber-500" />
+  Explore Managed Concierge
+</Button>
           </Link>
         </div>
       </div>
