@@ -77,7 +77,7 @@ function IndexComponent() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50 pb-20 dark:bg-slate-950">
+    <div className="w-full bg-slate-50/50 pb-20 dark:bg-slate-950">
       
       {/* Hero Header Section */}
       <section className="relative border-b border-slate-200/80 bg-white py-16 dark:border-slate-800 dark:bg-slate-900">
