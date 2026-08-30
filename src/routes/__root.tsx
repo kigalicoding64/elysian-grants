@@ -1,17 +1,56 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  Outlet,
+  createRootRouteWithContext,
+  HeadContent,
+  Scripts,
+} from "@tanstack/react-router";
+import { Toaster } from "sonner";
+import appCss from "../styles.css?url";
 import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer"; // <-- Import here
+import { SiteFooter } from "@/components/site-footer";
+
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  head: () => ({
+    meta: [
+      { charSet: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { title: "ElScholarship — Verified Global Scholarships" },
+    ],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
+    ],
+  }),
+  shellComponent: RootShell,
+  component: RootComponent,
+});
+
+function RootShell({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className="h-full">
+      <head>
+        <HeadContent />
+      </head>
+      <body className="flex min-h-full flex-col bg-slate-50 antialiased dark:bg-slate-950">
+        {children}
+        <Scripts />
+      </body>
+    </html>
+  );
+}
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="relative flex min-h-screen flex-col bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-50">
+      <div className="flex min-h-screen flex-col">
         <SiteHeader />
-        <main className="flex-1">
+        <main className="flex-1 shrink-0">
           <Outlet />
         </main>
-        <SiteFooter /> {/* <-- Render here */}
+        <SiteFooter />
         <Toaster position="top-right" richColors />
       </div>
     </QueryClientProvider>
