@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { SiteFooter, SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/how-it-works")({
@@ -46,36 +45,48 @@ const STEPS = [
 
 function HowItWorks() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader />
-      <main className="flex-1">
-        <section className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6">
-          <h1 className="text-4xl font-semibold">How ElScholarship works</h1>
-          <p className="mt-4 text-muted-foreground">
-            One account covers discovery, document management and submission tracking.
+    <div className="w-full">
+      {/* Hero Header Section */}
+      <section className="border-b border-slate-200 bg-slate-900 text-white dark:border-slate-800 dark:bg-slate-950">
+        <div className="mx-auto w-full max-w-3xl px-4 py-14 sm:px-6">
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            How ElScholarship works
+          </h1>
+          <p className="mt-3 text-slate-300">
+            One account covers discovery, document management, and submission tracking.
           </p>
+        </div>
+      </section>
 
-          <ol className="mt-10 space-y-6">
-            {STEPS.map((step) => (
-              <li
-                key={step.n}
-                className="flex gap-5 rounded-xl border border-border bg-card p-6 shadow-card"
-              >
-                <span className="text-2xl font-semibold text-primary">{step.n}</span>
-                <div>
-                  <h2 className="text-lg font-semibold">{step.title}</h2>
-                  <p className="mt-1.5 text-sm text-muted-foreground">{step.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+      {/* Main Content Area */}
+      <section className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
+        <ol className="space-y-5">
+          {STEPS.map((step) => (
+            <li
+              key={step.n}
+              className="flex gap-5 rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-slate-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700"
+            >
+              <span className="text-2xl font-black text-amber-600 dark:text-amber-500">
+                {step.n}
+              </span>
+              <div>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                  {step.title}
+                </h2>
+                <p className="mt-1.5 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                  {step.body}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
 
-          <Button asChild className="mt-10">
+        <div className="mt-10">
+          <Button asChild size="lg" className="bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400">
             <Link to="/">Start searching</Link>
           </Button>
-        </section>
-      </main>
-      <SiteFooter />
+        </div>
+      </section>
     </div>
   );
 }
