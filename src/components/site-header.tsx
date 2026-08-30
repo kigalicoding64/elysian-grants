@@ -31,7 +31,8 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-6 px-4 sm:px-6">
         <Link to="/" className="flex shrink-0 items-center gap-2">
-          <img src={logo.url} alt="ElScholarship emblem" className="h-9 w-9 object-contain" />
+         
+          <img src="/elscholarship-logo.jpg alt="ElScholarship emblem" className="h-9 w-9 object-contain" />
           <span className="text-lg font-semibold tracking-tight">ElScholarship</span>
         </Link>
 
@@ -92,7 +93,7 @@ export function SiteFooter() {
     <footer className="border-t border-border/70 bg-navy text-navy-foreground">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-10 sm:px-6">
         <div className="flex items-center gap-2">
-          <img src={logo.url} alt="" className="h-7 w-7 object-contain" />
+          <img src="/elscholarship-logo.jpg alt="" className="h-7 w-7 object-contain" />
           <span className="font-semibold">ElScholarship</span>
         </div>
         <p className="max-w-xl text-sm text-navy-foreground/70">
