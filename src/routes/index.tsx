@@ -1,190 +1,226 @@
-import { useMemo, useState } from "react";
+import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Globe2, Search, ShieldCheck, Sparkles } from "lucide-react";
-import { SiteFooter, SiteHeader } from "@/components/site-header";
+import { Search, SlidersHorizontal, Sparkles, GraduationCap, Globe2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScholarshipCard } from "@/components/scholarship-card";
 import { ApplyModal } from "@/components/apply-modal";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { DEGREE_LEVELS, REGIONS, type Scholarship } from "@/lib/scholarship";
+import { 
+  DEGREE_LEVELS, 
+  REGIONS, 
+  sortScholarshipsByUrgency, 
+  type Scholarship 
+} from "@/lib/scholarship";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "ElScholarship — Fully Funded Scholarships Worldwide" },
-      {
-        name: "description",
-        content:
-          "Browse 100% verified fully funded scholarships, tuition waivers and government grants, or let our officers manage your application end to end.",
-      },
-      { property: "og:title", content: "ElScholarship — Fully Funded Scholarships Worldwide" },
-      {
-        property: "og:description",
-        content:
-          "Verified global scholarship listings plus managed concierge application services for students.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: HomePage,
+  component: IndexComponent,
 });
 
-function HomePage() {
-  const [keyword, setKeyword] = useState("");
-  const [degree, setDegree] = useState("all");
-  const [funding, setFunding] = useState("all");
-  const [region, setRegion] = useState("all");
-  const [selected, setSelected] = useState<Scholarship | null>(null);
+function IndexComponent() {
+  const [search, setSearch] = useState("");
+  const [degreeFilter, setDegreeFilter] = useState<string>("all");
+  const [regionFilter, setRegionFilter] = useState<string>("all");
+  const [fundingFilter, setFundingFilter] = useState<string>("all");
+  const [selectedScholarship, setSelectedScholarship] = useState<Scholarship | null>(null);
+  const [applyModalOpen, setApplyModalOpen] = useState(false);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["scholarships", "published"],
+  // Fetch Published Scholarships
+  const { data: rawScholarships = [], isLoading } = useQuery({
+    queryKey: ["scholarships"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("scholarships")
         .select("*")
         .eq("status", "published")
-        .order("deadline", { ascending: true });
+        .order("created_at", { ascending: false });
+
       if (error) throw error;
-      return (data ?? []) as Scholarship[];
+      return data as Scholarship[];
     },
   });
 
-  const results = useMemo(() => {
-    const term = keyword.trim().toLowerCase();
-    return (data ?? []).filter((s) => {
-      const matchesTerm =
-        !term ||
-        s.title.toLowerCase().includes(term) ||
-        s.university.toLowerCase().includes(term) ||
-        s.country.toLowerCase().includes(term);
-      const matchesDegree = degree === "all" || s.degree_levels.includes(degree);
-      const matchesFunding = funding === "all" || s.funding_type === funding;
+  // Filter & Sort Logic
+  const processedScholarships = useMemo(() => {
+    // 1. Filter by user inputs
+    const filtered = rawScholarships.filter((item) => {
+      const matchesSearch =
+        !search ||
+        item.title.toLowerCase().includes(search.toLowerCase()) ||
+        item.university.toLowerCase().includes(search.toLowerCase()) ||
+        item.country.toLowerCase().includes(search.toLowerCase());
+
+      const matchesDegree =
+        degreeFilter === "all" || item.degree_levels.includes(degreeFilter);
+
       const matchesRegion =
-        region === "all" || s.country.toLowerCase().includes(region.toLowerCase());
-      return matchesTerm && matchesDegree && matchesFunding && matchesRegion;
+        regionFilter === "all" ||
+        (regionFilter === "Global"
+          ? true
+          : item.country.toLowerCase().includes(regionFilter.toLowerCase()));
+
+      const matchesFunding =
+        fundingFilter === "all" || item.funding_type === fundingFilter;
+
+      return matchesSearch && matchesDegree && matchesRegion && matchesFunding;
     });
-  }, [data, keyword, degree, funding, region]);
+
+    // 2. Sort by Urgency (Closing Soonest -> Closing Later -> Expired -> Rolling)
+    return sortScholarshipsByUrgency(filtered);
+  }, [rawScholarships, search, degreeFilter, regionFilter, fundingFilter]);
+
+  const handleManagedApply = (scholarship: Scholarship) => {
+    setSelectedScholarship(scholarship);
+    setApplyModalOpen(true);
+  };
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader />
+    <div className="min-h-screen bg-slate-50/50 pb-20 dark:bg-slate-950">
+      
+      {/* Hero Header Section */}
+      <section className="relative border-b border-slate-200/80 bg-white py-16 dark:border-slate-800 dark:bg-slate-900">
+        <div className="container mx-auto max-w-7xl px-4 text-center sm:px-6">
+          <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+            <Sparkles className="size-3.5" /> Managed Global Mobility Concierge
+          </div>
+          
+          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-5xl dark:text-slate-100">
+            Verified Global Opportunities
+          </h1>
+          <p className="mx-auto mt-3 max-w-2xl text-base text-slate-600 sm:text-lg dark:text-slate-400">
+            Access fully-funded higher education grants managed directly by our network of senior advisory officers.
+          </p>
 
-      <main className="flex-1">
-        <section className="hero-surface text-navy-foreground">
-          <div className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6">
-            <p className="inline-flex items-center gap-2 rounded-full border border-navy-foreground/20 bg-navy-foreground/5 px-3 py-1 text-xs font-medium">
-              <ShieldCheck className="size-3.5" /> Every listing manually verified
-            </p>
-            <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-tight sm:text-5xl">
-              Find &amp; Apply for Fully Funded Scholarships Worldwide
-            </h1>
-            <p className="mt-4 max-w-2xl text-lg text-navy-foreground/75">
-              Explore 100% verified grants, tuition waivers, and managed application services.
-            </p>
-
-            <div className="mt-10 grid gap-3 rounded-2xl bg-card p-4 text-card-foreground shadow-elevated md:grid-cols-[2fr_1fr_1fr_1fr]">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  aria-label="Search scholarships"
-                  placeholder="Search by title or university"
-                  className="pl-9"
-                  maxLength={100}
-                  value={keyword}
-                  onChange={(e) => setKeyword(e.target.value)}
-                />
-              </div>
-              <Select value={degree} onValueChange={setDegree}>
-                <SelectTrigger aria-label="Degree level">
-                  <SelectValue placeholder="Degree level" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All degree levels</SelectItem>
-                  {DEGREE_LEVELS.map((level) => (
-                    <SelectItem key={level} value={level}>
-                      {level}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={funding} onValueChange={setFunding}>
-                <SelectTrigger aria-label="Funding type">
-                  <SelectValue placeholder="Funding type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All funding types</SelectItem>
-                  <SelectItem value="full">Fully Funded</SelectItem>
-                  <SelectItem value="partial">Partially / Government Sponsored</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={region} onValueChange={setRegion}>
-                <SelectTrigger aria-label="Region">
-                  <SelectValue placeholder="Region" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All regions</SelectItem>
-                  {REGIONS.map((r) => (
-                    <SelectItem key={r} value={r}>
-                      {r}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          {/* Search Bar */}
+          <div className="mx-auto mt-8 max-w-2xl">
+            <div className="relative flex items-center">
+              <Search className="absolute left-4 size-5 text-slate-400" />
+              <Input
+                type="text"
+                placeholder="Search by university, degree title, or destination country..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="h-12 border-slate-200 bg-white pl-12 pr-4 text-sm shadow-sm transition-all focus-visible:ring-amber-500 dark:border-slate-800 dark:bg-slate-950"
+              />
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-semibold">Verified opportunities</h2>
-              <p className="text-sm text-muted-foreground">
-                {isLoading ? "Loading listings…" : `${results.length} scholarship(s) available`}
-              </p>
-            </div>
-            <p className="hidden items-center gap-2 text-sm text-muted-foreground sm:flex">
-              <Globe2 className="size-4" /> Updated continuously
-            </p>
+      {/* Main Content Area */}
+      <main className="container mx-auto max-w-7xl px-4 pt-10 sm:px-6">
+        
+        {/* Filter Toolbar */}
+        <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between dark:border-slate-800 dark:bg-slate-900">
+          
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <SlidersHorizontal className="size-4 text-amber-500" /> Filter Directory
           </div>
 
-          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {isLoading
-              ? Array.from({ length: 3 }).map((_, i) => (
-                  <Skeleton key={i} className="h-72 w-full rounded-xl" />
-                ))
-              : results.map((s) => (
-                  <ScholarshipCard key={s.id} scholarship={s} onManagedApply={setSelected} />
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 md:w-auto">
+            {/* Degree Select */}
+            <Select value={degreeFilter} onValueChange={setDegreeFilter}>
+              <SelectTrigger className="h-9 text-xs border-slate-200 dark:border-slate-800">
+                <GraduationCap className="size-3.5 mr-1.5 text-slate-400" />
+                <SelectValue placeholder="Degree Level" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Degree Levels</SelectItem>
+                {DEGREE_LEVELS.map((level) => (
+                  <SelectItem key={level} value={level}>
+                    {level}
+                  </SelectItem>
                 ))}
-          </div>
+              </SelectContent>
+            </Select>
 
-          {!isLoading && results.length === 0 ? (
-            <div className="mt-10 rounded-xl border border-dashed border-border bg-card p-12 text-center">
-              <Sparkles className="mx-auto size-8 text-muted-foreground" />
-              <p className="mt-3 font-medium">No scholarships match those filters</p>
-              <p className="text-sm text-muted-foreground">
-                Try a broader region or clear the keyword search.
-              </p>
-            </div>
-          ) : null}
-        </section>
+            {/* Region Select */}
+            <Select value={regionFilter} onValueChange={setRegionFilter}>
+              <SelectTrigger className="h-9 text-xs border-slate-200 dark:border-slate-800">
+                <Globe2 className="size-3.5 mr-1.5 text-slate-400" />
+                <SelectValue placeholder="Region" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Destination Regions</SelectItem>
+                {REGIONS.map((region) => (
+                  <SelectItem key={region} value={region}>
+                    {region}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Funding Select */}
+            <Select value={fundingFilter} onValueChange={setFundingFilter}>
+              <SelectTrigger className="h-9 text-xs border-slate-200 dark:border-slate-800">
+                <SelectValue placeholder="Funding Scope" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Funding Types</SelectItem>
+                <SelectItem value="full">100% Fully Funded</SelectItem>
+                <SelectItem value="partial">Partial Grant</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Directory Stats Counter */}
+        <div className="mt-6 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+          <p>
+            Displaying <strong className="text-slate-900 dark:text-slate-100">{processedScholarships.length}</strong> verified opportunities
+          </p>
+          <span className="font-medium text-slate-400">Ordered by Priority & Deadline Urgency</span>
+        </div>
+
+        {/* Card Grid */}
+        {isLoading ? (
+          <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="h-72 rounded-xl border border-slate-200 bg-white p-6 animate-pulse dark:border-slate-800 dark:bg-slate-900" />
+            ))}
+          </div>
+        ) : processedScholarships.length === 0 ? (
+          <div className="mt-12 rounded-2xl border border-dashed border-slate-200 bg-white p-12 text-center dark:border-slate-800 dark:bg-slate-900">
+            <p className="text-base font-semibold text-slate-900 dark:text-slate-100">
+              No matching scholarships found
+            </p>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              Try broadening your filters or clearing your search term.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-4 text-xs"
+              onClick={() => {
+                setSearch("");
+                setDegreeFilter("all");
+                setRegionFilter("all");
+                setFundingFilter("all");
+              }}
+            >
+              Reset All Filters
+            </Button>
+          </div>
+        ) : (
+          <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {processedScholarships.map((scholarship) => (
+              <ScholarshipCard
+                key={scholarship.id}
+                scholarship={scholarship}
+                onManagedApply={handleManagedApply}
+              />
+            ))}
+          </div>
+        )}
       </main>
 
-      <SiteFooter />
-
+      {/* Managed Application Modal */}
       <ApplyModal
-        scholarship={selected}
-        open={selected !== null}
-        onOpenChange={(open) => !open && setSelected(null)}
+        scholarship={selectedScholarship}
+        open={applyModalOpen}
+        onOpenChange={setApplyModalOpen}
       />
     </div>
   );
