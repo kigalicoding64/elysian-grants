@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, Eye, EyeOff, ShieldCheck, Sparkles, Loader2 } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,6 +47,7 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
 
@@ -105,59 +106,99 @@ function AuthPage() {
 
   return (
     <main className="grid min-h-screen lg:grid-cols-2">
-      <section className="hero-surface hidden flex-col justify-between p-12 text-navy-foreground lg:flex">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logo.url} alt="" className="h-9 w-9 object-contain" />
-          <span className="text-lg font-semibold">ElScholarship</span>
+      {/* Hero Branding Column */}
+      <section className="relative hidden flex-col justify-between bg-slate-900 p-12 text-slate-100 lg:flex dark:bg-slate-950">
+        <div className="absolute inset-0 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:16px_16px] opacity-20 pointer-events-none" />
+        
+        <Link to="/" className="relative z-10 flex items-center gap-3">
+          { /*<img src={logo.url} alt="ElScholarship" className="h-9 w-9 object-contain" />*/}
+
+            <img 
+                src="/elscholaship-logo.jpg" 
+                alt="ElScholarship Logo" 
+                width={40}
+                height={40}
+                className="h-10 w-10 rounded-md object-cover border border-slate-700" 
+              />
+
+
+          
+          <span className="text-xl font-extrabold tracking-tight">
+            El<span className="text-amber-500">Scholarship</span>
+          </span>
         </Link>
-        <div className="space-y-4">
-          <h1 className="text-4xl font-semibold leading-tight">
+
+        <div className="relative z-10 space-y-6">
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-400">
+            <Sparkles className="size-3.5" />
+            <span>Managed Application Concierge</span>
+          </div>
+          <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-white">
             Your fully funded future starts with one account.
           </h1>
-          <p className="max-w-md text-navy-foreground/70">
-            Save verified scholarships, upload your documents once, and let our officers manage the
-            submission end to end.
+          <p className="max-w-md text-sm leading-relaxed text-slate-400">
+            Save verified scholarships, upload your documents once, and let our senior officers manage your application submissions end-to-end.
           </p>
         </div>
-        <p className="text-sm text-navy-foreground/50">100% verified opportunities worldwide</p>
+
+        <div className="relative z-10 flex items-center gap-2 text-xs font-medium text-slate-400">
+          <ShieldCheck className="size-4 text-emerald-400" />
+          <span>100% verified academic opportunities worldwide</span>
+        </div>
       </section>
 
-      <section className="flex items-center justify-center px-4 py-16">
-        <div className="w-full max-w-sm">
-          <div className="mb-8 flex items-center gap-2 lg:hidden">
+      {/* Auth Form Column */}
+      <section className="flex items-center justify-center bg-white px-4 py-16 dark:bg-slate-900">
+        <div className="w-full max-w-sm space-y-6">
+          {/* Mobile Header */}
+          <div className="flex items-center gap-2.5 lg:hidden">
             <img src={logo.url} alt="" className="h-8 w-8 object-contain" />
-            <span className="font-semibold">ElScholarship</span>
+            <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100">
+              El<span className="text-amber-500">Scholarship</span>
+            </span>
           </div>
-          <h2 className="text-2xl font-semibold">
-            {isRegister ? "Create your account" : "Welcome back"}
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {isRegister
-              ? "Start tracking scholarships and managed applications."
-              : "Sign in to your student dashboard."}
-          </p>
+
+          <div>
+            <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
+              {isRegister ? "Create your account" : "Welcome back"}
+            </h2>
+            <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
+              {isRegister
+                ? "Start tracking scholarships and managed applications."
+                : "Sign in to access your student dashboard."}
+            </p>
+          </div>
 
           {checkEmail ? (
-            <div className="mt-8 rounded-lg border border-primary/30 bg-accent p-4 text-sm text-accent-foreground">
-              <GraduationCap className="mb-2 size-5" />
-              Check your email to confirm your account, then sign in.
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-5 text-xs text-amber-900 dark:text-amber-200">
+              <GraduationCap className="mb-2 size-6 text-amber-600 dark:text-amber-400" />
+              <p className="font-semibold">Confirmation link sent!</p>
+              <p className="mt-1 text-amber-800 dark:text-amber-300">
+                Check your inbox to verify your email address, then sign in below.
+              </p>
             </div>
           ) : (
-            <form onSubmit={onSubmit} className="mt-8 space-y-4">
-              {isRegister ? (
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">Full name</Label>
+            <form onSubmit={onSubmit} className="space-y-4">
+              {isRegister && (
+                <div className="space-y-1.5">
+                  <Label htmlFor="fullName" className="text-xs font-medium">
+                    Full name
+                  </Label>
                   <Input
                     id="fullName"
                     value={fullName}
                     maxLength={100}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="Jane Uwase"
+                    className="h-10 text-xs"
                   />
                 </div>
-              ) : null}
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+              )}
+
+              <div className="space-y-1.5">
+                <Label htmlFor="email" className="text-xs font-medium">
+                  Email address
+                </Label>
                 <Input
                   id="email"
                   type="email"
@@ -166,39 +207,95 @@ function AuthPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
+                  className="h-10 text-xs"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  maxLength={72}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="At least 8 characters"
-                />
+
+              <div className="space-y-1.5">
+                <Label htmlFor="password" className="text-xs font-medium">
+                  Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    maxLength={72}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="At least 8 characters"
+                    className="h-10 pr-9 text-xs"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  >
+                    {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  </button>
+                </div>
               </div>
-              <Button type="submit" className="w-full" disabled={busy}>
-                {busy ? "Please wait…" : isRegister ? "Create account" : "Log in"}
+
+              <Button
+                type="submit"
+                className="h-10 w-full bg-slate-900 text-xs font-semibold text-white hover:bg-slate-800 dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-600"
+                disabled={busy}
+              >
+                {busy ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="size-4 animate-spin" /> Processing…
+                  </span>
+                ) : isRegister ? (
+                  "Create Account"
+                ) : (
+                  "Sign In"
+                )}
               </Button>
             </form>
           )}
 
-          <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-wide text-muted-foreground">
-            <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
+          <div className="relative my-6 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-slate-200 dark:border-slate-800" />
+            </div>
+            <span className="relative bg-white px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:bg-slate-900">
+              Or continue with
+            </span>
           </div>
-          <Button variant="outline" className="w-full" onClick={googleSignIn}>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="h-10 w-full text-xs font-medium border-slate-200 dark:border-slate-800"
+            onClick={googleSignIn}
+          >
+            <svg className="mr-2 size-4" viewBox="0 0 24 24">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                fill="#4285F4"
+              />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853"
+              />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                fill="#FBBC05"
+              />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                fill="#EA4335"
+              />
+            </svg>
             Continue with Google
           </Button>
 
-          <p className="mt-6 text-center text-sm text-muted-foreground">
+          <p className="text-center text-xs text-slate-500 dark:text-slate-400">
             {isRegister ? "Already have an account?" : "New to ElScholarship?"}{" "}
             <Link
               to="/auth"
               search={{ mode: isRegister ? "login" : "register", redirect }}
-              className="font-medium text-primary hover:underline"
+              className="font-semibold text-amber-600 hover:underline dark:text-amber-500"
             >
               {isRegister ? "Log in" : "Create one"}
             </Link>
