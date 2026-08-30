@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ConciergeRouteImport } from './routes/concierge'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as UniversitiesRouteImport } from './routes/universities'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
@@ -41,6 +42,11 @@ const ConciergeRoute = ConciergeRouteImport.update({
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UniversitiesRoute = UniversitiesRouteImport.update({
+  id: '/universities',
+  path: '/universities',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/universities': typeof UniversitiesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/universities': typeof UniversitiesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/universities': typeof UniversitiesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/_authenticated/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/concierge'
     | '/how-it-works'
+    | '/universities'
     | '/dashboard'
     | '/admin/applications'
     | '/admin/scholarships'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/concierge'
     | '/how-it-works'
+    | '/universities'
     | '/dashboard'
     | '/admin/applications'
     | '/admin/scholarships'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/concierge'
     | '/how-it-works'
+    | '/universities'
     | '/_authenticated/dashboard'
     | '/_authenticated/admin/applications'
     | '/_authenticated/admin/scholarships'
@@ -138,6 +150,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ConciergeRoute: typeof ConciergeRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  UniversitiesRoute: typeof UniversitiesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -175,6 +188,13 @@ declare module '@tanstack/react-router' {
       path: '/how-it-works'
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/universities': {
+      id: '/universities'
+      path: '/universities'
+      fullPath: '/universities'
+      preLoaderRoute: typeof UniversitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard': {
@@ -231,6 +251,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ConciergeRoute: ConciergeRoute,
   HowItWorksRoute: HowItWorksRoute,
+  UniversitiesRoute: UniversitiesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
