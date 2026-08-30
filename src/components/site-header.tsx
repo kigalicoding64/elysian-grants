@@ -9,6 +9,8 @@ import logo from "@/assets/elscholarship-logo.png.asset.json";
 const NAV = [
   { to: "/", label: "Find Scholarships" },
   { to: "/concierge", label: "Managed Concierge" },
+  { to: "/universities", label: "Universities" },
+  { to: "/articles", label: "Guides" },
   { to: "/how-it-works", label: "How It Works" },
 ] as const;
 

@@ -64,6 +64,60 @@ export type Database = {
           },
         ]
       }
+      articles: {
+        Row: {
+          author: string | null
+          category: string
+          content: string
+          created_at: string | null
+          featured_image: string | null
+          id: number
+          meta_description: string | null
+          meta_title: string | null
+          published_at: string | null
+          slug: string
+          status: string | null
+          summary: string | null
+          target_keywords: string[] | null
+          title: string
+          views: number | null
+        }
+        Insert: {
+          author?: string | null
+          category: string
+          content: string
+          created_at?: string | null
+          featured_image?: string | null
+          id?: number
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          slug: string
+          status?: string | null
+          summary?: string | null
+          target_keywords?: string[] | null
+          title: string
+          views?: number | null
+        }
+        Update: {
+          author?: string | null
+          category?: string
+          content?: string
+          created_at?: string | null
+          featured_image?: string | null
+          id?: number
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          slug?: string
+          status?: string | null
+          summary?: string | null
+          target_keywords?: string[] | null
+          title?: string
+          views?: number | null
+        }
+        Relationships: []
+      }
       documents: {
         Row: {
           application_id: string | null
@@ -104,6 +158,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      internships: {
+        Row: {
+          coverage_details: string | null
+          created_at: string | null
+          deadline: string | null
+          id: number
+          location: string
+          official_link: string
+          organization: string
+          status: string | null
+          stipend_type: string | null
+          target_audience: string
+          title: string
+        }
+        Insert: {
+          coverage_details?: string | null
+          created_at?: string | null
+          deadline?: string | null
+          id?: number
+          location: string
+          official_link: string
+          organization: string
+          status?: string | null
+          stipend_type?: string | null
+          target_audience: string
+          title: string
+        }
+        Update: {
+          coverage_details?: string | null
+          created_at?: string | null
+          deadline?: string | null
+          id?: number
+          location?: string
+          official_link?: string
+          organization?: string
+          status?: string | null
+          stipend_type?: string | null
+          target_audience?: string
+          title?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -165,6 +261,54 @@ export type Database = {
           status?: string
           title?: string
           university?: string
+        }
+        Relationships: []
+      }
+      universities: {
+        Row: {
+          acronym: string | null
+          campuses: string[] | null
+          city: string
+          country: string
+          created_at: string | null
+          description: string | null
+          id: number
+          name: string
+          popular_faculties: string[] | null
+          status: string | null
+          tuition_range: string | null
+          type: string | null
+          website: string
+        }
+        Insert: {
+          acronym?: string | null
+          campuses?: string[] | null
+          city: string
+          country: string
+          created_at?: string | null
+          description?: string | null
+          id?: number
+          name: string
+          popular_faculties?: string[] | null
+          status?: string | null
+          tuition_range?: string | null
+          type?: string | null
+          website: string
+        }
+        Update: {
+          acronym?: string | null
+          campuses?: string[] | null
+          city?: string
+          country?: string
+          created_at?: string | null
+          description?: string | null
+          id?: number
+          name?: string
+          popular_faculties?: string[] | null
+          status?: string | null
+          tuition_range?: string | null
+          type?: string | null
+          website?: string
         }
         Relationships: []
       }

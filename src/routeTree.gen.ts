@@ -14,8 +14,12 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ConciergeRouteImport } from './routes/concierge'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as UniversitiesRouteImport } from './routes/universities'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
+import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as AuthenticatedAdminScholarshipsRouteImport } from './routes/_authenticated/admin.scholarships'
 
 const IndexRoute = IndexRouteImport.update({
@@ -42,16 +46,37 @@ const HowItWorksRoute = HowItWorksRouteImport.update({
   path: '/how-it-works',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UniversitiesRoute = UniversitiesRouteImport.update({
+  id: '/universities',
+  path: '/universities',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
+  id: '/articles/',
+  path: '/articles/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
+  id: '/articles/$slug',
+  path: '/articles/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminApplicationsRoute =
+  AuthenticatedAdminApplicationsRouteImport.update({
+    id: '/admin/applications',
+    path: '/admin/applications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminScholarshipsRoute =
   AuthenticatedAdminScholarshipsRouteImport.update({
     id: '/admin/scholarships',
@@ -64,7 +89,11 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/universities': typeof UniversitiesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
+  '/articles/': typeof ArticlesIndexRoute
+  '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -73,7 +102,11 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/universities': typeof UniversitiesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
+  '/articles': typeof ArticlesIndexRoute
+  '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
@@ -84,7 +117,11 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/universities': typeof UniversitiesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
+  '/articles/': typeof ArticlesIndexRoute
+  '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/_authenticated/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -95,7 +132,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/concierge'
     | '/how-it-works'
+    | '/universities'
     | '/dashboard'
+    | '/articles/$slug'
+    | '/articles/'
+    | '/admin/applications'
     | '/admin/scholarships'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -104,7 +145,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/concierge'
     | '/how-it-works'
+    | '/universities'
     | '/dashboard'
+    | '/articles/$slug'
+    | '/articles'
+    | '/admin/applications'
     | '/admin/scholarships'
     | '/admin'
   id:
@@ -114,7 +159,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/concierge'
     | '/how-it-works'
+    | '/universities'
     | '/_authenticated/dashboard'
+    | '/articles/$slug'
+    | '/articles/'
+    | '/_authenticated/admin/applications'
     | '/_authenticated/admin/scholarships'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
@@ -125,6 +174,9 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ConciergeRoute: typeof ConciergeRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  UniversitiesRoute: typeof UniversitiesRoute
+  ArticlesSlugRoute: typeof ArticlesSlugRoute
+  ArticlesIndexRoute: typeof ArticlesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -164,6 +216,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HowItWorksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/universities': {
+      id: '/universities'
+      path: '/universities'
+      fullPath: '/universities'
+      preLoaderRoute: typeof UniversitiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -171,11 +230,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/articles/': {
+      id: '/articles/'
+      path: '/articles'
+      fullPath: '/articles/'
+      preLoaderRoute: typeof ArticlesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles/$slug': {
+      id: '/articles/$slug'
+      path: '/articles/$slug'
+      fullPath: '/articles/$slug'
+      preLoaderRoute: typeof ArticlesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
       path: '/admin'
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/applications': {
+      id: '/_authenticated/admin/applications'
+      path: '/admin/applications'
+      fullPath: '/admin/applications'
+      preLoaderRoute: typeof AuthenticatedAdminApplicationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin/scholarships': {
@@ -190,12 +270,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
   AuthenticatedAdminScholarshipsRoute: typeof AuthenticatedAdminScholarshipsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
   AuthenticatedAdminScholarshipsRoute: AuthenticatedAdminScholarshipsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
@@ -209,6 +291,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ConciergeRoute: ConciergeRoute,
   HowItWorksRoute: HowItWorksRoute,
+  UniversitiesRoute: UniversitiesRoute,
+  ArticlesSlugRoute: ArticlesSlugRoute,
+  ArticlesIndexRoute: ArticlesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
