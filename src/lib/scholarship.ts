@@ -108,3 +108,37 @@ export function coverageTags(coverage: string | null): string[] {
   if (text.includes("mentor")) tags.push("Mentorship");
   return tags;
 }
+
+/**
+  Sorts scholarships in order:
+  1. Active with least time remaining (closing soonest)
+  2. Active with longer time remaining
+  3. Closed / Expired at the end
+  4. Rolling intake (null deadlines) last
+ */
+export function sortScholarshipsByUrgency(scholarships: Scholarship[]): Scholarship[] {
+  return [...scholarships].sort((a, b) => {
+    const daysA = daysUntil(a.deadline);
+    const daysB = daysUntil(b.deadline);
+
+    // Push null / rolling intake deadlines to the bottom
+    if (daysA === null && daysB === null) return 0;
+    if (daysA === null) return 1;
+    if (daysB === null) return -1;
+
+    const isClosedA = daysA < 0;
+    const isClosedB = daysB < 0;
+
+    // Active opportunities ALWAYS come before Closed ones
+    if (!isClosedA && isClosedB) return -1;
+    if (isClosedA && !isClosedB) return 1;
+
+    // Both Active: Ascending order (smallest positive days remaining first)
+    if (!isClosedA && !isClosedB) {
+      return daysA - daysB;
+    }
+
+    // Both Closed: Descending order (most recently expired first)
+    return daysB - daysA;
+  });
+}
