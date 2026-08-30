@@ -17,6 +17,7 @@ import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as UniversitiesRouteImport } from './routes/universities'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
+import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as AuthenticatedAdminScholarshipsRouteImport } from './routes/_authenticated/admin.scholarships'
@@ -60,6 +61,11 @@ const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
   path: '/articles/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
+  id: '/articles/$slug',
+  path: '/articles/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/how-it-works': typeof HowItWorksRoute
   '/universities': typeof UniversitiesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/articles/': typeof ArticlesIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/how-it-works': typeof HowItWorksRoute
   '/universities': typeof UniversitiesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/articles': typeof ArticlesIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/how-it-works': typeof HowItWorksRoute
   '/universities': typeof UniversitiesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/articles/': typeof ArticlesIndexRoute
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/_authenticated/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/universities'
     | '/dashboard'
+    | '/articles/$slug'
     | '/articles/'
     | '/admin/applications'
     | '/admin/scholarships'
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/universities'
     | '/dashboard'
+    | '/articles/$slug'
     | '/articles'
     | '/admin/applications'
     | '/admin/scholarships'
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/universities'
     | '/_authenticated/dashboard'
+    | '/articles/$slug'
     | '/articles/'
     | '/_authenticated/admin/applications'
     | '/_authenticated/admin/scholarships'
@@ -163,6 +175,7 @@ export interface RootRouteChildren {
   ConciergeRoute: typeof ConciergeRoute
   HowItWorksRoute: typeof HowItWorksRoute
   UniversitiesRoute: typeof UniversitiesRoute
+  ArticlesSlugRoute: typeof ArticlesSlugRoute
   ArticlesIndexRoute: typeof ArticlesIndexRoute
 }
 
@@ -224,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArticlesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/articles/$slug': {
+      id: '/articles/$slug'
+      path: '/articles/$slug'
+      fullPath: '/articles/$slug'
+      preLoaderRoute: typeof ArticlesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
       path: '/admin'
@@ -272,6 +292,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConciergeRoute: ConciergeRoute,
   HowItWorksRoute: HowItWorksRoute,
   UniversitiesRoute: UniversitiesRoute,
+  ArticlesSlugRoute: ArticlesSlugRoute,
   ArticlesIndexRoute: ArticlesIndexRoute,
 }
 export const routeTree = rootRouteImport
