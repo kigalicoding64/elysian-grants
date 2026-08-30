@@ -5,10 +5,14 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "sonner";
 import appCss from "../styles.css?url";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { NotFoundPage } from "./not-found";
+
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
@@ -22,6 +26,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
   }),
+  notFoundComponent: NotFoundPage,
   shellComponent: RootShell,
   component: RootComponent,
 });
@@ -44,15 +49,17 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col">
-        <SiteHeader />
-        <main className="flex-1 shrink-0">
-          <Outlet />
-        </main>
-        <SiteFooter />
-        <Toaster position="top-right" richColors />
-      </div>
-    </QueryClientProvider>
+    <GoogleOAuthProvider clientId={googleClientId}>
+      <QueryClientProvider client={queryClient}>
+        <div className="flex min-h-screen flex-col">
+          <SiteHeader />
+          <main className="flex-1 shrink-0">
+            <Outlet />
+          </main>
+          <SiteFooter />
+          <Toaster position="top-right" richColors />
+        </div>
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
   );
 }
