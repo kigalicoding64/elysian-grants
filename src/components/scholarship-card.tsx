@@ -1,16 +1,31 @@
 import { useState } from "react";
-import { 
-  Building2, 
-  MapPin, 
-  ArrowUpRight, 
-  Bookmark, 
-  ShieldCheck, 
+import {
+  Building2,
+  MapPin,
+  ArrowUpRight,
+  Bookmark,
   Clock,
-  Layers,
-  ChevronRight
+  ChevronRight,
+  Share2,
+  Link2,
+  MessageCircle,
+  Twitter,
+  Linkedin,
+  ArrowBigUp,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { coverageTags, daysUntil, deadlineLabel, type Scholarship } from "@/lib/scholarship";
+import {
+  buildShareLinks,
+  useSavedScholarship,
+  useUpvotedScholarship,
+} from "@/lib/engagement";
 
 export function ScholarshipCard({
   scholarship,
@@ -19,10 +34,28 @@ export function ScholarshipCard({
   scholarship: Scholarship;
   onManagedApply: (s: Scholarship) => void;
 }) {
-  const [isSaved, setIsSaved] = useState(false);
+  const { active: isSaved, toggle: toggleSaved } = useSavedScholarship(scholarship.id);
+  const { active: isUpvoted, toggle: toggleUpvote } = useUpvotedScholarship(scholarship.id);
+  const [shareOpen, setShareOpen] = useState(false);
   const days = daysUntil(scholarship.deadline);
   const urgent = days !== null && days >= 0 && days <= 14;
   const closed = days !== null && days < 0;
+
+  const shareUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/?scholarship=${scholarship.id}`
+      : "";
+  const shareLinks = buildShareLinks(shareUrl, scholarship.title);
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success("Link copied to clipboard");
+    } catch {
+      toast.error("Could not copy the link");
+    }
+    setShareOpen(false);
+  }
 
   return (
     <article className="group relative flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:border-amber-500/40 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:border-slate-800 dark:bg-slate-950">
@@ -53,15 +86,66 @@ export function ScholarshipCard({
             </span>
           </div>
 
-          {/* Action Bookmark */}
-          <button
-            type="button"
-            onClick={() => setIsSaved(!isSaved)}
-            className="text-slate-400 transition-colors hover:text-amber-600 dark:hover:text-amber-400"
-            aria-label="Save program"
-          >
-            <Bookmark className={`size-4 ${isSaved ? "fill-amber-500 text-amber-500" : ""}`} />
-          </button>
+          {/* Save / Share actions */}
+          <div className="flex items-center gap-1">
+            <Popover open={shareOpen} onOpenChange={setShareOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  className="text-slate-400 transition-colors hover:text-amber-600 dark:hover:text-amber-400"
+                  aria-label="Share scholarship"
+                >
+                  <Share2 className="size-4" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-48 p-1.5">
+                <button
+                  type="button"
+                  onClick={copyLink}
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  <Link2 className="size-3.5" /> Copy link
+                </button>
+                <a
+                  href={shareLinks.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  <MessageCircle className="size-3.5" /> WhatsApp
+                </a>
+                <a
+                  href={shareLinks.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  <Twitter className="size-3.5" /> Twitter / X
+                </a>
+                <a
+                  href={shareLinks.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  <Linkedin className="size-3.5" /> LinkedIn
+                </a>
+              </PopoverContent>
+            </Popover>
+
+            <button
+              type="button"
+              onClick={() => {
+                const saved = toggleSaved();
+                toast.success(saved ? "Saved to your list" : "Removed from your list");
+              }}
+              className="text-slate-400 transition-colors hover:text-amber-600 dark:hover:text-amber-400"
+              aria-label={isSaved ? "Remove from saved" : "Save program"}
+              aria-pressed={isSaved}
+            >
+              <Bookmark className={`size-4 ${isSaved ? "fill-amber-500 text-amber-500" : ""}`} />
+            </button>
+          </div>
         </div>
 
         {/* Title */}
@@ -103,6 +187,28 @@ export function ScholarshipCard({
 
       {/* Footer Section */}
       <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-900">
+
+        {/* Upvote */}
+        <div className="mb-3 flex items-center justify-between text-xs">
+          <span className="text-slate-400 font-medium">Community</span>
+          <button
+            type="button"
+            onClick={() => {
+              const up = toggleUpvote();
+              toast.success(up ? "Upvoted" : "Upvote removed");
+            }}
+            aria-pressed={isUpvoted}
+            className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-semibold transition-colors ${
+              isUpvoted
+                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                : "border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900"
+            }`}
+          >
+            <ArrowBigUp className={`size-3.5 ${isUpvoted ? "fill-emerald-500" : ""}`} />
+            {isUpvoted ? "Upvoted" : "Upvote"}
+          </button>
+        </div>
+
         
         {/* Deadline Status */}
         <div className="mb-4 flex items-center justify-between text-xs">

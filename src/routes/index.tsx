@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScholarshipCard } from "@/components/scholarship-card";
 import { ApplyModal } from "@/components/apply-modal";
+import { AdBanner } from "@/components/ui/ad-banner";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   DEGREE_LEVELS, 
@@ -15,7 +16,30 @@ import {
   type Scholarship 
 } from "@/lib/scholarship";
 
+const SITE_URL = "https://elysian-grants.lovable.app";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "ElScholarship — Verified Fully Funded Scholarships Directory" },
+      {
+        name: "description",
+        content:
+          "Browse verified fully funded scholarships worldwide, filter by degree, region and funding type, or apply through our managed concierge service.",
+      },
+      { property: "og:title", content: "ElScholarship — Verified Fully Funded Scholarships" },
+      {
+        property: "og:description",
+        content:
+          "Browse verified fully funded scholarships worldwide and apply with expert managed support.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/` },
+      { property: "og:image", content: `${SITE_URL}/elscholaship-logo.jpg` },
+      { name: "twitter:image", content: `${SITE_URL}/elscholaship-logo.jpg` },
+    ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/` }],
+  }),
   component: IndexComponent,
 });
 
@@ -204,15 +228,18 @@ function IndexComponent() {
             </Button>
           </div>
         ) : (
-          <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {processedScholarships.map((scholarship) => (
-              <ScholarshipCard
-                key={scholarship.id}
-                scholarship={scholarship}
-                onManagedApply={handleManagedApply}
-              />
-            ))}
-          </div>
+          <>
+            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {processedScholarships.map((scholarship) => (
+                <ScholarshipCard
+                  key={scholarship.id}
+                  scholarship={scholarship}
+                  onManagedApply={handleManagedApply}
+                />
+              ))}
+            </div>
+            <AdBanner slot="1234567890" className="mt-8" />
+          </>
         )}
       </main>
 

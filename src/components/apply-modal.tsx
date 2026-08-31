@@ -61,8 +61,8 @@ export function ApplyModal({
       setForm((prev) => ({
         ...prev,
         email: user.email ?? prev.email,
-        full_name: user.user_metadata?.full_name ?? prev.full_name,
-        phone: user.user_metadata?.phone ?? prev.phone,
+        full_name: (user.user_metadata?.['full_name'] as string | undefined) ?? prev.full_name,
+        phone: (user.user_metadata?.['phone'] as string | undefined) ?? prev.phone,
       }));
     }
   }, [user]);
