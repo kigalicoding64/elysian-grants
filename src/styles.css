@@ -226,3 +226,13 @@
   border-radius: 0.75rem;
   margin-bottom: 1rem;
 }
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-marquee {
+  animation: marquee 90s linear infinite;
+}

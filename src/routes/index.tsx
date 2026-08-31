@@ -14,6 +14,7 @@ import {
 import { ScholarshipCard } from "@/components/scholarship-card";
 import { ApplyModal } from "@/components/apply-modal";
 import { AdBanner } from "@/components/ui/ad-banner";
+import { UniversityMarqueeTicker } from "@/components/UniversityMarqueeTicker";
 import { supabase } from "@/integrations/supabase/client";
 import {
   DEGREE_LEVELS,
@@ -136,6 +137,8 @@ function IndexComponent() {
           </div>
         </div>
       </section>
+
+      <UniversityMarqueeTicker />
 
       {/* Main Content Area */}
       <main className="container mx-auto max-w-7xl px-4 pt-10 sm:px-6">
