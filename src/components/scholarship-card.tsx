@@ -1,16 +1,31 @@
 import { useState } from "react";
-import { 
-  Building2, 
-  MapPin, 
-  ArrowUpRight, 
-  Bookmark, 
-  ShieldCheck, 
+import {
+  Building2,
+  MapPin,
+  ArrowUpRight,
+  Bookmark,
   Clock,
-  Layers,
-  ChevronRight
+  ChevronRight,
+  Share2,
+  Link2,
+  MessageCircle,
+  Twitter,
+  Linkedin,
+  ArrowBigUp,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { coverageTags, daysUntil, deadlineLabel, type Scholarship } from "@/lib/scholarship";
+import {
+  buildShareLinks,
+  useSavedScholarship,
+  useUpvotedScholarship,
+} from "@/lib/engagement";
 
 export function ScholarshipCard({
   scholarship,
