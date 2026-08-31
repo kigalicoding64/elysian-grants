@@ -227,15 +227,18 @@ function IndexComponent() {
             </Button>
           </div>
         ) : (
-          <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {processedScholarships.map((scholarship) => (
-              <ScholarshipCard
-                key={scholarship.id}
-                scholarship={scholarship}
-                onManagedApply={handleManagedApply}
-              />
-            ))}
-          </div>
+          <>
+            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {processedScholarships.map((scholarship) => (
+                <ScholarshipCard
+                  key={scholarship.id}
+                  scholarship={scholarship}
+                  onManagedApply={handleManagedApply}
+                />
+              ))}
+            </div>
+            <AdBanner slot="1234567890" className="mt-8" />
+          </>
         )}
       </main>
 
