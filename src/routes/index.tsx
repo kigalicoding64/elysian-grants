@@ -4,16 +4,23 @@ import { useQuery } from "@tanstack/react-query";
 import { Search, SlidersHorizontal, Sparkles, GraduationCap, Globe2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ScholarshipCard } from "@/components/scholarship-card";
 import { ApplyModal } from "@/components/apply-modal";
 import { AdBanner } from "@/components/ui/ad-banner";
+import { UniversityMarqueeTicker } from "@/components/UniversityMarqueeTicker";
 import { supabase } from "@/integrations/supabase/client";
-import { 
-  DEGREE_LEVELS, 
-  REGIONS, 
-  sortScholarshipsByUrgency, 
-  type Scholarship 
+import {
+  DEGREE_LEVELS,
+  REGIONS,
+  sortScholarshipsByUrgency,
+  type Scholarship,
 } from "@/lib/scholarship";
 
 const SITE_URL = "https://elysian-grants.lovable.app";
@@ -59,7 +66,7 @@ function IndexComponent() {
         .from("scholarships")
         .select("*")
         .eq("status", "published")
-        .order("created_at", { ascending: false });
+        .order("deadline", { ascending: true, nullsFirst: false });
 
       if (error) throw error;
       return data as Scholarship[];
@@ -76,8 +83,7 @@ function IndexComponent() {
         item.university.toLowerCase().includes(search.toLowerCase()) ||
         item.country.toLowerCase().includes(search.toLowerCase());
 
-      const matchesDegree =
-        degreeFilter === "all" || item.degree_levels.includes(degreeFilter);
+      const matchesDegree = degreeFilter === "all" || item.degree_levels.includes(degreeFilter);
 
       const matchesRegion =
         regionFilter === "all" ||
@@ -85,13 +91,12 @@ function IndexComponent() {
           ? true
           : item.country.toLowerCase().includes(regionFilter.toLowerCase()));
 
-      const matchesFunding =
-        fundingFilter === "all" || item.funding_type === fundingFilter;
+      const matchesFunding = fundingFilter === "all" || item.funding_type === fundingFilter;
 
       return matchesSearch && matchesDegree && matchesRegion && matchesFunding;
     });
 
-    // 2. Sort by Urgency (Closing Soonest -> Closing Later -> Expired -> Rolling)
+    // 2. Sort by Status & Urgency (Open -> Closing Soon -> Closed -> Rolling)
     return sortScholarshipsByUrgency(filtered);
   }, [rawScholarships, search, degreeFilter, regionFilter, fundingFilter]);
 
@@ -102,19 +107,19 @@ function IndexComponent() {
 
   return (
     <div className="w-full bg-slate-50/50 pb-20 dark:bg-slate-950">
-      
       {/* Hero Header Section */}
       <section className="relative border-b border-slate-200/80 bg-white py-16 dark:border-slate-800 dark:bg-slate-900">
         <div className="container mx-auto max-w-7xl px-4 text-center sm:px-6">
           <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
             <Sparkles className="size-3.5" /> Managed Global Mobility Concierge
           </div>
-          
+
           <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-5xl dark:text-slate-100">
             Verified Global Opportunities
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-base text-slate-600 sm:text-lg dark:text-slate-400">
-            Access fully-funded higher education grants managed directly by our network of senior advisory officers.
+            Access fully-funded higher education grants managed directly by our network of senior
+            advisory officers.
           </p>
 
           {/* Search Bar */}
@@ -133,12 +138,12 @@ function IndexComponent() {
         </div>
       </section>
 
+      <UniversityMarqueeTicker />
+
       {/* Main Content Area */}
       <main className="container mx-auto max-w-7xl px-4 pt-10 sm:px-6">
-        
         {/* Filter Toolbar */}
         <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between dark:border-slate-800 dark:bg-slate-900">
-          
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             <SlidersHorizontal className="size-4 text-amber-500" /> Filter Directory
           </div>
@@ -193,7 +198,11 @@ function IndexComponent() {
         {/* Directory Stats Counter */}
         <div className="mt-6 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <p>
-            Displaying <strong className="text-slate-900 dark:text-slate-100">{processedScholarships.length}</strong> verified opportunities
+            Displaying{" "}
+            <strong className="text-slate-900 dark:text-slate-100">
+              {processedScholarships.length}
+            </strong>{" "}
+            verified opportunities
           </p>
           <span className="font-medium text-slate-400">Ordered by Priority & Deadline Urgency</span>
         </div>
@@ -202,7 +211,10 @@ function IndexComponent() {
         {isLoading ? (
           <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="h-72 rounded-xl border border-slate-200 bg-white p-6 animate-pulse dark:border-slate-800 dark:bg-slate-900" />
+              <div
+                key={i}
+                className="h-72 rounded-xl border border-slate-200 bg-white p-6 animate-pulse dark:border-slate-800 dark:bg-slate-900"
+              />
             ))}
           </div>
         ) : processedScholarships.length === 0 ? (
