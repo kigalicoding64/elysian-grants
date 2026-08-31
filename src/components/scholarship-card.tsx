@@ -15,17 +15,15 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { coverageTags, daysUntil, deadlineLabel, type Scholarship } from "@/lib/scholarship";
-import {
-  buildShareLinks,
-  useSavedScholarship,
-  useUpvotedScholarship,
-} from "@/lib/engagement";
+  coverageTags,
+  daysUntil,
+  deadlineLabel,
+  scholarshipStatusTag,
+  type Scholarship,
+} from "@/lib/scholarship";
+import { buildShareLinks, useSavedScholarship, useUpvotedScholarship } from "@/lib/engagement";
 
 export function ScholarshipCard({
   scholarship,
@@ -40,11 +38,10 @@ export function ScholarshipCard({
   const days = daysUntil(scholarship.deadline);
   const urgent = days !== null && days >= 0 && days <= 14;
   const closed = days !== null && days < 0;
+  const statusTag = scholarshipStatusTag(scholarship.deadline);
 
   const shareUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/?scholarship=${scholarship.id}`
-      : "";
+    typeof window !== "undefined" ? `${window.location.origin}/?scholarship=${scholarship.id}` : "";
   const shareLinks = buildShareLinks(shareUrl, scholarship.title);
 
   async function copyLink() {
@@ -59,11 +56,9 @@ export function ScholarshipCard({
 
   return (
     <article className="group relative flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:border-amber-500/40 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:border-slate-800 dark:bg-slate-950">
-      
       {/* Top Header Row */}
       <div>
         <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3.5 dark:border-slate-900">
-          
           {/* Degree & Funding Badges */}
           <div className="flex flex-wrap items-center gap-2">
             {scholarship.degree_levels.map((level) => (
@@ -83,6 +78,18 @@ export function ScholarshipCard({
               }`}
             >
               {scholarship.funding_type === "full" ? "100% Funded" : "Partial Grant"}
+            </span>
+
+            <span
+              className={`rounded-md px-2.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase ${
+                statusTag === "Closed"
+                  ? "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                  : statusTag === "Closing Today"
+                    ? "bg-rose-500/10 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400"
+                    : "bg-emerald-500/10 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400"
+              }`}
+            >
+              {statusTag}
             </span>
           </div>
 
@@ -187,7 +194,6 @@ export function ScholarshipCard({
 
       {/* Footer Section */}
       <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-900">
-
         {/* Upvote */}
         <div className="mb-3 flex items-center justify-between text-xs">
           <span className="text-slate-400 font-medium">Community</span>
@@ -209,7 +215,6 @@ export function ScholarshipCard({
           </button>
         </div>
 
-        
         {/* Deadline Status */}
         <div className="mb-4 flex items-center justify-between text-xs">
           <span className="text-slate-400 font-medium">Deadline</span>
@@ -229,18 +234,23 @@ export function ScholarshipCard({
 
         {/* High-End Action Group */}
         <div className="grid grid-cols-2 gap-2.5">
-          <Button 
-            asChild 
-            variant="outline" 
+          <Button
+            asChild
+            variant="outline"
             size="sm"
             className="w-full border-slate-200 bg-transparent text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900"
           >
-            <a href={scholarship.official_link ?? "#"} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-1">
+            <a
+              href={scholarship.official_link ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1"
+            >
               Official Link <ArrowUpRight className="size-3 text-slate-400" />
             </a>
           </Button>
 
-          <Button 
+          <Button
             size="sm"
             onClick={() => onManagedApply(scholarship)}
             className="w-full bg-slate-900 text-xs font-semibold text-amber-400 transition-all hover:bg-slate-800 hover:shadow-sm dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400"
@@ -250,7 +260,6 @@ export function ScholarshipCard({
             </span>
           </Button>
         </div>
-
       </div>
     </article>
   );
