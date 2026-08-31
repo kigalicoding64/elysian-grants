@@ -187,6 +187,28 @@ export function ScholarshipCard({
 
       {/* Footer Section */}
       <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-900">
+
+        {/* Upvote */}
+        <div className="mb-3 flex items-center justify-between text-xs">
+          <span className="text-slate-400 font-medium">Community</span>
+          <button
+            type="button"
+            onClick={() => {
+              const up = toggleUpvote();
+              toast.success(up ? "Upvoted" : "Upvote removed");
+            }}
+            aria-pressed={isUpvoted}
+            className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-semibold transition-colors ${
+              isUpvoted
+                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                : "border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900"
+            }`}
+          >
+            <ArrowBigUp className={`size-3.5 ${isUpvoted ? "fill-emerald-500" : ""}`} />
+            {isUpvoted ? "Upvoted" : "Upvote"}
+          </button>
+        </div>
+
         
         {/* Deadline Status */}
         <div className="mb-4 flex items-center justify-between text-xs">
