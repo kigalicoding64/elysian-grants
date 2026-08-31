@@ -15,7 +15,30 @@ import {
   type Scholarship 
 } from "@/lib/scholarship";
 
+const SITE_URL = "https://elysian-grants.lovable.app";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "ElScholarship — Verified Fully Funded Scholarships Directory" },
+      {
+        name: "description",
+        content:
+          "Browse verified fully funded scholarships worldwide, filter by degree, region and funding type, or apply through our managed concierge service.",
+      },
+      { property: "og:title", content: "ElScholarship — Verified Fully Funded Scholarships" },
+      {
+        property: "og:description",
+        content:
+          "Browse verified fully funded scholarships worldwide and apply with expert managed support.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/` },
+      { property: "og:image", content: `${SITE_URL}/elscholaship-logo.jpg` },
+      { name: "twitter:image", content: `${SITE_URL}/elscholaship-logo.jpg` },
+    ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/` }],
+  }),
   component: IndexComponent,
 });
 
