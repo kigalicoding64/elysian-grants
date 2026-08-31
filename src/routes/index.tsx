@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScholarshipCard } from "@/components/scholarship-card";
 import { ApplyModal } from "@/components/apply-modal";
+import { AdBanner } from "@/components/ui/ad-banner";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   DEGREE_LEVELS, 
