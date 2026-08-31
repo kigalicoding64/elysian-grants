@@ -34,10 +34,28 @@ export function ScholarshipCard({
   scholarship: Scholarship;
   onManagedApply: (s: Scholarship) => void;
 }) {
-  const [isSaved, setIsSaved] = useState(false);
+  const { active: isSaved, toggle: toggleSaved } = useSavedScholarship(scholarship.id);
+  const { active: isUpvoted, toggle: toggleUpvote } = useUpvotedScholarship(scholarship.id);
+  const [shareOpen, setShareOpen] = useState(false);
   const days = daysUntil(scholarship.deadline);
   const urgent = days !== null && days >= 0 && days <= 14;
   const closed = days !== null && days < 0;
+
+  const shareUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/?scholarship=${scholarship.id}`
+      : "";
+  const shareLinks = buildShareLinks(shareUrl, scholarship.title);
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success("Link copied to clipboard");
+    } catch {
+      toast.error("Could not copy the link");
+    }
+    setShareOpen(false);
+  }
 
   return (
     <article className="group relative flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:border-amber-500/40 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:border-slate-800 dark:bg-slate-950">
