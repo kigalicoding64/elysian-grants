@@ -86,15 +86,66 @@ export function ScholarshipCard({
             </span>
           </div>
 
-          {/* Action Bookmark */}
-          <button
-            type="button"
-            onClick={() => setIsSaved(!isSaved)}
-            className="text-slate-400 transition-colors hover:text-amber-600 dark:hover:text-amber-400"
-            aria-label="Save program"
-          >
-            <Bookmark className={`size-4 ${isSaved ? "fill-amber-500 text-amber-500" : ""}`} />
-          </button>
+          {/* Save / Share actions */}
+          <div className="flex items-center gap-1">
+            <Popover open={shareOpen} onOpenChange={setShareOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  className="text-slate-400 transition-colors hover:text-amber-600 dark:hover:text-amber-400"
+                  aria-label="Share scholarship"
+                >
+                  <Share2 className="size-4" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-48 p-1.5">
+                <button
+                  type="button"
+                  onClick={copyLink}
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  <Link2 className="size-3.5" /> Copy link
+                </button>
+                <a
+                  href={shareLinks.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  <MessageCircle className="size-3.5" /> WhatsApp
+                </a>
+                <a
+                  href={shareLinks.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  <Twitter className="size-3.5" /> Twitter / X
+                </a>
+                <a
+                  href={shareLinks.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  <Linkedin className="size-3.5" /> LinkedIn
+                </a>
+              </PopoverContent>
+            </Popover>
+
+            <button
+              type="button"
+              onClick={() => {
+                const saved = toggleSaved();
+                toast.success(saved ? "Saved to your list" : "Removed from your list");
+              }}
+              className="text-slate-400 transition-colors hover:text-amber-600 dark:hover:text-amber-400"
+              aria-label={isSaved ? "Remove from saved" : "Save program"}
+              aria-pressed={isSaved}
+            >
+              <Bookmark className={`size-4 ${isSaved ? "fill-amber-500 text-amber-500" : ""}`} />
+            </button>
+          </div>
         </div>
 
         {/* Title */}
