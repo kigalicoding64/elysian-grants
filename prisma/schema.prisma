@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum FundingType {
+  full
+  partial
+}
+
+enum ScholarshipStatus {
+  published
+  draft
+}
+
+model Scholarship {
+  id              String            @id @default(uuid())
+  title           String
+  university      String
+  country         String
+  degreeLevels    String[]          @default([]) @map("degree_levels")
+  fundingType     FundingType       @map("funding_type")
+  coverageDetails String?           @map("coverage_details")
+  officialLink    String?           @map("official_link")
+  deadline        DateTime?
+  status          ScholarshipStatus @default(draft)
+  course          String[]          @default([])
+  location        String[]          @default([])
+  demographicTags String[]          @default([]) @map("demographic_tags")
+  categoryType    String[]          @default([]) @map("category_type")
+  academicLevels  String[]          @default([]) @map("academic_levels")
+  yearOfStudy     String[]          @default([]) @map("year_of_study")
+  createdAt       DateTime          @default(now()) @map("created_at")
+
+  @@index([course], type: Gin)
+  @@index([location], type: Gin)
+  @@index([demographicTags], type: Gin)
+  @@index([categoryType], type: Gin)
+  @@index([academicLevels], type: Gin)
+  @@index([yearOfStudy], type: Gin)
+  @@index([deadline])
+  @@map("scholarships")
+}

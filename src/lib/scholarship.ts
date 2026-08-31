@@ -13,12 +13,7 @@ export type Scholarship = {
 };
 
 export type ApplicationStatus =
-  | "DOC_REVIEW"
-  | "DOC_APPROVED"
-  | "PREP_IN_PROGRESS"
-  | "SUBMITTED"
-  | "ACCEPTED"
-  | "REJECTED";
+  "DOC_REVIEW" | "DOC_APPROVED" | "PREP_IN_PROGRESS" | "SUBMITTED" | "ACCEPTED" | "REJECTED";
 
 export type Application = {
   id: string;
@@ -81,6 +76,15 @@ export function daysUntil(deadline: string | null): number | null {
   return Math.ceil((target - today) / 86_400_000);
 }
 
+export type ScholarshipStatusTag = "Open" | "Closing Today" | "Closed";
+
+export function scholarshipStatusTag(deadline: string | null): ScholarshipStatusTag {
+  const days = daysUntil(deadline);
+  if (days !== null && days < 0) return "Closed";
+  if (days === 0) return "Closing Today";
+  return "Open";
+}
+
 export function deadlineLabel(deadline: string | null): string {
   const days = daysUntil(deadline);
   if (days === null) return "Rolling intake";
@@ -111,32 +115,32 @@ export function coverageTags(coverage: string | null): string[] {
 
 /**
   Sorts scholarships in order:
-  1. Active with least time remaining (closing soonest)
-  2. Active with longer time remaining
-  3. Closed / Expired at the end
-  4. Rolling intake (null deadlines) last
+  1. Open / active opportunities, including rolling intake
+  2. Upcoming deadlines in ascending order, so closing-soon opportunities surface first
+  3. Closed / expired opportunities at the bottom
  */
 export function sortScholarshipsByUrgency(scholarships: Scholarship[]): Scholarship[] {
   return [...scholarships].sort((a, b) => {
     const daysA = daysUntil(a.deadline);
     const daysB = daysUntil(b.deadline);
 
-    // Push null / rolling intake deadlines to the bottom
-    if (daysA === null && daysB === null) return 0;
-    if (daysA === null) return 1;
-    if (daysB === null) return -1;
-
-    const isClosedA = daysA < 0;
-    const isClosedB = daysB < 0;
+    const isClosedA = daysA !== null && daysA < 0;
+    const isClosedB = daysB !== null && daysB < 0;
 
     // Active opportunities ALWAYS come before Closed ones
     if (!isClosedA && isClosedB) return -1;
     if (isClosedA && !isClosedB) return 1;
 
-    // Both Active: Ascending order (smallest positive days remaining first)
     if (!isClosedA && !isClosedB) {
+      if (daysA === null && daysB === null) return 0;
+      if (daysA === null) return 1;
+      if (daysB === null) return -1;
       return daysA - daysB;
     }
+
+    if (daysA === null && daysB === null) return 0;
+    if (daysA === null) return 1;
+    if (daysB === null) return -1;
 
     // Both Closed: Descending order (most recently expired first)
     return daysB - daysA;
