@@ -20,6 +20,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
 import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as ScholarshipsIdRouteImport } from './routes/scholarships.$id'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as AuthenticatedAdminScholarshipsRouteImport } from './routes/_authenticated/admin.scholarships'
@@ -78,6 +79,11 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/callback',
   getParentRoute: () => AuthRoute,
 } as any)
+const ScholarshipsIdRoute = ScholarshipsIdRouteImport.update({
+  id: '/scholarships/$id',
+  path: '/scholarships/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/scholarships/$id': typeof ScholarshipsIdRoute
   '/articles/': typeof ArticlesIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/scholarships/$id': typeof ScholarshipsIdRoute
   '/articles': typeof ArticlesIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/scholarships/$id': typeof ScholarshipsIdRoute
   '/articles/': typeof ArticlesIndexRoute
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/_authenticated/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/articles/$slug'
     | '/auth/callback'
+    | '/scholarships/$id'
     | '/articles/'
     | '/admin/applications'
     | '/admin/scholarships'
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/articles/$slug'
     | '/auth/callback'
+    | '/scholarships/$id'
     | '/articles'
     | '/admin/applications'
     | '/admin/scholarships'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/articles/$slug'
     | '/auth/callback'
+    | '/scholarships/$id'
     | '/articles/'
     | '/_authenticated/admin/applications'
     | '/_authenticated/admin/scholarships'
@@ -201,6 +213,7 @@ export interface RootRouteChildren {
   NotFoundRoute: typeof NotFoundRoute
   UniversitiesRoute: typeof UniversitiesRoute
   ArticlesSlugRoute: typeof ArticlesSlugRoute
+  ScholarshipsIdRoute: typeof ScholarshipsIdRoute
   ArticlesIndexRoute: typeof ArticlesIndexRoute
 }
 
@@ -283,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/scholarships/$id': {
+      id: '/scholarships/$id'
+      path: '/scholarships/$id'
+      fullPath: '/scholarships/$id'
+      preLoaderRoute: typeof ScholarshipsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
       path: '/admin'
@@ -343,6 +363,7 @@ const rootRouteChildren: RootRouteChildren = {
   NotFoundRoute: NotFoundRoute,
   UniversitiesRoute: UniversitiesRoute,
   ArticlesSlugRoute: ArticlesSlugRoute,
+  ScholarshipsIdRoute: ScholarshipsIdRoute,
   ArticlesIndexRoute: ArticlesIndexRoute,
 }
 export const routeTree = rootRouteImport
