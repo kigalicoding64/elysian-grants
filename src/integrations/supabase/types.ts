@@ -230,7 +230,9 @@ export type Database = {
           deadline: string | null
           degree_levels: string[]
           funding_type: string
+          hero_banner_url: string | null
           id: string
+          image_url: string | null
           official_link: string | null
           status: string
           title: string
@@ -243,7 +245,9 @@ export type Database = {
           deadline?: string | null
           degree_levels?: string[]
           funding_type?: string
+          hero_banner_url?: string | null
           id?: string
+          image_url?: string | null
           official_link?: string | null
           status?: string
           title: string
@@ -256,7 +260,9 @@ export type Database = {
           deadline?: string | null
           degree_levels?: string[]
           funding_type?: string
+          hero_banner_url?: string | null
           id?: string
+          image_url?: string | null
           official_link?: string | null
           status?: string
           title?: string
