@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import {
   Building2,
   MapPin,
@@ -94,7 +95,7 @@ export function ScholarshipCard({
           </div>
 
           {/* Save / Share actions */}
-          <div className="flex items-center gap-1">
+          <div className="relative z-10 flex items-center gap-1">
             <Popover open={shareOpen} onOpenChange={setShareOpen}>
               <PopoverTrigger asChild>
                 <button
@@ -157,7 +158,13 @@ export function ScholarshipCard({
 
         {/* Title */}
         <h3 className="mt-4 text-lg font-bold leading-snug tracking-tight text-slate-900 transition-colors group-hover:text-amber-700 dark:text-slate-100 dark:group-hover:text-amber-400">
-          {scholarship.title}
+          <Link
+            to="/scholarships/$id"
+            params={{ id: scholarship.id }}
+            className="after:absolute after:inset-0 after:content-['']"
+          >
+            {scholarship.title}
+          </Link>
         </h3>
 
         {/* Institution & Country */}
@@ -204,7 +211,7 @@ export function ScholarshipCard({
               toast.success(up ? "Upvoted" : "Upvote removed");
             }}
             aria-pressed={isUpvoted}
-            className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-semibold transition-colors ${
+            className={`relative z-10 inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-semibold transition-colors ${
               isUpvoted
                 ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
                 : "border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900"
@@ -240,20 +247,19 @@ export function ScholarshipCard({
             size="sm"
             className="w-full border-slate-200 bg-transparent text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900"
           >
-            <a
-              href={scholarship.official_link ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-1"
+            <Link
+              to="/scholarships/$id"
+              params={{ id: scholarship.id }}
+              className="relative z-10 inline-flex items-center justify-center gap-1"
             >
-              Official Link <ArrowUpRight className="size-3 text-slate-400" />
-            </a>
+              View Details <ArrowUpRight className="size-3 text-slate-400" />
+            </Link>
           </Button>
 
           <Button
             size="sm"
             onClick={() => onManagedApply(scholarship)}
-            className="w-full bg-slate-900 text-xs font-semibold text-amber-400 transition-all hover:bg-slate-800 hover:shadow-sm dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400"
+            className="relative z-10 w-full bg-slate-900 text-xs font-semibold text-amber-400 transition-all hover:bg-slate-800 hover:shadow-sm dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400"
           >
             <span className="inline-flex items-center gap-1">
               Managed Concierge <ChevronRight className="size-3" />

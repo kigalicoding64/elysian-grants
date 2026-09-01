@@ -112,9 +112,9 @@ const MARQUEE_UNIVERSITIES = [...ALL_UNIVERSITIES, ...ALL_UNIVERSITIES];
 function applyAvatarFallback(event: SyntheticEvent<HTMLImageElement>, university: University) {
   const image = event.currentTarget;
 
-  if (image.dataset.fallbackApplied) return;
+  if (image.dataset['fallbackApplied']) return;
 
-  image.dataset.fallbackApplied = "true";
+  image.dataset['fallbackApplied'] = "true";
   image.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(university.name)}&background=random&format=svg`;
 }
 
