@@ -130,13 +130,13 @@ function ArticlePage() {
         {data.author ?? "Editorial Team"} · {formatDate(data.published_at)}
       </p>
 
-      {data.featured_image ? (
-        <img
-          src={data.featured_image}
-          alt={data.title}
-          className="mt-8 w-full rounded-xl object-cover"
-        />
-      ) : null}
+      <img
+        src={data.featured_image || heroImageFor(slug)}
+        alt={data.title}
+        loading="lazy"
+        className="mt-8 h-56 w-full rounded-xl object-cover sm:h-72"
+      />
+
 
       <AdBanner slot="2345678901" className="mt-8" />
 
