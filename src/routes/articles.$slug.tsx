@@ -6,34 +6,61 @@ import { ArrowLeft } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdBanner } from "@/components/ui/ad-banner";
 import { fetchArticleBySlug, formatDate } from "@/lib/content";
+import { heroImageFor } from "@/lib/hero";
 
 const SITE_URL = "https://elysian-grants.lovable.app";
-const OG_IMAGE = `${SITE_URL}/elscholaship-logo.jpg`;
 
 export const Route = createFileRoute("/articles/$slug")({
   head: ({ params }) => {
     const url = `${SITE_URL}/articles/${params.slug}`;
     const readable = params.slug.replace(/-/g, " ");
+    const hero = heroImageFor(params.slug);
+    const description = "Scholarship guidance from the ElScholarship editorial team.";
     return {
       meta: [
         { title: `${readable} — ElScholarship` },
+        { name: "description", content: description },
         {
-          name: "description",
-          content: "Scholarship guidance from the ElScholarship editorial team.",
+          name: "keywords",
+          content: "Scholarships, Study Guides, University Grants, Education, Study Abroad",
         },
         { property: "og:title", content: `${readable} — ElScholarship` },
-        {
-          property: "og:description",
-          content: "Scholarship guidance from the ElScholarship editorial team.",
-        },
+        { property: "og:description", content: description },
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
-        { property: "og:image", content: OG_IMAGE },
-        { name: "twitter:image", content: OG_IMAGE },
+        { property: "og:image", content: hero },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: hero },
+        { property: "article:author", content: "ElScholarship Team" },
       ],
       links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: readable,
+            description,
+            mainEntityOfPage: url,
+            image: hero,
+            author: { "@type": "Organization", name: "ElScholarship Team" },
+            publisher: {
+              "@type": "Organization",
+              name: "ElScholarship",
+              logo: {
+                "@type": "ImageObject",
+                url: `${SITE_URL}/elscholaship-logo.jpg`,
+              },
+            },
+          }),
+        },
+      ],
     };
   },
+
   component: ArticlePage,
   errorComponent: ({ error }) => (
     <ArticleMessage title="This guide didn't load" body={error.message} />
@@ -103,13 +130,13 @@ function ArticlePage() {
         {data.author ?? "Editorial Team"} · {formatDate(data.published_at)}
       </p>
 
-      {data.featured_image ? (
-        <img
-          src={data.featured_image}
-          alt={data.title}
-          className="mt-8 w-full rounded-xl object-cover"
-        />
-      ) : null}
+      <img
+        src={data.featured_image || heroImageFor(slug)}
+        alt={data.title}
+        loading="lazy"
+        className="mt-8 h-56 w-full rounded-xl object-cover sm:h-72"
+      />
+
 
       <AdBanner slot="2345678901" className="mt-8" />
 

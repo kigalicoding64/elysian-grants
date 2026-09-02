@@ -17,6 +17,7 @@ import { AdBanner } from "@/components/ui/ad-banner";
 import { ApplyModal } from "@/components/apply-modal";
 import { supabase } from "@/integrations/supabase/client";
 import { useSavedScholarship, useUpvotedScholarship } from "@/lib/engagement";
+import { heroImageFor } from "@/lib/hero";
 import {
   coverageTags,
   deadlineLabel,
@@ -27,30 +28,54 @@ import {
 const SITE_URL = "https://elysian-grants.lovable.app";
 
 export const Route = createFileRoute("/scholarships/$id")({
-  head: ({ params }) => ({
-    meta: [
-      { title: "Scholarship Details — ElScholarship" },
-      {
-        name: "description",
-        content:
-          "Full details for this verified scholarship: funding scope, eligibility, deadline and how to apply with managed concierge support.",
-      },
-      { property: "og:title", content: "Scholarship Details — ElScholarship" },
-      {
-        property: "og:description",
-        content:
-          "Verified scholarship listing with funding scope, deadline and managed application support.",
-      },
-      { property: "og:type", content: "article" },
-      { property: "og:url", content: `${SITE_URL}/scholarships/${params.id}` },
-      { property: "og:image", content: `${SITE_URL}/elscholaship-logo.jpg` },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: `${SITE_URL}/elscholaship-logo.jpg` },
-    ],
-    links: [{ rel: "canonical", href: `${SITE_URL}/scholarships/${params.id}` }],
-  }),
+  head: ({ params }) => {
+    const url = `${SITE_URL}/scholarships/${params.id}`;
+    const hero = heroImageFor(params.id);
+    return {
+      meta: [
+        { title: "Scholarship Details — ElScholarship" },
+        {
+          name: "description",
+          content:
+            "Full details for this verified scholarship: funding scope, eligibility, deadline and how to apply with managed concierge support.",
+        },
+        {
+          name: "keywords",
+          content: "Scholarships, Fully Funded, University Grants, Study Abroad, Education",
+        },
+        { property: "og:title", content: "Scholarship Details — ElScholarship" },
+        {
+          property: "og:description",
+          content:
+            "Verified scholarship listing with funding scope, deadline and managed application support.",
+        },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+        { property: "og:image", content: hero },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: hero },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FinancialProduct",
+            name: "Verified scholarship",
+            url,
+            image: hero,
+            provider: { "@type": "Organization", name: "ElScholarship" },
+          }),
+        },
+      ],
+    };
+  },
   component: ScholarshipDetailPage,
 });
+
 
 function ScholarshipDetailPage() {
   const { id } = Route.useParams();
@@ -99,10 +124,29 @@ function ScholarshipDetailPage() {
 
   const scholarship = data;
   const statusTag = scholarshipStatusTag(scholarship.deadline);
+  const heroImage = heroImageFor(scholarship.id);
 
   return (
     <div className="w-full bg-slate-50/50 pb-20 dark:bg-slate-950">
+      <div className="relative h-56 w-full overflow-hidden sm:h-72">
+        <img
+          src={heroImage}
+          alt={`${scholarship.university} campus`}
+          loading="lazy"
+          className="size-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/45 to-slate-950/10" />
+        <div className="absolute inset-x-0 bottom-0">
+          <div className="container mx-auto max-w-4xl px-4 pb-6 sm:px-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">
+              {scholarship.country}
+            </p>
+            <p className="mt-1 text-lg font-bold text-white sm:text-2xl">{scholarship.title}</p>
+          </div>
+        </div>
+      </div>
       <section className="border-b border-slate-200/80 bg-white py-12 dark:border-slate-800 dark:bg-slate-900">
+
         <div className="container mx-auto max-w-4xl px-4 sm:px-6">
           <Link
             to="/"
