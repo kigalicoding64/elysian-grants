@@ -338,6 +338,50 @@ function IndexComponent() {
         )}
       </main>
 
+      {/* Explanations */}
+      <section className="container mx-auto mt-16 max-w-7xl px-4 sm:px-6">
+        <div className="rounded-2xl border border-border bg-card p-8 shadow-card sm:p-12">
+          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
+            What applicants ask before starting
+          </h2>
+          <div className="mt-8 grid gap-8 md:grid-cols-2">
+            {[
+              {
+                q: "How is a listing verified?",
+                a: "An officer opens the awarding institution's own funding page, confirms the closing date, degree levels and covered costs, and records the source link. Listings whose source page goes stale are unpublished rather than left up.",
+              },
+              {
+                q: "What does 'fully funded' actually cover?",
+                a: "On our listings it means tuition plus at least a living stipend. Each detail page itemises what is included — travel, insurance, settling-in allowance — so you can budget the gap accurately.",
+              },
+              {
+                q: "What does the managed service do that I can't?",
+                a: "Nothing you couldn't do with unlimited time. What you buy is an experienced reader on your motivation letter, a structural check against the published criteria, and someone accountable for the deadline.",
+              },
+              {
+                q: "Can I apply directly instead?",
+                a: "Yes. Every listing links to the official application portal. The concierge route is optional and priced per file, never bundled into the directory.",
+              },
+              {
+                q: "Who handles my documents?",
+                a: "Uploads are stored in a private bucket readable only by you and your assigned officer. They are never shared with third parties or other applicants.",
+              },
+              {
+                q: "How long does a decision take?",
+                a: "Institutions typically respond four to sixteen weeks after their closing date. Your dashboard reflects each status change as we receive it.",
+              },
+            ].map((f) => (
+              <div key={f.q}>
+                <h3 className="text-sm font-semibold text-foreground">{f.q}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+
       {/* Managed Application Modal */}
       <ApplyModal
         scholarship={selectedScholarship}
