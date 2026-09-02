@@ -17,6 +17,7 @@ import { AdBanner } from "@/components/ui/ad-banner";
 import { ApplyModal } from "@/components/apply-modal";
 import { supabase } from "@/integrations/supabase/client";
 import { useSavedScholarship, useUpvotedScholarship } from "@/lib/engagement";
+import { heroImageFor } from "@/lib/hero";
 import {
   coverageTags,
   deadlineLabel,
