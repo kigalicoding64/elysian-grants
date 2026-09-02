@@ -107,38 +107,121 @@ function IndexComponent() {
 
   return (
     <div className="w-full bg-slate-50/50 pb-20 dark:bg-slate-950">
-      {/* Hero Header Section */}
-      <section className="relative border-b border-slate-200/80 bg-white py-16 dark:border-slate-800 dark:bg-slate-900">
-        <div className="container mx-auto max-w-7xl px-4 text-center sm:px-6">
-          <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
-            <Sparkles className="size-3.5" /> Managed Global Mobility Concierge
-          </div>
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-border hero-surface py-20">
+        <div className="container relative mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+                <Sparkles className="size-3.5" /> Managed Global Mobility Concierge
+              </div>
 
-          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-5xl dark:text-slate-100">
-            Verified Global Opportunities
-          </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-base text-slate-600 sm:text-lg dark:text-slate-400">
-            Access fully-funded higher education grants managed directly by our network of senior
-            advisory officers.
-          </p>
+              <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-navy-foreground sm:text-6xl">
+                Fully funded degrees,
+                <span className="block text-primary">handled end to end.</span>
+              </h1>
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-navy-foreground/70 sm:text-lg">
+                Every listing on ElScholarship is manually verified against the official awarding
+                body. Our senior advisory officers then prepare, review and submit your file — so
+                nothing is lost to a missed clause or a late deadline.
+              </p>
 
-          {/* Search Bar */}
-          <div className="mx-auto mt-8 max-w-2xl">
-            <div className="relative flex items-center">
-              <Search className="absolute left-4 size-5 text-slate-400" />
-              <Input
-                type="text"
-                placeholder="Search by university, degree title, or destination country..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="h-12 border-slate-200 bg-white pl-12 pr-4 text-sm shadow-sm transition-all focus-visible:ring-amber-500 dark:border-slate-800 dark:bg-slate-950"
-              />
+              <div className="mx-auto mt-8 max-w-2xl">
+                <div className="relative flex items-center">
+                  <Search className="absolute left-4 size-5 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Search by university, degree title, or destination country..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="h-14 rounded-xl border-transparent bg-card pl-12 pr-4 text-sm shadow-elevated"
+                  />
+                </div>
+              </div>
+
+              <dl className="mt-10 grid max-w-xl grid-cols-3 gap-6 border-t border-navy-foreground/10 pt-6">
+                {[
+                  { k: "100%", v: "Sources verified" },
+                  { k: "48h", v: "Advisor response" },
+                  { k: "60+", v: "Host countries" },
+                ].map((s) => (
+                  <div key={s.v}>
+                    <dt className="text-2xl font-bold text-navy-foreground">{s.k}</dt>
+                    <dd className="mt-1 text-xs uppercase tracking-wider text-navy-foreground/60">
+                      {s.v}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            <div className="rounded-2xl border border-navy-foreground/10 bg-card/95 p-7 shadow-elevated backdrop-blur">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                How the concierge works
+              </p>
+              <ol className="mt-5 space-y-5">
+                {[
+                  {
+                    t: "Eligibility review",
+                    d: "We audit your transcripts, language scores and funding profile against each award's published criteria.",
+                  },
+                  {
+                    t: "Document preparation",
+                    d: "Motivation letters, CVs and referee packs are drafted and reviewed by an assigned senior officer.",
+                  },
+                  {
+                    t: "Submission & tracking",
+                    d: "We file before the deadline and track the outcome in your dashboard until a decision lands.",
+                  },
+                ].map((step, i) => (
+                  <li key={step.t} className="flex gap-4">
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{step.t}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{step.d}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <p className="mt-6 border-t border-border pt-4 text-[11px] leading-relaxed text-muted-foreground">
+                No agency fee is charged before an eligibility review is completed and shared with
+                you in writing.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       <UniversityMarqueeTicker />
+
+      {/* Trust pillars */}
+      <section className="border-b border-border bg-card">
+        <div className="container mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 md:grid-cols-3">
+          {[
+            {
+              t: "Verified at the source",
+              d: "Each award is cross-checked against the university or ministry portal before publication, and re-checked when deadlines shift.",
+            },
+            {
+              t: "Senior advisory officers",
+              d: "Your file is owned by one named advisor with postgraduate admissions experience — not a rotating support queue.",
+            },
+            {
+              t: "Transparent by design",
+              d: "Funding scope, covered costs, eligibility and closing dates are published in full on every listing. No hidden conditions.",
+            },
+          ].map((p) => (
+            <div key={p.t}>
+              <div className="h-1 w-10 rounded-full bg-primary" />
+              <h2 className="mt-4 text-lg font-semibold text-foreground">{p.t}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
 
       {/* Main Content Area */}
       <main className="container mx-auto max-w-7xl px-4 pt-10 sm:px-6">
@@ -254,6 +337,50 @@ function IndexComponent() {
           </>
         )}
       </main>
+
+      {/* Explanations */}
+      <section className="container mx-auto mt-16 max-w-7xl px-4 sm:px-6">
+        <div className="rounded-2xl border border-border bg-card p-8 shadow-card sm:p-12">
+          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
+            What applicants ask before starting
+          </h2>
+          <div className="mt-8 grid gap-8 md:grid-cols-2">
+            {[
+              {
+                q: "How is a listing verified?",
+                a: "An officer opens the awarding institution's own funding page, confirms the closing date, degree levels and covered costs, and records the source link. Listings whose source page goes stale are unpublished rather than left up.",
+              },
+              {
+                q: "What does 'fully funded' actually cover?",
+                a: "On our listings it means tuition plus at least a living stipend. Each detail page itemises what is included — travel, insurance, settling-in allowance — so you can budget the gap accurately.",
+              },
+              {
+                q: "What does the managed service do that I can't?",
+                a: "Nothing you couldn't do with unlimited time. What you buy is an experienced reader on your motivation letter, a structural check against the published criteria, and someone accountable for the deadline.",
+              },
+              {
+                q: "Can I apply directly instead?",
+                a: "Yes. Every listing links to the official application portal. The concierge route is optional and priced per file, never bundled into the directory.",
+              },
+              {
+                q: "Who handles my documents?",
+                a: "Uploads are stored in a private bucket readable only by you and your assigned officer. They are never shared with third parties or other applicants.",
+              },
+              {
+                q: "How long does a decision take?",
+                a: "Institutions typically respond four to sixteen weeks after their closing date. Your dashboard reflects each status change as we receive it.",
+              },
+            ].map((f) => (
+              <div key={f.q}>
+                <h3 className="text-sm font-semibold text-foreground">{f.q}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
 
       {/* Managed Application Modal */}
       <ApplyModal
