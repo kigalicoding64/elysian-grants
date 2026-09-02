@@ -27,30 +27,54 @@ import {
 const SITE_URL = "https://elysian-grants.lovable.app";
 
 export const Route = createFileRoute("/scholarships/$id")({
-  head: ({ params }) => ({
-    meta: [
-      { title: "Scholarship Details — ElScholarship" },
-      {
-        name: "description",
-        content:
-          "Full details for this verified scholarship: funding scope, eligibility, deadline and how to apply with managed concierge support.",
-      },
-      { property: "og:title", content: "Scholarship Details — ElScholarship" },
-      {
-        property: "og:description",
-        content:
-          "Verified scholarship listing with funding scope, deadline and managed application support.",
-      },
-      { property: "og:type", content: "article" },
-      { property: "og:url", content: `${SITE_URL}/scholarships/${params.id}` },
-      { property: "og:image", content: `${SITE_URL}/elscholaship-logo.jpg` },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: `${SITE_URL}/elscholaship-logo.jpg` },
-    ],
-    links: [{ rel: "canonical", href: `${SITE_URL}/scholarships/${params.id}` }],
-  }),
+  head: ({ params }) => {
+    const url = `${SITE_URL}/scholarships/${params.id}`;
+    const hero = heroImageFor(params.id);
+    return {
+      meta: [
+        { title: "Scholarship Details — ElScholarship" },
+        {
+          name: "description",
+          content:
+            "Full details for this verified scholarship: funding scope, eligibility, deadline and how to apply with managed concierge support.",
+        },
+        {
+          name: "keywords",
+          content: "Scholarships, Fully Funded, University Grants, Study Abroad, Education",
+        },
+        { property: "og:title", content: "Scholarship Details — ElScholarship" },
+        {
+          property: "og:description",
+          content:
+            "Verified scholarship listing with funding scope, deadline and managed application support.",
+        },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+        { property: "og:image", content: hero },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: hero },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FinancialProduct",
+            name: "Verified scholarship",
+            url,
+            image: hero,
+            provider: { "@type": "Organization", name: "ElScholarship" },
+          }),
+        },
+      ],
+    };
+  },
   component: ScholarshipDetailPage,
 });
+
 
 function ScholarshipDetailPage() {
   const { id } = Route.useParams();
