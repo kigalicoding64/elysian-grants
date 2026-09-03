@@ -56,43 +56,42 @@ export function ScholarshipCard({
   }
 
   return (
-    <article className="group relative flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:border-amber-500/40 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:border-slate-800 dark:bg-slate-950">
+    <article className="neu-flat group relative flex flex-col justify-between rounded-3xl p-6 transition-transform duration-300 hover:-translate-y-1">
       {/* Top Header Row */}
       <div>
-        <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3.5 dark:border-slate-900">
+        <div className="flex items-center justify-between gap-2 pb-3.5">
           {/* Degree & Funding Badges */}
           <div className="flex flex-wrap items-center gap-2">
             {scholarship.degree_levels.map((level) => (
               <span
                 key={level}
-                className="rounded-md bg-slate-900 px-2.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase text-slate-100 dark:bg-slate-100 dark:text-slate-900"
+                className="neu-pressed rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-[#374151]"
               >
                 {level}
               </span>
             ))}
 
             <span
-              className={`rounded-md px-2.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase ${
-                scholarship.funding_type === "full"
-                  ? "bg-amber-500/10 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400"
-                  : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+              className={`neu-pressed rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider ${
+                scholarship.funding_type === "full" ? "text-[#b45309]" : "text-[#6b7280]"
               }`}
             >
               {scholarship.funding_type === "full" ? "100% Funded" : "Partial Grant"}
             </span>
 
             <span
-              className={`rounded-md px-2.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase ${
+              className={`neu-pressed rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider ${
                 statusTag === "Closed"
-                  ? "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                  ? "text-[#6b7280]"
                   : statusTag === "Closing Today"
-                    ? "bg-rose-500/10 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400"
-                    : "bg-emerald-500/10 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400"
+                    ? "text-[#b91c1c]"
+                    : "text-[#047857]"
               }`}
             >
               {statusTag}
             </span>
           </div>
+
 
           {/* Save / Share actions */}
           <div className="relative z-10 flex items-center gap-1">
