@@ -82,7 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`,
         crossOrigin: "anonymous",
       },
-      /* Step 1: Adcash Library Script */
+      /* Step 1: Adcash Main Library Script */
       {
         id: "aclib",
         type: "text/javascript",
@@ -113,16 +113,21 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
         
-        {/* Step 2: Adcash Tag Execution Script */}
+        {/* Step 2: Adcash Tags Execution Script */}
         <script
           type="text/javascript"
           dangerouslySetInnerHTML={{
             __html: `
-              if (typeof aclib !== 'undefined') {
-                aclib.runAutoTag({
-                  zoneId: 'nmnzgnqvor'
-                });
-              }
+              window.addEventListener('load', function() {
+                if (typeof aclib !== 'undefined') {
+                  aclib.runAutoTag({
+                    zoneId: 'nmnzgnqvor'
+                  });
+                  aclib.runAutoTag({
+                    zoneId: 'fhoxh0qu5q'
+                  });
+                }
+              });
             `,
           }}
         />
