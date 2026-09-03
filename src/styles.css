@@ -110,50 +110,44 @@
 }
 
 
+/* Soft Neumorphism is a single light surface language — dark mode mirrors it. */
 .dark {
-  --background: oklch(0.16 0.035 264);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.68 0.14 163.2);
-  --primary-foreground: oklch(0.16 0.035 264);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.3 0.05 165);
-  --accent-foreground: oklch(0.9 0.05 163);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.99 0.01 20);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.68 0.14 163.2);
-  --navy: oklch(0.208 0.042 265.755);
-  --navy-foreground: oklch(0.984 0.003 247.858);
-  --gold: oklch(0.79 0.12 85);
-  --success: oklch(0.68 0.14 163.2);
-  --warning: oklch(0.75 0.15 65);
-  --warning-foreground: oklch(0.2 0.05 65);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.68 0.14 163.2);
-  --sidebar-primary-foreground: oklch(0.16 0.035 264);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.68 0.14 163.2);
+  --background: #e0e5ec;
+  --foreground: #374151;
+  --card: #e0e5ec;
+  --card-foreground: #374151;
+  --popover: #e6ebf2;
+  --popover-foreground: #374151;
+  --primary: #047857;
+  --primary-foreground: #f4f7fb;
+  --secondary: #dae0e9;
+  --secondary-foreground: #374151;
+  --muted: #dae0e9;
+  --muted-foreground: #6b7280;
+  --accent: #d7dfe9;
+  --accent-foreground: #047857;
+  --border: transparent;
+  --input: transparent;
+  --ring: #a3b1c6;
+  --navy: #374151;
+  --navy-foreground: #e0e5ec;
+  --gold: #b45309;
+  --success: #047857;
+  --warning: #b45309;
 }
 
 @layer base {
   * {
-    border-color: var(--color-border);
+    border-color: transparent;
+  }
+
+  html,
+  body {
+    background-color: var(--neu-base);
+    color: var(--foreground);
   }
 
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
     font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   }
 
@@ -163,8 +157,146 @@
   h4 {
     font-family: "Sora", ui-sans-serif, system-ui, sans-serif;
     letter-spacing: -0.02em;
+    color: #374151;
   }
 }
+
+/* ---------------------------------------------------------------
+ * Global flat-to-neumorphic normalisation.
+ * Removes harsh borders / hard drop shadows from legacy utilities
+ * and rebases every opaque surface onto the soft base colour.
+ * --------------------------------------------------------------- */
+@layer components {
+  [class*="border-slate-"],
+  [class*="border-gray-"],
+  [class*="border-border"],
+  [class*="border-navy"],
+  .border,
+  .border-b,
+  .border-t,
+  .border-l,
+  .border-r,
+  .border-y,
+  .border-x {
+    border-color: transparent !important;
+  }
+
+  .bg-white,
+  .bg-slate-50,
+  .bg-slate-100,
+  .bg-gray-50,
+  .bg-gray-100,
+  .bg-background,
+  .bg-card,
+  .bg-slate-900,
+  .bg-slate-950,
+  .bg-navy-900,
+  .bg-slate-800 {
+    background-color: var(--neu-base) !important;
+  }
+
+  .text-white,
+  .text-slate-100,
+  .text-slate-200,
+  .text-slate-300,
+  .text-slate-900,
+  .text-slate-800,
+  .text-foreground {
+    color: #374151 !important;
+  }
+
+  .text-slate-400,
+  .text-slate-500,
+  .text-slate-600,
+  .text-muted-foreground {
+    color: #6b7280 !important;
+  }
+
+  [class*="text-amber-"] {
+    color: var(--neu-amber) !important;
+  }
+
+  [class*="text-emerald-"] {
+    color: var(--neu-emerald) !important;
+  }
+
+  [class*="shadow-"]:not(.neu-flat):not(.neu-btn):not(.neu-pressed) {
+    box-shadow:
+      6px 6px 12px var(--neu-dark),
+      -6px -6px 12px var(--neu-light) !important;
+  }
+}
+
+/* Neumorphic primitives */
+@utility neu-flat {
+  background: var(--neu-base);
+  border: none;
+  box-shadow:
+    8px 8px 16px var(--neu-dark),
+    -8px -8px 16px var(--neu-light);
+}
+
+@utility neu-pressed {
+  background: var(--neu-base);
+  border: none;
+  outline: none;
+  box-shadow:
+    inset 4px 4px 8px var(--neu-dark),
+    inset -4px -4px 8px var(--neu-light);
+}
+
+@utility neu-btn {
+  background: var(--neu-base);
+  border: none;
+  color: #374151;
+  box-shadow:
+    6px 6px 12px var(--neu-dark),
+    -6px -6px 12px var(--neu-light);
+  transition:
+    box-shadow 200ms ease,
+    transform 200ms ease;
+
+  &:hover {
+    box-shadow:
+      4px 4px 10px var(--neu-dark),
+      -4px -4px 10px var(--neu-light);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow:
+      inset 4px 4px 8px var(--neu-dark),
+      inset -4px -4px 8px var(--neu-light);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow:
+      inset 3px 3px 6px var(--neu-dark),
+      inset -3px -3px 6px var(--neu-light),
+      0 0 0 2px color-mix(in srgb, var(--neu-emerald) 45%, transparent);
+  }
+}
+
+@utility neu-accent {
+  background: var(--neu-base);
+  color: var(--neu-emerald);
+  box-shadow:
+    6px 6px 12px var(--neu-dark),
+    -6px -6px 12px var(--neu-light);
+}
+
+/* Inputs keep the inset look, gain a soft focus ring */
+.neu-pressed:focus,
+.neu-pressed:focus-visible,
+.neu-pressed:focus-within {
+  outline: none;
+  box-shadow:
+    inset 4px 4px 8px var(--neu-dark),
+    inset -4px -4px 8px var(--neu-light),
+    0 0 0 2px color-mix(in srgb, var(--neu-emerald) 40%, transparent);
+}
+
 
 @utility hero-surface {
   background:
