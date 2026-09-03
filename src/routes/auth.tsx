@@ -105,58 +105,57 @@ function AuthPage() {
   }
 
   return (
-    <main className="grid min-h-screen lg:grid-cols-2">
+    <main className="grid min-h-screen place-items-center px-4 py-12 lg:grid-cols-2 lg:place-items-stretch lg:gap-8 lg:px-10">
       {/* Hero Branding Column */}
-      <section className="relative hidden flex-col justify-between bg-slate-900 p-12 text-slate-100 lg:flex dark:bg-slate-950">
-        <div className="absolute inset-0 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:16px_16px] opacity-20 pointer-events-none" />
-        
+      <section className="neu-flat relative hidden flex-col justify-between rounded-[40px] p-12 lg:flex">
         <Link to="/" className="relative z-10 flex items-center gap-3">
-          { /*<img src={logo.url} alt="ElScholarship" className="h-9 w-9 object-contain" />*/}
-
-            <img 
-                src="/elscholaship-logo.jpg" 
-                alt="ElScholarship Logo" 
-                width={40}
-                height={40}
-                className="h-10 w-10 rounded-md object-cover border border-slate-700" 
-              />
-
-
-          
-          <span className="text-xl font-extrabold tracking-tight">
-            El<span className="text-amber-500">Scholarship</span>
+          <span className="neu-flat flex h-12 w-12 items-center justify-center overflow-hidden rounded-full">
+            <img
+              src="/elscholaship-logo.jpg"
+              alt="ElScholarship Logo"
+              width={36}
+              height={36}
+              className="h-9 w-9 rounded-full object-cover"
+            />
+          </span>
+          <span className="text-xl font-extrabold tracking-tight text-[#374151]">
+            El<span className="text-[#b45309]">Scholarship</span>
           </span>
         </Link>
 
         <div className="relative z-10 space-y-6">
-          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-400">
+          <div className="neu-pressed inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-[#b45309]">
             <Sparkles className="size-3.5" />
             <span>Managed Application Concierge</span>
           </div>
-          <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-white">
+          <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-[#374151]">
             Your fully funded future starts with one account.
           </h1>
-          <p className="max-w-md text-sm leading-relaxed text-slate-400">
-            Save verified scholarships, upload your documents once, and let our senior officers manage your application submissions end-to-end.
+          <p className="max-w-md text-sm leading-relaxed text-[#6b7280]">
+            Save verified scholarships, upload your documents once, and let our senior officers
+            manage your application submissions end-to-end.
           </p>
         </div>
 
-        <div className="relative z-10 flex items-center gap-2 text-xs font-medium text-slate-400">
-          <ShieldCheck className="size-4 text-emerald-400" />
+        <div className="relative z-10 flex items-center gap-2 text-xs font-medium text-[#6b7280]">
+          <ShieldCheck className="size-4 text-[#047857]" />
           <span>100% verified academic opportunities worldwide</span>
         </div>
       </section>
 
       {/* Auth Form Column */}
-      <section className="flex items-center justify-center bg-white px-4 py-16 dark:bg-slate-900">
-        <div className="w-full max-w-sm space-y-6">
+      <section className="flex w-full items-center justify-center">
+        <div className="neu-flat w-full max-w-md space-y-6 rounded-[40px] p-8 sm:p-10">
           {/* Mobile Header */}
           <div className="flex items-center gap-2.5 lg:hidden">
-            <img src={logo.url} alt="" className="h-8 w-8 object-contain" />
-            <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100">
-              El<span className="text-amber-500">Scholarship</span>
+            <span className="neu-flat flex h-10 w-10 items-center justify-center rounded-full">
+              <img src={logo.url} alt="" className="h-6 w-6 object-contain" />
+            </span>
+            <span className="text-lg font-bold tracking-tight text-[#374151]">
+              El<span className="text-[#b45309]">Scholarship</span>
             </span>
           </div>
+
 
           <div>
             <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
