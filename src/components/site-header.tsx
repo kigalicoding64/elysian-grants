@@ -235,7 +235,7 @@ export function SiteHeader() {
                   <ChevronDown className="size-3 transition-transform group-hover/nav:rotate-180" />
                 </button>
                 <div className="invisible absolute left-1/2 top-full z-50 w-[min(760px,calc(100vw-2rem))] -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-hover/nav:visible group-hover/nav:opacity-100">
-                  <div className="rounded-2xl border border-border bg-background p-5 shadow-xl">
+                  <div className="neu-flat rounded-3xl p-5">
                     <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
                       {group.columns.map((column) => (
                         <div key={column.title}>
