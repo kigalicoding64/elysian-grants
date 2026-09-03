@@ -16,6 +16,8 @@ import {
   ExternalLink,
   GraduationCap,
   ChevronDown,
+  MessageCircle,
+
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -159,19 +161,19 @@ export function SiteHeader() {
   return (
     <>
       {/* Top Professional Announcement Bar */}
-      <div className="bg-navy-900 border-b border-navy-700 bg-slate-950 px-4 py-1.5 text-xs text-slate-300">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
+      <div className="px-4 pt-3 text-xs text-[#6b7280]">
+        <div className="neu-pressed mx-auto flex max-w-7xl items-center justify-between rounded-full px-5 py-2">
           <div className="flex items-center gap-2">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="flex h-2 w-2 rounded-full bg-[#047857] animate-pulse" />
             <span className="font-medium">
               440+ Verified Fully Funded Scholarships Active Today
             </span>
           </div>
           <div className="hidden items-center gap-4 sm:flex">
-            <span className="flex items-center gap-1 text-slate-400">
-              <CheckCircle2 className="size-3.5 text-emerald-400" /> 100% Guaranteed Official Links
+            <span className="flex items-center gap-1">
+              <CheckCircle2 className="size-3.5 text-emerald-700" /> 100% Guaranteed Official Links
             </span>
-            <Link to="/concierge" className="text-amber-400 hover:underline">
+            <Link to="/concierge" className="font-semibold text-amber-700 hover:underline">
               Concierge Priority Application Service &rarr;
             </Link>
           </div>
@@ -179,29 +181,49 @@ export function SiteHeader() {
       </div>
 
       {/* Main Sticky Header */}
-      <header className="sticky top-0 z-40 border-b border-border/80 bg-background/95 backdrop-blur support-[backdrop-filter]:bg-background/80">
-        <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
+      <header className="sticky top-0 z-40 px-3 py-3 sm:px-6">
+        <div className="neu-flat mx-auto flex w-full max-w-7xl items-center justify-between gap-4 rounded-full px-4 py-3 sm:px-6">
           {/* Logo Brand Block */}
           <Link
             to="/"
-            className="flex shrink-0 items-center gap-3 transition-opacity hover:opacity-90"
+            className="flex shrink-0 items-center gap-3 transition-transform hover:scale-[1.02]"
           >
-            <img
-              src="/elscholaship-logo.jpg"
-              alt="ElScholarship Emblem"
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-lg object-cover shadow-sm border border-border"
-            />
+            <span className="neu-flat flex h-11 w-11 items-center justify-center overflow-hidden rounded-full">
+              <img
+                src="/elscholaship-logo.jpg"
+                alt="ElScholarship Emblem"
+                width={40}
+                height={40}
+                className="h-8 w-8 rounded-full object-cover"
+              />
+            </span>
             <div className="flex flex-col">
-              <span className="text-xl font-extrabold tracking-tight text-foreground">
+              <span className="text-lg font-extrabold tracking-tight text-[#374151]">
                 ElScholarship
               </span>
-              <span className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest">
+              <span className="hidden text-[10px] font-semibold uppercase tracking-widest text-[#6b7280] sm:block">
                 Global Academic Mobility
               </span>
             </div>
           </Link>
+
+          {/* Inset search */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              navigate({ to: "/" });
+            }}
+            className="neu-pressed hidden items-center gap-2 rounded-full px-4 py-2 md:flex md:w-56 lg:w-72"
+          >
+            <Search className="size-4 shrink-0 text-[#6b7280]" />
+            <input
+              type="search"
+              placeholder="Search scholarships…"
+              aria-label="Search scholarships"
+              className="w-full bg-transparent text-xs text-[#374151] placeholder:text-[#6b7280] focus:outline-none"
+            />
+          </form>
+
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-1 xl:flex">
@@ -215,7 +237,7 @@ export function SiteHeader() {
                   <ChevronDown className="size-3 transition-transform group-hover/nav:rotate-180" />
                 </button>
                 <div className="invisible absolute left-1/2 top-full z-50 w-[min(760px,calc(100vw-2rem))] -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-hover/nav:visible group-hover/nav:opacity-100">
-                  <div className="rounded-2xl border border-border bg-background p-5 shadow-xl">
+                  <div className="neu-flat rounded-3xl p-5">
                     <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
                       {group.columns.map((column) => (
                         <div key={column.title}>
@@ -284,29 +306,35 @@ export function SiteHeader() {
               </>
             ) : (
               <>
-                <Button asChild variant="ghost" size="sm">
+                <a
+                  href="https://wa.me/250794433166"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="neu-btn hidden items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-[#047857] lg:inline-flex"
+                >
+                  <MessageCircle className="size-4" /> WhatsApp Support
+                </a>
+                <Button asChild variant="outline" size="sm">
                   <Link to="/auth" search={{ mode: "login" }}>
                     Log In
                   </Link>
                 </Button>
-                <Button
-                  asChild
-                  size="sm"
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium"
-                >
+                <Button asChild size="sm" className="text-[#047857]">
                   <Link to="/auth" search={{ mode: "register" }}>
                     Apply via Concierge
                   </Link>
                 </Button>
               </>
             )}
+
           </div>
 
           {/* Mobile Hamburger Toggle */}
           <button
             type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-md border border-border lg:hidden"
+            className="neu-btn flex h-11 w-11 items-center justify-center rounded-full lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle navigation"
           >
             {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
@@ -314,7 +342,8 @@ export function SiteHeader() {
 
         {/* Mobile Dropdown Drawer */}
         {mobileMenuOpen && (
-          <div className="border-b border-border bg-background px-4 py-6 lg:hidden">
+          <div className="neu-flat mx-auto mt-3 max-w-7xl rounded-3xl px-4 py-6 lg:hidden">
+
             <div className="flex flex-col gap-3">
               {MAIN_NAV.map((item) => (
                 <Link

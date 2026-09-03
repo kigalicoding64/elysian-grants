@@ -56,43 +56,42 @@ export function ScholarshipCard({
   }
 
   return (
-    <article className="group relative flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:border-amber-500/40 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:border-slate-800 dark:bg-slate-950">
+    <article className="neu-flat group relative flex flex-col justify-between rounded-3xl p-6 transition-transform duration-300 hover:-translate-y-1">
       {/* Top Header Row */}
       <div>
-        <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3.5 dark:border-slate-900">
+        <div className="flex items-center justify-between gap-2 pb-3.5">
           {/* Degree & Funding Badges */}
           <div className="flex flex-wrap items-center gap-2">
             {scholarship.degree_levels.map((level) => (
               <span
                 key={level}
-                className="rounded-md bg-slate-900 px-2.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase text-slate-100 dark:bg-slate-100 dark:text-slate-900"
+                className="neu-pressed rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-[#374151]"
               >
                 {level}
               </span>
             ))}
 
             <span
-              className={`rounded-md px-2.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase ${
-                scholarship.funding_type === "full"
-                  ? "bg-amber-500/10 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400"
-                  : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+              className={`neu-pressed rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider ${
+                scholarship.funding_type === "full" ? "text-[#b45309]" : "text-[#6b7280]"
               }`}
             >
               {scholarship.funding_type === "full" ? "100% Funded" : "Partial Grant"}
             </span>
 
             <span
-              className={`rounded-md px-2.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase ${
+              className={`neu-pressed rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider ${
                 statusTag === "Closed"
-                  ? "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                  ? "text-[#6b7280]"
                   : statusTag === "Closing Today"
-                    ? "bg-rose-500/10 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400"
-                    : "bg-emerald-500/10 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400"
+                    ? "text-[#b91c1c]"
+                    : "text-[#047857]"
               }`}
             >
               {statusTag}
             </span>
           </div>
+
 
           {/* Save / Share actions */}
           <div className="relative z-10 flex items-center gap-1">
@@ -191,7 +190,7 @@ export function ScholarshipCard({
           {coverageTags(scholarship.coverage_details).map((tag) => (
             <span
               key={tag}
-              className="rounded-md border border-slate-200 bg-slate-50/50 px-2 py-0.5 text-[10px] font-medium text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+              className="neu-pressed rounded-full px-3 py-1 text-[10px] font-medium text-[#6b7280]"
             >
               {tag}
             </span>
@@ -200,10 +199,10 @@ export function ScholarshipCard({
       </div>
 
       {/* Footer Section */}
-      <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-900">
+      <div className="mt-6 pt-4">
         {/* Upvote */}
         <div className="mb-3 flex items-center justify-between text-xs">
-          <span className="text-slate-400 font-medium">Community</span>
+          <span className="font-medium text-[#6b7280]">Community</span>
           <button
             type="button"
             onClick={() => {
@@ -211,27 +210,21 @@ export function ScholarshipCard({
               toast.success(up ? "Upvoted" : "Upvote removed");
             }}
             aria-pressed={isUpvoted}
-            className={`relative z-10 inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-semibold transition-colors ${
-              isUpvoted
-                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-                : "border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900"
+            className={`relative z-10 inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold ${
+              isUpvoted ? "neu-pressed text-[#047857]" : "neu-btn text-[#6b7280]"
             }`}
           >
-            <ArrowBigUp className={`size-3.5 ${isUpvoted ? "fill-emerald-500" : ""}`} />
+            <ArrowBigUp className={`size-3.5 ${isUpvoted ? "fill-emerald-700" : ""}`} />
             {isUpvoted ? "Upvoted" : "Upvote"}
           </button>
         </div>
 
         {/* Deadline Status */}
         <div className="mb-4 flex items-center justify-between text-xs">
-          <span className="text-slate-400 font-medium">Deadline</span>
+          <span className="font-medium text-[#6b7280]">Deadline</span>
           <span
             className={`inline-flex items-center gap-1.5 font-semibold ${
-              closed
-                ? "text-slate-400"
-                : urgent
-                  ? "text-rose-600 dark:text-rose-400"
-                  : "text-slate-700 dark:text-slate-300"
+              closed ? "text-[#6b7280]" : urgent ? "text-[#b45309]" : "text-[#374151]"
             }`}
           >
             <Clock className="size-3" />
@@ -240,26 +233,21 @@ export function ScholarshipCard({
         </div>
 
         {/* High-End Action Group */}
-        <div className="grid grid-cols-2 gap-2.5">
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            className="w-full border-slate-200 bg-transparent text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900"
-          >
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+          <Button asChild variant="outline" size="sm" className="w-full text-xs">
             <Link
               to="/scholarships/$id"
               params={{ id: scholarship.id }}
               className="relative z-10 inline-flex items-center justify-center gap-1"
             >
-              View Details <ArrowUpRight className="size-3 text-slate-400" />
+              View Details <ArrowUpRight className="size-3" />
             </Link>
           </Button>
 
           <Button
             size="sm"
             onClick={() => onManagedApply(scholarship)}
-            className="relative z-10 w-full bg-slate-900 text-xs font-semibold text-amber-400 transition-all hover:bg-slate-800 hover:shadow-sm dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400"
+            className="relative z-10 w-full text-xs text-[#047857]"
           >
             <span className="inline-flex items-center gap-1">
               Managed Concierge <ChevronRight className="size-3" />
@@ -267,6 +255,7 @@ export function ScholarshipCard({
           </Button>
         </div>
       </div>
+
     </article>
   );
 }
