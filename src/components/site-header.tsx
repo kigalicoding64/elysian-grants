@@ -325,8 +325,9 @@ export function SiteHeader() {
           {/* Mobile Hamburger Toggle */}
           <button
             type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-md border border-border lg:hidden"
+            className="neu-btn flex h-11 w-11 items-center justify-center rounded-full lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle navigation"
           >
             {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
@@ -334,7 +335,8 @@ export function SiteHeader() {
 
         {/* Mobile Dropdown Drawer */}
         {mobileMenuOpen && (
-          <div className="border-b border-border bg-background px-4 py-6 lg:hidden">
+          <div className="neu-flat mx-auto mt-3 max-w-7xl rounded-3xl px-4 py-6 lg:hidden">
+
             <div className="flex flex-col gap-3">
               {MAIN_NAV.map((item) => (
                 <Link
