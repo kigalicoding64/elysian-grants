@@ -27,7 +27,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "ElScholarship — Fully Funded Global Scholarships, TVET Grants & University Mobility 2026",
       },
 
-      /* Comprehensive Targeted Keywords (TVET, ICT, Engineering, Agri-Tech, TVET Rwanda) */
+      /* Comprehensive Targeted Keywords */
       {
         name: "keywords",
         content:
@@ -46,7 +46,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "ElScholarship Team" },
       { name: "google-adsense-account", content: ADSENSE_CLIENT },
 
-      /* OpenGraph Meta Tags (WhatsApp, Facebook, LinkedIn) */
+      /* OpenGraph Meta Tags */
       { property: "og:site_name", content: "ElScholarship" },
       { property: "og:type", content: "website" },
       {
@@ -82,41 +82,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`,
         crossOrigin: "anonymous",
       },
-
-      /* -------------------------------------------------------------
-         STEP 1: ADCASH LIBRARY SCRIPT
-         Replace YOUR_ADCASH_LIB_ID with your actual Adcash library ID or URL
-         ------------------------------------------------------------- */
+      /* Step 1: Adcash Library Script */
       {
-<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
-
-      },
-
-      /* -------------------------------------------------------------
-         STEP 2: ADCASH TAG SCRIPT
-         Replace the inner code with the exact JS snippet from your Adcash dashboard
-         ------------------------------------------------------------- */
-      {
-     <script type="text/javascript">
-    aclib.runAutoTag({
-        zoneId: 'nmnzgnqvor',
-    });
-</script>
-
-      },
-
-      /* Structured Data (JSON-LD Organization Schema) */
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          "name": "ElScholarship",
-          "alternateName": ["El Scholarship", "Elysian Grants"],
-          "url": SITE_URL,
-          "logo": OG_IMAGE,
-          "description": "Global academic mobility directory indexing fully funded scholarships, TVET grants, and university stipends.",
-        }),
+        id: "aclib",
+        type: "text/javascript",
+        src: "//acscdn.com/script/aclib.js",
+        async: true,
       },
     ],
   }),
@@ -126,10 +97,41 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: React.ReactNode }) {
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "ElScholarship",
+    alternateName: ["El Scholarship", "Elysian Grants"],
+    url: SITE_URL,
+    logo: OG_IMAGE,
+    description:
+      "Global academic mobility directory indexing fully funded scholarships, TVET grants, and university stipends.",
+  };
+
   return (
     <html lang="en" className="h-full">
       <head>
         <HeadContent />
+        
+        {/* Step 2: Adcash Tag Execution Script */}
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof aclib !== 'undefined') {
+                aclib.runAutoTag({
+                  zoneId: 'nmnzgnqvor'
+                });
+              }
+            `,
+          }}
+        />
+
+        {/* Structured Data (JSON-LD Organization Schema) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+        />
       </head>
       <body className="flex min-h-full flex-col bg-slate-50 antialiased dark:bg-slate-950">
         {children}
