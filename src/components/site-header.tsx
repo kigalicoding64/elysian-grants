@@ -304,22 +304,27 @@ export function SiteHeader() {
               </>
             ) : (
               <>
-                <Button asChild variant="ghost" size="sm">
+                <a
+                  href="https://wa.me/250794433166"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="neu-btn hidden items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-[#047857] lg:inline-flex"
+                >
+                  <MessageCircle className="size-4" /> WhatsApp Support
+                </a>
+                <Button asChild variant="outline" size="sm">
                   <Link to="/auth" search={{ mode: "login" }}>
                     Log In
                   </Link>
                 </Button>
-                <Button
-                  asChild
-                  size="sm"
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium"
-                >
+                <Button asChild size="sm" className="text-[#047857]">
                   <Link to="/auth" search={{ mode: "register" }}>
                     Apply via Concierge
                   </Link>
                 </Button>
               </>
             )}
+
           </div>
 
           {/* Mobile Hamburger Toggle */}
