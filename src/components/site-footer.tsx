@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-slate-200 bg-white text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
+    <footer className="neu-flat mx-3 mb-3 mt-10 rounded-[40px] text-[#6b7280] sm:mx-6">
       <FooterTaxonomy />
       {/* Top Banner / Value Proposition */}
-      <div className="border-b border-slate-100 dark:border-slate-800/60">
+      <div>
+
         <div className="container mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-8 text-center sm:px-6 md:flex-row md:text-left">
           <div className="flex items-center gap-3">
             <div className="flex size-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400">
