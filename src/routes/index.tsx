@@ -116,11 +116,11 @@ function IndexComponent() {
                 <Sparkles className="size-3.5" /> Managed Global Mobility Concierge
               </div>
 
-              <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-navy-foreground sm:text-6xl">
+              <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-[#374151] sm:text-6xl">
                 Fully funded degrees,
                 <span className="block text-primary">handled end to end.</span>
               </h1>
-              <p className="mt-5 max-w-xl text-base leading-relaxed text-navy-foreground/70 sm:text-lg">
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-[#6b7280] sm:text-lg">
                 Every listing on ElScholarship is manually verified against the official awarding
                 body. Our senior advisory officers then prepare, review and submit your file — so
                 nothing is lost to a missed clause or a late deadline.
@@ -146,8 +146,8 @@ function IndexComponent() {
                   { k: "60+", v: "Host countries" },
                 ].map((s) => (
                   <div key={s.v}>
-                    <dt className="text-2xl font-bold text-navy-foreground">{s.k}</dt>
-                    <dd className="mt-1 text-xs uppercase tracking-wider text-navy-foreground/60">
+                    <dt className="text-2xl font-bold text-[#374151]">{s.k}</dt>
+                    <dd className="mt-1 text-xs uppercase tracking-wider text-[#374151]/60">
                       {s.v}
                     </dd>
                   </div>
