@@ -127,27 +127,28 @@ function ScholarshipDetailPage() {
   const heroImage = heroImageFor(scholarship.id);
 
   return (
-    <div className="w-full bg-slate-50/50 pb-20 dark:bg-slate-950">
-      <div className="relative h-56 w-full overflow-hidden sm:h-72">
+    <div className="w-full px-3 pb-20 sm:px-6">
+      <div className="neu-flat relative mt-4 h-56 w-full overflow-hidden rounded-[40px] sm:h-72">
         <img
           src={heroImage}
           alt={`${scholarship.university} campus`}
           loading="lazy"
           className="size-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/45 to-slate-950/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#374151]/80 via-[#374151]/30 to-transparent" />
         <div className="absolute inset-x-0 bottom-0">
-          <div className="container mx-auto max-w-4xl px-4 pb-6 sm:px-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">
+          <div className="container mx-auto max-w-4xl px-6 pb-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-200">
               {scholarship.country}
             </p>
-            <p className="mt-1 text-lg font-bold text-white sm:text-2xl">{scholarship.title}</p>
+            <p className="mt-1 text-lg font-bold text-slate-50 sm:text-2xl">{scholarship.title}</p>
           </div>
         </div>
       </div>
-      <section className="border-b border-slate-200/80 bg-white py-12 dark:border-slate-800 dark:bg-slate-900">
+      <section className="py-10">
 
-        <div className="container mx-auto max-w-4xl px-4 sm:px-6">
+        <div className="container mx-auto max-w-4xl">
+
           <Link
             to="/"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-amber-600 dark:text-slate-400"
