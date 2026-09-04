@@ -160,32 +160,31 @@ function ScholarshipDetailPage() {
             {scholarship.degree_levels.map((level) => (
               <span
                 key={level}
-                className="rounded-md bg-slate-900 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-100 dark:bg-slate-100 dark:text-slate-900"
+                className="neu-pressed rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-[#374151]"
               >
                 {level}
               </span>
             ))}
             <span
-              className={`rounded-md px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
-                scholarship.funding_type === "full"
-                  ? "bg-amber-500/10 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400"
-                  : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+              className={`neu-pressed rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider ${
+                scholarship.funding_type === "full" ? "text-[#b45309]" : "text-[#6b7280]"
               }`}
             >
               {scholarship.funding_type === "full" ? "100% Funded" : "Partial Grant"}
             </span>
             <span
-              className={`rounded-md px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
+              className={`neu-pressed rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider ${
                 statusTag === "Closed"
-                  ? "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                  ? "text-[#6b7280]"
                   : statusTag === "Closing Today"
-                    ? "bg-rose-500/10 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400"
-                    : "bg-emerald-500/10 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400"
+                    ? "text-[#b91c1c]"
+                    : "text-[#047857]"
               }`}
             >
               {statusTag}
             </span>
           </div>
+
 
           <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
             {scholarship.title}
@@ -204,12 +203,10 @@ function ScholarshipDetailPage() {
           </div>
 
           <div className="mt-7 flex flex-wrap gap-3">
-            <Button
-              onClick={() => setApplyOpen(true)}
-              className="bg-slate-900 text-sm font-semibold text-amber-400 hover:bg-slate-800 dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400"
-            >
-              Apply with Managed Concierge
+            <Button onClick={() => setApplyOpen(true)} className="text-sm text-[#047857]">
+              Apply Now
             </Button>
+
             {scholarship.official_link ? (
               <Button asChild variant="outline" className="text-sm font-semibold">
                 <a href={scholarship.official_link} target="_blank" rel="noopener noreferrer">
