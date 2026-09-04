@@ -127,27 +127,28 @@ function ScholarshipDetailPage() {
   const heroImage = heroImageFor(scholarship.id);
 
   return (
-    <div className="w-full bg-slate-50/50 pb-20 dark:bg-slate-950">
-      <div className="relative h-56 w-full overflow-hidden sm:h-72">
+    <div className="w-full px-3 pb-20 sm:px-6">
+      <div className="neu-flat relative mt-4 h-56 w-full overflow-hidden rounded-[40px] sm:h-72">
         <img
           src={heroImage}
           alt={`${scholarship.university} campus`}
           loading="lazy"
           className="size-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/45 to-slate-950/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#374151]/80 via-[#374151]/30 to-transparent" />
         <div className="absolute inset-x-0 bottom-0">
-          <div className="container mx-auto max-w-4xl px-4 pb-6 sm:px-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">
+          <div className="container mx-auto max-w-4xl px-6 pb-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-200">
               {scholarship.country}
             </p>
-            <p className="mt-1 text-lg font-bold text-white sm:text-2xl">{scholarship.title}</p>
+            <p className="mt-1 text-lg font-bold text-slate-50 sm:text-2xl">{scholarship.title}</p>
           </div>
         </div>
       </div>
-      <section className="border-b border-slate-200/80 bg-white py-12 dark:border-slate-800 dark:bg-slate-900">
+      <section className="py-10">
 
-        <div className="container mx-auto max-w-4xl px-4 sm:px-6">
+        <div className="container mx-auto max-w-4xl">
+
           <Link
             to="/"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-amber-600 dark:text-slate-400"
@@ -159,32 +160,31 @@ function ScholarshipDetailPage() {
             {scholarship.degree_levels.map((level) => (
               <span
                 key={level}
-                className="rounded-md bg-slate-900 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-100 dark:bg-slate-100 dark:text-slate-900"
+                className="neu-pressed rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-[#374151]"
               >
                 {level}
               </span>
             ))}
             <span
-              className={`rounded-md px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
-                scholarship.funding_type === "full"
-                  ? "bg-amber-500/10 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400"
-                  : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+              className={`neu-pressed rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider ${
+                scholarship.funding_type === "full" ? "text-[#b45309]" : "text-[#6b7280]"
               }`}
             >
               {scholarship.funding_type === "full" ? "100% Funded" : "Partial Grant"}
             </span>
             <span
-              className={`rounded-md px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
+              className={`neu-pressed rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider ${
                 statusTag === "Closed"
-                  ? "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                  ? "text-[#6b7280]"
                   : statusTag === "Closing Today"
-                    ? "bg-rose-500/10 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400"
-                    : "bg-emerald-500/10 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400"
+                    ? "text-[#b91c1c]"
+                    : "text-[#047857]"
               }`}
             >
               {statusTag}
             </span>
           </div>
+
 
           <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
             {scholarship.title}
@@ -203,12 +203,10 @@ function ScholarshipDetailPage() {
           </div>
 
           <div className="mt-7 flex flex-wrap gap-3">
-            <Button
-              onClick={() => setApplyOpen(true)}
-              className="bg-slate-900 text-sm font-semibold text-amber-400 hover:bg-slate-800 dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400"
-            >
-              Apply with Managed Concierge
+            <Button onClick={() => setApplyOpen(true)} className="text-sm text-[#047857]">
+              Apply Now
             </Button>
+
             {scholarship.official_link ? (
               <Button asChild variant="outline" className="text-sm font-semibold">
                 <a href={scholarship.official_link} target="_blank" rel="noopener noreferrer">
@@ -246,7 +244,7 @@ function ScholarshipDetailPage() {
 
       <main className="container mx-auto max-w-4xl px-4 pt-10 sm:px-6">
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="md:col-span-2 rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+          <div className="neu-flat md:col-span-2 rounded-3xl p-6">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Coverage & Benefits
             </h2>
@@ -258,7 +256,7 @@ function ScholarshipDetailPage() {
               {coverageTags(scholarship.coverage_details).map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-md border border-slate-200 bg-slate-50/50 px-2 py-0.5 text-[10px] font-medium text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300"
+                  className="neu-pressed rounded-full px-3 py-1 text-[10px] font-medium text-[#6b7280]"
                 >
                   {tag}
                 </span>
@@ -266,7 +264,7 @@ function ScholarshipDetailPage() {
             </div>
           </div>
 
-          <aside className="rounded-xl border border-slate-200 bg-white p-6 text-sm dark:border-slate-800 dark:bg-slate-900">
+          <aside className="neu-flat rounded-3xl p-6 text-sm">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               At a glance
             </h2>
