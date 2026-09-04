@@ -244,7 +244,7 @@ function ScholarshipDetailPage() {
 
       <main className="container mx-auto max-w-4xl px-4 pt-10 sm:px-6">
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="md:col-span-2 rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+          <div className="neu-flat md:col-span-2 rounded-3xl p-6">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Coverage & Benefits
             </h2>
@@ -256,7 +256,7 @@ function ScholarshipDetailPage() {
               {coverageTags(scholarship.coverage_details).map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-md border border-slate-200 bg-slate-50/50 px-2 py-0.5 text-[10px] font-medium text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300"
+                  className="neu-pressed rounded-full px-3 py-1 text-[10px] font-medium text-[#6b7280]"
                 >
                   {tag}
                 </span>
@@ -264,7 +264,7 @@ function ScholarshipDetailPage() {
             </div>
           </div>
 
-          <aside className="rounded-xl border border-slate-200 bg-white p-6 text-sm dark:border-slate-800 dark:bg-slate-900">
+          <aside className="neu-flat rounded-3xl p-6 text-sm">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               At a glance
             </h2>
