@@ -4,12 +4,18 @@ import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
   ArrowUpRight,
-  Building2,
-  Clock,
-  GraduationCap,
-  MapPin,
+  BadgeCheck,
   Bookmark,
   ArrowBigUp,
+  Building2,
+  ChevronDown,
+  ClipboardList,
+  Clock,
+  FileCheck,
+  GraduationCap,
+  MapPin,
+  ShieldCheck,
+  Wallet,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -18,12 +24,42 @@ import { ApplyModal } from "@/components/apply-modal";
 import { supabase } from "@/integrations/supabase/client";
 import { useSavedScholarship, useUpvotedScholarship } from "@/lib/engagement";
 import { heroImageFor } from "@/lib/hero";
+import { faqItems, timelineSteps } from "@/lib/scholarship-guide";
+import { toScholarshipDetail } from "@/lib/scholarship-detail";
 import {
-  coverageTags,
   deadlineLabel,
   scholarshipStatusTag,
   type Scholarship,
 } from "@/lib/scholarship";
+
+function SectionCard({
+  icon: Icon,
+  eyebrow,
+  title,
+  children,
+}: {
+  icon: typeof Building2;
+  eyebrow: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="neu-flat rounded-3xl p-6 sm:p-8">
+      <div className="flex items-center gap-3">
+        <span className="neu-pressed flex size-10 shrink-0 items-center justify-center rounded-2xl text-[#b45309]">
+          <Icon className="size-5" />
+        </span>
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#6b7280]">
+            {eyebrow}
+          </p>
+          <h2 className="text-base font-bold text-[#374151]">{title}</h2>
+        </div>
+      </div>
+      <div className="mt-4 text-[15px] leading-[1.75] text-[#374151]/90">{children}</div>
+    </section>
+  );
+}
 
 const SITE_URL = "https://elysian-grants.lovable.app";
 
@@ -125,6 +161,7 @@ function ScholarshipDetailPage() {
   const scholarship = data;
   const statusTag = scholarshipStatusTag(scholarship.deadline);
   const heroImage = heroImageFor(scholarship.id);
+  const detail = toScholarshipDetail(scholarship);
 
   return (
     <div className="w-full px-3 pb-20 sm:px-6">
@@ -242,65 +279,161 @@ function ScholarshipDetailPage() {
         </div>
       </section>
 
-      <main className="container mx-auto max-w-4xl px-4 pt-10 sm:px-6">
-        <div className="grid gap-6 md:grid-cols-3">
-          <div className="neu-flat md:col-span-2 rounded-3xl p-6">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Coverage & Benefits
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-              {scholarship.coverage_details ??
-                "Full coverage details are confirmed with your advisory officer during the managed application process."}
-            </p>
-            <div className="mt-5 flex flex-wrap gap-1.5">
-              {coverageTags(scholarship.coverage_details).map((tag) => (
-                <span
-                  key={tag}
-                  className="neu-pressed rounded-full px-3 py-1 text-[10px] font-medium text-[#6b7280]"
-                >
-                  {tag}
-                </span>
-              ))}
+      <main className="container mx-auto max-w-5xl px-4 pt-4 sm:px-6">
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="space-y-6 lg:col-span-2">
+            <SectionCard icon={Building2} eyebrow="Section 01" title={`About ${detail.institution.name} & ${detail.institution.location}`}>
+              <p>{detail.institution.about}</p>
+            </SectionCard>
+
+            <SectionCard icon={BadgeCheck} eyebrow="Section 02" title="What Is Covered by the Scholarship">
+              <p>{detail.coverageAndBenefits.summary}</p>
+              <div className="mt-5 flex flex-wrap gap-1.5">
+                {detail.coverageAndBenefits.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="neu-pressed rounded-full px-3 py-1 text-[10px] font-medium text-[#6b7280]"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </SectionCard>
+
+            <SectionCard icon={GraduationCap} eyebrow="Section 03" title="Eligibility & Admission Requirements">
+              <p>{detail.eligibilityAndRequirements.description}</p>
+            </SectionCard>
+
+            <SectionCard icon={Wallet} eyebrow="Section 04" title="Financial Indicators & Income Scores">
+              <p>{detail.financialThresholds.description}</p>
+            </SectionCard>
+
+            <SectionCard icon={FileCheck} eyebrow="Section 05" title="Required Certificates & Documentation">
+              <p>{detail.requiredCertificates.description}</p>
+            </SectionCard>
+
+            <SectionCard icon={ClipboardList} eyebrow="Section 06" title="What Is Needed From the Student">
+              <p>{detail.studentResponsibilities.description}</p>
+            </SectionCard>
+
+            <div className="neu-flat rounded-3xl p-6 sm:p-8">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-[#6b7280]">
+                Your application timeline
+              </h2>
+              <ol className="mt-5 space-y-4">
+                {timelineSteps(scholarship).map((t, i) => (
+                  <li key={t.step} className="flex gap-4">
+                    <span className="neu-pressed flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-[#b45309]">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold text-[#374151]">{t.step}</p>
+                      <p className="mt-0.5 text-[13px] leading-relaxed text-[#6b7280]">{t.detail}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="neu-flat rounded-3xl p-6 sm:p-8">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-[#6b7280]">
+                Frequently asked questions
+              </h2>
+              <div className="mt-4 divide-y divide-[#a3b1c6]/30">
+                {faqItems(scholarship).map((f) => (
+                  <details key={f.q} className="group py-3.5">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-[#374151]">
+                      {f.q}
+                      <ChevronDown className="size-4 shrink-0 text-[#6b7280] transition-transform group-open:rotate-180" />
+                    </summary>
+                    <p className="mt-2 text-[13px] leading-relaxed text-[#6b7280]">{f.a}</p>
+                  </details>
+                ))}
+              </div>
             </div>
           </div>
 
-          <aside className="neu-flat rounded-3xl p-6 text-sm">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              At a glance
-            </h2>
-            <dl className="mt-4 space-y-3 text-xs">
-              <div className="flex items-start justify-between gap-3">
-                <dt className="text-slate-400">Degrees</dt>
-                <dd className="text-right font-medium text-slate-800 dark:text-slate-200">
-                  {scholarship.degree_levels.join(", ") || "—"}
-                </dd>
+          <aside className="lg:sticky lg:top-24 lg:self-start">
+            <div className="neu-flat rounded-3xl p-6 text-sm">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-[#6b7280]">
+                At a glance
+              </h2>
+              <dl className="mt-4 space-y-3 text-xs">
+                <div className="flex items-start justify-between gap-3">
+                  <dt className="text-[#6b7280]">Degrees</dt>
+                  <dd className="text-right font-medium text-[#374151]">{detail.atAGlance.degrees}</dd>
+                </div>
+                <div className="flex items-start justify-between gap-3">
+                  <dt className="text-[#6b7280]">Funding</dt>
+                  <dd className="text-right font-medium text-[#374151]">{detail.atAGlance.fundingType}</dd>
+                </div>
+                <div className="flex items-start justify-between gap-3">
+                  <dt className="text-[#6b7280]">Host</dt>
+                  <dd className="text-right font-medium text-[#374151]">{detail.atAGlance.host}</dd>
+                </div>
+                <div className="flex items-start justify-between gap-3">
+                  <dt className="text-[#6b7280]">Deadline</dt>
+                  <dd>
+                    <span
+                      className={`neu-pressed rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${
+                        statusTag === "Closed"
+                          ? "text-[#6b7280]"
+                          : statusTag === "Closing Today"
+                            ? "text-[#b91c1c]"
+                            : "text-[#047857]"
+                      }`}
+                    >
+                      {detail.atAGlance.deadline}
+                    </span>
+                  </dd>
+                </div>
+              </dl>
+              <p className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-medium text-[#047857]">
+                <ShieldCheck className="size-3.5" /> Verified by ElScholarship advisors
+              </p>
+
+              <div className="mt-5 space-y-2.5">
+                <Button onClick={() => setApplyOpen(true)} className="w-full text-sm text-[#047857]">
+                  Apply Now
+                </Button>
+                {scholarship.official_link ? (
+                  <Button asChild variant="outline" className="w-full text-sm font-semibold">
+                    <a href={scholarship.official_link} target="_blank" rel="noopener noreferrer">
+                      Official Link <ArrowUpRight className="ml-1 size-3.5" />
+                    </a>
+                  </Button>
+                ) : null}
+                <div className="grid grid-cols-2 gap-2.5">
+                  <Button
+                    variant="outline"
+                    className="text-sm font-semibold"
+                    aria-pressed={isSaved}
+                    onClick={() => {
+                      const saved = toggleSaved();
+                      toast.success(saved ? "Saved to your list" : "Removed from your list");
+                    }}
+                  >
+                    <Bookmark className={`mr-1 size-4 ${isSaved ? "fill-amber-500 text-amber-500" : ""}`} />
+                    {isSaved ? "Saved" : "Save"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="text-sm font-semibold"
+                    aria-pressed={isUpvoted}
+                    onClick={() => {
+                      const up = toggleUpvote();
+                      toast.success(up ? "Upvoted" : "Upvote removed");
+                    }}
+                  >
+                    <ArrowBigUp className={`mr-1 size-4 ${isUpvoted ? "fill-emerald-500" : ""}`} />
+                    {isUpvoted ? "Upvoted" : "Upvote"}
+                  </Button>
+                </div>
               </div>
-              <div className="flex items-start justify-between gap-3">
-                <dt className="text-slate-400">Funding</dt>
-                <dd className="text-right font-medium text-slate-800 dark:text-slate-200">
-                  {scholarship.funding_type === "full" ? "Fully funded" : "Partial"}
-                </dd>
-              </div>
-              <div className="flex items-start justify-between gap-3">
-                <dt className="text-slate-400">Host</dt>
-                <dd className="text-right font-medium text-slate-800 dark:text-slate-200">
-                  {scholarship.university}
-                </dd>
-              </div>
-              <div className="flex items-start justify-between gap-3">
-                <dt className="text-slate-400">Deadline</dt>
-                <dd className="text-right font-medium text-slate-800 dark:text-slate-200">
-                  {deadlineLabel(scholarship.deadline)}
-                </dd>
-              </div>
-            </dl>
-            <p className="mt-5 inline-flex items-center gap-1.5 text-[11px] text-slate-400">
-              <GraduationCap className="size-3.5" /> Verified by ElScholarship advisors
-            </p>
+            </div>
+            <AdBanner slot="1234567890" className="mt-6" />
           </aside>
         </div>
-
-        <AdBanner slot="1234567890" className="mt-8" />
       </main>
 
       <ApplyModal scholarship={scholarship} open={applyOpen} onOpenChange={setApplyOpen} />
