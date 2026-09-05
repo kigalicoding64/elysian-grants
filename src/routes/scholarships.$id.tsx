@@ -4,12 +4,18 @@ import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
   ArrowUpRight,
-  Building2,
-  Clock,
-  GraduationCap,
-  MapPin,
+  BadgeCheck,
   Bookmark,
   ArrowBigUp,
+  Building2,
+  ChevronDown,
+  ClipboardList,
+  Clock,
+  FileCheck,
+  GraduationCap,
+  MapPin,
+  ShieldCheck,
+  Wallet,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -18,12 +24,42 @@ import { ApplyModal } from "@/components/apply-modal";
 import { supabase } from "@/integrations/supabase/client";
 import { useSavedScholarship, useUpvotedScholarship } from "@/lib/engagement";
 import { heroImageFor } from "@/lib/hero";
+import { faqItems, timelineSteps } from "@/lib/scholarship-guide";
+import { toScholarshipDetail } from "@/lib/scholarship-detail";
 import {
-  coverageTags,
   deadlineLabel,
   scholarshipStatusTag,
   type Scholarship,
 } from "@/lib/scholarship";
+
+function SectionCard({
+  icon: Icon,
+  eyebrow,
+  title,
+  children,
+}: {
+  icon: typeof Building2;
+  eyebrow: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="neu-flat rounded-3xl p-6 sm:p-8">
+      <div className="flex items-center gap-3">
+        <span className="neu-pressed flex size-10 shrink-0 items-center justify-center rounded-2xl text-[#b45309]">
+          <Icon className="size-5" />
+        </span>
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#6b7280]">
+            {eyebrow}
+          </p>
+          <h2 className="text-base font-bold text-[#374151]">{title}</h2>
+        </div>
+      </div>
+      <div className="mt-4 text-[15px] leading-[1.75] text-[#374151]/90">{children}</div>
+    </section>
+  );
+}
 
 const SITE_URL = "https://elysian-grants.lovable.app";
 
@@ -125,6 +161,7 @@ function ScholarshipDetailPage() {
   const scholarship = data;
   const statusTag = scholarshipStatusTag(scholarship.deadline);
   const heroImage = heroImageFor(scholarship.id);
+  const detail = toScholarshipDetail(scholarship);
 
   return (
     <div className="w-full px-3 pb-20 sm:px-6">
