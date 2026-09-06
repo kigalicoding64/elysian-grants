@@ -1,5 +1,6 @@
 export type Scholarship = {
   id: string;
+  slug: string | null;
   title: string;
   university: string;
   country: string;
@@ -9,8 +10,11 @@ export type Scholarship = {
   official_link: string | null;
   deadline: string | null;
   status: "published" | "draft";
+  image_url?: string | null;
+  hero_banner_url?: string | null;
   created_at: string;
 };
+
 
 export type ApplicationStatus =
   "DOC_REVIEW" | "DOC_APPROVED" | "PREP_IN_PROGRESS" | "SUBMITTED" | "ACCEPTED" | "REJECTED";

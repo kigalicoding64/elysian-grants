@@ -63,34 +63,71 @@ function SectionCard({
 
 const SITE_URL = "https://elysian-grants.lovable.app";
 
-export const Route = createFileRoute("/scholarships/$id")({
-  head: ({ params }) => {
-    const url = `${SITE_URL}/scholarships/${params.id}`;
-    const hero = heroImageFor(params.id);
+export const Route = createFileRoute("/scholarships/$slug")({
+  loader: async ({ params }) => {
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      params.slug,
+    );
+    const { data } = await supabase
+      .from("scholarships")
+      .select("*")
+      .eq(isUuid ? "id" : "slug", params.slug)
+      .eq("status", "published")
+      .maybeSingle();
+    return { scholarship: (data as Scholarship | null) ?? null };
+  },
+  head: ({ params, loaderData }) => {
+    const s = loaderData?.scholarship ?? null;
+    const url = `${SITE_URL}/scholarships/${params.slug}`;
+    const cover = s?.image_url ?? heroImageFor(params.slug);
+    const hero = cover.startsWith("http") ? cover : `${SITE_URL}${cover}`;
+    const title = s
+      ? `${s.title} — ${s.funding_type === "full" ? "Fully Funded" : "Partial"} ${s.degree_levels[0] ?? "Scholarship"} at ${s.university}, ${s.country}`
+      : "Scholarship Details — ElScholarship";
+    const description = s
+      ? `${s.title} at ${s.university} in ${s.country}. ${
+          s.funding_type === "full" ? "Fully funded" : "Partial funding"
+        } for ${s.degree_levels.join(", ") || "students"}. ${
+          s.coverage_details ? s.coverage_details.slice(0, 110) + ". " : ""
+        }Open to Rwandan students — eligibility, deadline and how to apply with ElScholarship managed support in Kigali.`.slice(
+          0,
+          300,
+        )
+      : "Full details for this verified scholarship: funding scope, eligibility, deadline and how to apply with managed concierge support for Rwandan students.";
+    const keywords = s
+      ? [
+          s.title,
+          `${s.title} scholarship`,
+          `${s.university} scholarship`,
+          `scholarships in ${s.country}`,
+          "scholarships for Rwandan students",
+          "scholarships in Rwanda",
+          "fully funded scholarships Rwanda",
+          "bourse d'études Rwanda",
+          "Kigali scholarship organisation",
+          ...s.degree_levels.map((d) => `${d} scholarship Rwanda`),
+        ].join(", ")
+      : "scholarships in Rwanda, scholarships for Rwandan students, fully funded scholarships Rwanda";
     return {
       meta: [
-        { title: "Scholarship Details — ElScholarship" },
-        {
-          name: "description",
-          content:
-            "Full details for this verified scholarship: funding scope, eligibility, deadline and how to apply with managed concierge support.",
-        },
-        {
-          name: "keywords",
-          content: "Scholarships, Fully Funded, University Grants, Study Abroad, Education",
-        },
-        { property: "og:title", content: "Scholarship Details — ElScholarship" },
-        {
-          property: "og:description",
-          content:
-            "Verified scholarship listing with funding scope, deadline and managed application support.",
-        },
+        { title },
+        { name: "description", content: description },
+        { name: "keywords", content: keywords },
+        { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
+        { name: "geo.region", content: "RW" },
+        { name: "geo.placename", content: "Kigali, Rwanda" },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
         { property: "og:type", content: "article" },
+        { property: "og:locale", content: "en_RW" },
+        { property: "og:site_name", content: "ElScholarship" },
         { property: "og:url", content: url },
         { property: "og:image", content: hero },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
         { name: "twitter:image", content: hero },
       ],
       links: [{ rel: "canonical", href: url }],
@@ -100,10 +137,28 @@ export const Route = createFileRoute("/scholarships/$id")({
           children: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "FinancialProduct",
-            name: "Verified scholarship",
+            name: s?.title ?? "Verified scholarship",
+            description,
             url,
             image: hero,
-            provider: { "@type": "Organization", name: "ElScholarship" },
+            areaServed: ["Rwanda", "East Africa", s?.country].filter(Boolean),
+            provider: {
+              "@type": "Organization",
+              name: s?.university ?? "ElScholarship",
+              address: s?.country,
+            },
+            ...(s?.deadline ? { availabilityEnds: s.deadline } : {}),
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Scholarships", item: `${SITE_URL}/` },
+              { "@type": "ListItem", position: 2, name: s?.title ?? "Scholarship", item: url },
+            ],
           }),
         },
       ],
@@ -113,25 +168,28 @@ export const Route = createFileRoute("/scholarships/$id")({
 });
 
 
+
 function ScholarshipDetailPage() {
-  const { id } = Route.useParams();
+  const { slug } = Route.useParams();
   const [applyOpen, setApplyOpen] = useState(false);
-  const { active: isSaved, toggle: toggleSaved } = useSavedScholarship(id);
-  const { active: isUpvoted, toggle: toggleUpvote } = useUpvotedScholarship(id);
+  const { active: isSaved, toggle: toggleSaved } = useSavedScholarship(slug);
+  const { active: isUpvoted, toggle: toggleUpvote } = useUpvotedScholarship(slug);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["scholarship", id],
+    queryKey: ["scholarship", slug],
     queryFn: async () => {
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
       const { data, error } = await supabase
         .from("scholarships")
         .select("*")
-        .eq("id", id)
+        .eq(isUuid ? "id" : "slug", slug)
         .eq("status", "published")
         .maybeSingle();
       if (error) throw error;
       return data as Scholarship | null;
     },
   });
+
 
   if (isLoading) {
     return (
@@ -160,7 +218,7 @@ function ScholarshipDetailPage() {
 
   const scholarship = data;
   const statusTag = scholarshipStatusTag(scholarship.deadline);
-  const heroImage = heroImageFor(scholarship.id);
+  const heroImage = scholarship.image_url ?? heroImageFor(slug);
   const detail = toScholarshipDetail(scholarship);
 
   return (

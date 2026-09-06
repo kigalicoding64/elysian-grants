@@ -234,6 +234,7 @@ export type Database = {
           id: string
           image_url: string | null
           official_link: string | null
+          slug: string | null
           status: string
           title: string
           university: string
@@ -249,6 +250,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           official_link?: string | null
+          slug?: string | null
           status?: string
           title: string
           university: string
@@ -264,6 +266,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           official_link?: string | null
+          slug?: string | null
           status?: string
           title?: string
           university?: string
@@ -348,6 +351,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      slugify: { Args: { v: string }; Returns: string }
     }
     Enums: {
       app_role: "student" | "admin"

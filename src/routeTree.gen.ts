@@ -15,12 +15,13 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ConciergeRouteImport } from './routes/concierge'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as NotFoundRouteImport } from './routes/not-found'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as UniversitiesRouteImport } from './routes/universities'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
 import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
-import { Route as ScholarshipsIdRouteImport } from './routes/scholarships.$id'
+import { Route as ScholarshipsSlugRouteImport } from './routes/scholarships.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as AuthenticatedAdminScholarshipsRouteImport } from './routes/_authenticated/admin.scholarships'
@@ -54,6 +55,11 @@ const NotFoundRoute = NotFoundRouteImport.update({
   path: '/not-found',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UniversitiesRoute = UniversitiesRouteImport.update({
   id: '/universities',
   path: '/universities',
@@ -79,9 +85,9 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/callback',
   getParentRoute: () => AuthRoute,
 } as any)
-const ScholarshipsIdRoute = ScholarshipsIdRouteImport.update({
-  id: '/scholarships/$id',
-  path: '/scholarships/$id',
+const ScholarshipsSlugRoute = ScholarshipsSlugRouteImport.update({
+  id: '/scholarships/$slug',
+  path: '/scholarships/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
@@ -108,11 +114,12 @@ export interface FileRoutesByFullPath {
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
   '/not-found': typeof NotFoundRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/universities': typeof UniversitiesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/scholarships/$id': typeof ScholarshipsIdRoute
+  '/scholarships/$slug': typeof ScholarshipsSlugRoute
   '/articles/': typeof ArticlesIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
@@ -124,11 +131,12 @@ export interface FileRoutesByTo {
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
   '/not-found': typeof NotFoundRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/universities': typeof UniversitiesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/scholarships/$id': typeof ScholarshipsIdRoute
+  '/scholarships/$slug': typeof ScholarshipsSlugRoute
   '/articles': typeof ArticlesIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
@@ -142,11 +150,12 @@ export interface FileRoutesById {
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
   '/not-found': typeof NotFoundRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/universities': typeof UniversitiesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/scholarships/$id': typeof ScholarshipsIdRoute
+  '/scholarships/$slug': typeof ScholarshipsSlugRoute
   '/articles/': typeof ArticlesIndexRoute
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/_authenticated/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
@@ -160,11 +169,12 @@ export interface FileRouteTypes {
     | '/concierge'
     | '/how-it-works'
     | '/not-found'
+    | '/sitemap.xml'
     | '/universities'
     | '/dashboard'
     | '/articles/$slug'
     | '/auth/callback'
-    | '/scholarships/$id'
+    | '/scholarships/$slug'
     | '/articles/'
     | '/admin/applications'
     | '/admin/scholarships'
@@ -176,11 +186,12 @@ export interface FileRouteTypes {
     | '/concierge'
     | '/how-it-works'
     | '/not-found'
+    | '/sitemap.xml'
     | '/universities'
     | '/dashboard'
     | '/articles/$slug'
     | '/auth/callback'
-    | '/scholarships/$id'
+    | '/scholarships/$slug'
     | '/articles'
     | '/admin/applications'
     | '/admin/scholarships'
@@ -193,11 +204,12 @@ export interface FileRouteTypes {
     | '/concierge'
     | '/how-it-works'
     | '/not-found'
+    | '/sitemap.xml'
     | '/universities'
     | '/_authenticated/dashboard'
     | '/articles/$slug'
     | '/auth/callback'
-    | '/scholarships/$id'
+    | '/scholarships/$slug'
     | '/articles/'
     | '/_authenticated/admin/applications'
     | '/_authenticated/admin/scholarships'
@@ -211,9 +223,10 @@ export interface RootRouteChildren {
   ConciergeRoute: typeof ConciergeRoute
   HowItWorksRoute: typeof HowItWorksRoute
   NotFoundRoute: typeof NotFoundRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   UniversitiesRoute: typeof UniversitiesRoute
   ArticlesSlugRoute: typeof ArticlesSlugRoute
-  ScholarshipsIdRoute: typeof ScholarshipsIdRoute
+  ScholarshipsSlugRoute: typeof ScholarshipsSlugRoute
   ArticlesIndexRoute: typeof ArticlesIndexRoute
 }
 
@@ -261,6 +274,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotFoundRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/universities': {
       id: '/universities'
       path: '/universities'
@@ -296,11 +316,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/scholarships/$id': {
-      id: '/scholarships/$id'
-      path: '/scholarships/$id'
-      fullPath: '/scholarships/$id'
-      preLoaderRoute: typeof ScholarshipsIdRouteImport
+    '/scholarships/$slug': {
+      id: '/scholarships/$slug'
+      path: '/scholarships/$slug'
+      fullPath: '/scholarships/$slug'
+      preLoaderRoute: typeof ScholarshipsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/': {
@@ -361,9 +381,10 @@ const rootRouteChildren: RootRouteChildren = {
   ConciergeRoute: ConciergeRoute,
   HowItWorksRoute: HowItWorksRoute,
   NotFoundRoute: NotFoundRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   UniversitiesRoute: UniversitiesRoute,
   ArticlesSlugRoute: ArticlesSlugRoute,
-  ScholarshipsIdRoute: ScholarshipsIdRoute,
+  ScholarshipsSlugRoute: ScholarshipsSlugRoute,
   ArticlesIndexRoute: ArticlesIndexRoute,
 }
 export const routeTree = rootRouteImport
