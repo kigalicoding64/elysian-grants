@@ -218,7 +218,7 @@ function ScholarshipDetailPage() {
 
   const scholarship = data;
   const statusTag = scholarshipStatusTag(scholarship.deadline);
-  const heroImage = heroImageFor(scholarship.id);
+  const heroImage = scholarship.image_url ?? heroImageFor(slug);
   const detail = toScholarshipDetail(scholarship);
 
   return (
