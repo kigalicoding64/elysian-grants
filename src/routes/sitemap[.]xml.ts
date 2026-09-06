@@ -17,7 +17,7 @@ function xmlEscape(value: string) {
   );
 }
 
-export const Route = createFileRoute("/sitemap/xml")({
+export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
@@ -66,10 +66,10 @@ export const Route = createFileRoute("/sitemap/xml")({
           if (error) throw error;
           if (!data || data.length === 0) break;
           for (const row of data as { slug: string; published_at: string | null }[]) {
-            entries.push({
-              path: `/articles/${encodeURIComponent(row.slug)}`,
-              lastmod: row.published_at ? new Date(row.published_at).toISOString().slice(0, 10) : undefined,
-            });
+            const lastmod = row.published_at
+              ? new Date(row.published_at).toISOString().slice(0, 10)
+              : undefined;
+            entries.push({ path: `/articles/${encodeURIComponent(row.slug)}`, ...(lastmod ? { lastmod } : {}) });
           }
           offset += data.length;
         }

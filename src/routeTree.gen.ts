@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ConciergeRouteImport } from './routes/concierge'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as NotFoundRouteImport } from './routes/not-found'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as UniversitiesRouteImport } from './routes/universities'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
@@ -52,6 +53,11 @@ const HowItWorksRoute = HowItWorksRouteImport.update({
 const NotFoundRoute = NotFoundRouteImport.update({
   id: '/not-found',
   path: '/not-found',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UniversitiesRoute = UniversitiesRouteImport.update({
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
   '/not-found': typeof NotFoundRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/universities': typeof UniversitiesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/articles/$slug': typeof ArticlesSlugRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
   '/not-found': typeof NotFoundRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/universities': typeof UniversitiesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/articles/$slug': typeof ArticlesSlugRoute
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/concierge': typeof ConciergeRoute
   '/how-it-works': typeof HowItWorksRoute
   '/not-found': typeof NotFoundRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/universities': typeof UniversitiesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/articles/$slug': typeof ArticlesSlugRoute
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/concierge'
     | '/how-it-works'
     | '/not-found'
+    | '/sitemap.xml'
     | '/universities'
     | '/dashboard'
     | '/articles/$slug'
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/concierge'
     | '/how-it-works'
     | '/not-found'
+    | '/sitemap.xml'
     | '/universities'
     | '/dashboard'
     | '/articles/$slug'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/concierge'
     | '/how-it-works'
     | '/not-found'
+    | '/sitemap.xml'
     | '/universities'
     | '/_authenticated/dashboard'
     | '/articles/$slug'
@@ -211,6 +223,7 @@ export interface RootRouteChildren {
   ConciergeRoute: typeof ConciergeRoute
   HowItWorksRoute: typeof HowItWorksRoute
   NotFoundRoute: typeof NotFoundRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   UniversitiesRoute: typeof UniversitiesRoute
   ArticlesSlugRoute: typeof ArticlesSlugRoute
   ScholarshipsSlugRoute: typeof ScholarshipsSlugRoute
@@ -259,6 +272,13 @@ declare module '@tanstack/react-router' {
       path: '/not-found'
       fullPath: '/not-found'
       preLoaderRoute: typeof NotFoundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/universities': {
@@ -361,6 +381,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConciergeRoute: ConciergeRoute,
   HowItWorksRoute: HowItWorksRoute,
   NotFoundRoute: NotFoundRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   UniversitiesRoute: UniversitiesRoute,
   ArticlesSlugRoute: ArticlesSlugRoute,
   ScholarshipsSlugRoute: ScholarshipsSlugRoute,
