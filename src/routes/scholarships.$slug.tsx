@@ -63,10 +63,10 @@ function SectionCard({
 
 const SITE_URL = "https://elysian-grants.lovable.app";
 
-export const Route = createFileRoute("/scholarships/$id")({
+export const Route = createFileRoute("/scholarships/$slug")({
   head: ({ params }) => {
-    const url = `${SITE_URL}/scholarships/${params.id}`;
-    const hero = heroImageFor(params.id);
+    const url = `${SITE_URL}/scholarships/${params.slug}`;
+    const hero = heroImageFor(params.slug);
     return {
       meta: [
         { title: "Scholarship Details — ElScholarship" },
@@ -114,7 +114,7 @@ export const Route = createFileRoute("/scholarships/$id")({
 
 
 function ScholarshipDetailPage() {
-  const { id } = Route.useParams();
+  const { slug } = Route.useParams();
   const [applyOpen, setApplyOpen] = useState(false);
   const { active: isSaved, toggle: toggleSaved } = useSavedScholarship(id);
   const { active: isUpvoted, toggle: toggleUpvote } = useUpvotedScholarship(id);

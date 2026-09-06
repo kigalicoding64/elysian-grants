@@ -158,8 +158,8 @@ export function ScholarshipCard({
         {/* Title */}
         <h3 className="mt-4 text-lg font-bold leading-snug tracking-tight text-slate-900 transition-colors group-hover:text-amber-700 dark:text-slate-100 dark:group-hover:text-amber-400">
           <Link
-            to="/scholarships/$id"
-            params={{ id: scholarship.id }}
+            to="/scholarships/$slug"
+            params={{ slug: scholarship.slug ?? scholarship.id }}
             className="after:absolute after:inset-0 after:content-['']"
           >
             {scholarship.title}
@@ -236,8 +236,8 @@ export function ScholarshipCard({
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           <Button asChild variant="outline" size="sm" className="w-full text-xs">
             <Link
-              to="/scholarships/$id"
-              params={{ id: scholarship.id }}
+              to="/scholarships/$slug"
+              params={{ slug: scholarship.slug ?? scholarship.id }}
               className="relative z-10 inline-flex items-center justify-center gap-1"
             >
               View Details <ArrowUpRight className="size-3" />
