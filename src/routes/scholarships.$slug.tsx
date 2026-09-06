@@ -116,22 +116,24 @@ export const Route = createFileRoute("/scholarships/$slug")({
 function ScholarshipDetailPage() {
   const { slug } = Route.useParams();
   const [applyOpen, setApplyOpen] = useState(false);
-  const { active: isSaved, toggle: toggleSaved } = useSavedScholarship(id);
-  const { active: isUpvoted, toggle: toggleUpvote } = useUpvotedScholarship(id);
+  const { active: isSaved, toggle: toggleSaved } = useSavedScholarship(slug);
+  const { active: isUpvoted, toggle: toggleUpvote } = useUpvotedScholarship(slug);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["scholarship", id],
+    queryKey: ["scholarship", slug],
     queryFn: async () => {
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
       const { data, error } = await supabase
         .from("scholarships")
         .select("*")
-        .eq("id", id)
+        .eq(isUuid ? "id" : "slug", slug)
         .eq("status", "published")
         .maybeSingle();
       if (error) throw error;
       return data as Scholarship | null;
     },
   });
+
 
   if (isLoading) {
     return (
