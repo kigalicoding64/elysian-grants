@@ -27,7 +27,7 @@ declare global {
  */
 export function AdBanner({
   slot,
-  zoneId = "12098942",
+  zoneId = "12124686",
   provider = "adcash",
   format = "auto",
   className,
@@ -41,7 +41,7 @@ export function AdBanner({
     pushed.current = true;
 
     if (provider === "adcash" && adcashContainerRef.current) {
-      const activeZone = zoneId || slot || "12098942";
+      const activeZone = zoneId || slot || "12124686";
       
       // Clears previous nodes and appends the script inside the inner <div>
       adcashContainerRef.current.innerHTML = "";
