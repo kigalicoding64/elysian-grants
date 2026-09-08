@@ -121,10 +121,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
               window.addEventListener('load', function() {
                 if (typeof aclib !== 'undefined') {
                   aclib.runAutoTag({
-                    zoneId: 'nmnzgnqvor'
+                    zoneId: 'ixqpd77w14'
                   });
                   aclib.runAutoTag({
-                    zoneId: 'fhoxh0qu5q'
+                    zoneId: '12124710'
                   });
                 }
               });
