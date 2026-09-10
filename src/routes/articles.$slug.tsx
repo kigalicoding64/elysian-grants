@@ -137,14 +137,36 @@ function ArticlePage() {
         className="mt-8 h-56 w-full rounded-xl object-cover sm:h-72"
       />
 
-
-      <AdBanner slot="2345678901" className="mt-8" />
+      {/* Google Ad - Top of Article */}
+      <AdBanner 
+        provider="adsense"
+        slot="2345678901"
+        format="auto"
+        className="mt-8"
+        label="Sponsored Content"
+      />
 
       <div className="prose-content mt-8">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{data.content}</ReactMarkdown>
       </div>
 
-      <AdBanner slot="3456789012" className="mt-10" />
+      {/* Google Ad - Mid Article */}
+      <AdBanner 
+        provider="adsense"
+        slot="4567890123"
+        format="auto"
+        className="my-8"
+        label="Sponsored"
+      />
+
+      {/* Google Ad - Bottom of Article */}
+      <AdBanner 
+        provider="adsense"
+        slot="6789012345"
+        format="auto"
+        className="mt-8"
+        label="Sponsored Content"
+      />
     </div>
   );
 }
