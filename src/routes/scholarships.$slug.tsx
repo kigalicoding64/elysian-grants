@@ -358,6 +358,15 @@ function ScholarshipDetailPage() {
               </div>
             </SectionCard>
 
+            {/* Google Ad - Mid Content Ad Unit 1 */}
+            <AdBanner 
+              provider="adsense"
+              slot="9568922697"
+              format="auto"
+              className="mt-6"
+              label="Sponsored"
+            />
+
             <SectionCard icon={GraduationCap} eyebrow="Section 03" title="Eligibility & Admission Requirements">
               <p>{detail.eligibilityAndRequirements.description}</p>
             </SectionCard>
@@ -369,6 +378,15 @@ function ScholarshipDetailPage() {
             <SectionCard icon={FileCheck} eyebrow="Section 05" title="Required Certificates & Documentation">
               <p>{detail.requiredCertificates.description}</p>
             </SectionCard>
+
+            {/* Google Ad - Mid Content Ad Unit 2 */}
+            <AdBanner 
+              provider="adsense"
+              slot="7891234567"
+              format="auto"
+              className="mt-6"
+              label="Sponsored"
+            />
 
             <SectionCard icon={ClipboardList} eyebrow="Section 06" title="What Is Needed From the Student">
               <p>{detail.studentResponsibilities.description}</p>
@@ -409,6 +427,15 @@ function ScholarshipDetailPage() {
                 ))}
               </div>
             </div>
+
+            {/* Google Ad - Bottom Content Ad Unit */}
+            <AdBanner 
+              provider="adsense"
+              slot="3456789012"
+              format="auto"
+              className="mt-8"
+              label="Sponsored"
+            />
           </div>
 
           <aside className="lg:sticky lg:top-24 lg:self-start">
@@ -489,7 +516,24 @@ function ScholarshipDetailPage() {
                 </div>
               </div>
             </div>
-            <AdBanner slot="1234567890" className="mt-6" />
+            
+            {/* Sidebar Ad - Top */}
+            <AdBanner 
+              provider="adsense"
+              slot="1234567890"
+              format="auto"
+              className="mt-6"
+              label="Sponsored"
+            />
+
+            {/* Sidebar Ad - Bottom */}
+            <AdBanner 
+              provider="adsense"
+              slot="5678901234"
+              format="auto"
+              className="mt-6"
+              label="Sponsored"
+            />
           </aside>
         </div>
       </main>
