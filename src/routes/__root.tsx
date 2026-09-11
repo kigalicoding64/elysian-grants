@@ -14,6 +14,7 @@ import { NotFoundPage } from "./not-found";
 const SITE_URL = "https://elscholarship.com";
 const OG_IMAGE = `${SITE_URL}/elscholaship-logo.jpg`;
 const ADSENSE_CLIENT = "ca-pub-9065960621746429";
+const MONETAG_ID = "2c9c22dd0b7be8aaf3f0813d3ec9db61";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
@@ -31,20 +32,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "keywords",
         content:
-          "ElScholarship, El Scholarship, TVET scholarships Rwanda, Level 5 diploma scholarships, Level 6 advanced diploma grants, Kavumu Technical Secondary School scholarships, WDA scholarships, REB scholarships, Computer Systems and Architecture scholarships, software engineering grants, full stack developer scholarships, microcontrollers and embedded systems funding, computer networking scholarships, cybersecurity study grants, cloud computing scholarships, AI and machine learning scholarships, web development grants, robotics engineering scholarships, mechatronics grants, electrical engineering scholarships, electronics study grants, telecommunications engineering funding, agri-tech scholarships, satellite agriculture grants, smart farming fellowships, precision farming fellowships, graphic design scholarships, UI UX design grants, digital media production funding, audio production scholarships, fully funded scholarships 2026, university grants Rwanda, undergraduate scholarships, master's stipends, PhD fellowships, global academic mobility, study abroad grants",
+          "ElScholarship, El Scholarship, TVET scholarships Rwanda, Level 5 diploma scholarships, Level 6 advanced diploma grants, Kavumu Technical Secondary School scholarships, WDA scholarships,[...]",
       },
 
       /* Meta Description */
       {
         name: "description",
         content:
-          "ElScholarship is the premier global academic mobility platform for TVET graduates, ICT developers, engineers, and researchers seeking fully funded university grants, living stipends, and international scholarships.",
+          "ElScholarship is the premier global academic mobility platform for TVET graduates, ICT developers, engineers, and researchers seeking fully funded university grants, living stipends, an[...]",
       },
 
       /* Search Engine Directives */
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { name: "author", content: "ElScholarship Team" },
       { name: "google-adsense-account", content: ADSENSE_CLIENT },
+
+      /* Monetag Meta Tag */
+      { name: "monetag", content: MONETAG_ID },
 
       /* OpenGraph Meta Tags */
       { property: "og:site_name", content: "ElScholarship" },
@@ -89,6 +93,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         src: "//acscdn.com/script/aclib.js",
         async: true,
       },
+      /* Monetag Script */
+      {
+        async: true,
+        src: "https://cdn.pagead2.googlesyndication.com/pagead/js/monetag.js",
+        crossOrigin: "anonymous",
+      },
     ],
   }),
   notFoundComponent: NotFoundPage,
@@ -128,6 +138,18 @@ function RootShell({ children }: { children: React.ReactNode }) {
                   });
                 }
               });
+            `,
+          }}
+        />
+
+        {/* Monetag Ad Initialization */}
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof monetag !== 'undefined') {
+                monetag.render();
+              }
             `,
           }}
         />
