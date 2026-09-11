@@ -99,6 +99,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         src: "https://cdn.pagead2.googlesyndication.com/pagead/js/monetag.js",
         crossOrigin: "anonymous",
       },
+      /* Quge5 Ad Tag Script */
+      {
+        async: true,
+        src: "https://quge5.com/88/tag.min.js",
+        "data-zone": "279088",
+        "data-cfasync": "false",
+      },
     ],
   }),
   notFoundComponent: NotFoundPage,
