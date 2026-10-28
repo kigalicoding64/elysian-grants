@@ -28,25 +28,50 @@ const SITE_URL = "https://elysian-grants.lovable.app";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ElScholarship — Verified Fully Funded Scholarships Directory" },
+      { title: "ElScholarship — Scholarships in Rwanda & Fully Funded Scholarships for Rwandan Students" },
       {
         name: "description",
         content:
-          "Browse verified fully funded scholarships worldwide, filter by degree, region and funding type, or apply through our managed concierge service.",
+          "Rwanda's verified scholarship directory: fully funded scholarships for Rwandan students, HEC Rwanda loans, Mastercard Foundation, university grants in Kigali and study-abroad funding — with managed application support.",
       },
-      { property: "og:title", content: "ElScholarship — Verified Fully Funded Scholarships" },
+      {
+        name: "keywords",
+        content:
+          "scholarships in Rwanda, scholarships for Rwandan students, fully funded scholarships Rwanda, Kigali scholarships, HEC Rwanda, Mastercard Foundation Rwanda, study abroad Rwanda, bourse Rwanda, scholarship organisation Rwanda, East Africa scholarships",
+      },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      { name: "geo.region", content: "RW" },
+      { name: "geo.placename", content: "Kigali, Rwanda" },
+      { property: "og:title", content: "ElScholarship — Scholarships for Rwandan Students" },
       {
         property: "og:description",
         content:
-          "Browse verified fully funded scholarships worldwide and apply with expert managed support.",
+          "Verified fully funded scholarships for students in Rwanda, with expert managed application support from Kigali.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:locale", content: "en_RW" },
       { property: "og:url", content: `${SITE_URL}/` },
-      { property: "og:image", content: `${SITE_URL}/elscholaship-logo.jpg` },
-      { name: "twitter:image", content: `${SITE_URL}/elscholaship-logo.jpg` },
+      { property: "og:image", content: `${SITE_URL}/covers/cover-5.jpg` },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: `${SITE_URL}/covers/cover-5.jpg` },
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/` }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "EducationalOrganization",
+          name: "ElScholarship",
+          url: SITE_URL,
+          areaServed: { "@type": "Country", name: "Rwanda" },
+          address: { "@type": "PostalAddress", addressLocality: "Kigali", addressCountry: "RW" },
+          telephone: "+250794433166",
+        }),
+      },
+    ],
   }),
+
   component: IndexComponent,
 });
 
