@@ -25,6 +25,7 @@ import { Route as ScholarshipsSlugRouteImport } from './routes/scholarships.$slu
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as AuthenticatedAdminScholarshipsRouteImport } from './routes/_authenticated/admin.scholarships'
+import { Route as AuthenticatedAdminSyncRouteImport } from './routes/_authenticated/admin.sync'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -107,6 +108,11 @@ const AuthenticatedAdminScholarshipsRoute =
     path: '/admin/scholarships',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminSyncRoute = AuthenticatedAdminSyncRouteImport.update({
+  id: '/admin/sync',
+  path: '/admin/sync',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/articles/': typeof ArticlesIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
+  '/admin/sync': typeof AuthenticatedAdminSyncRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -140,6 +147,7 @@ export interface FileRoutesByTo {
   '/articles': typeof ArticlesIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
+  '/admin/sync': typeof AuthenticatedAdminSyncRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/articles/': typeof ArticlesIndexRoute
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/_authenticated/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
+  '/_authenticated/admin/sync': typeof AuthenticatedAdminSyncRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -178,6 +187,7 @@ export interface FileRouteTypes {
     | '/articles/'
     | '/admin/applications'
     | '/admin/scholarships'
+    | '/admin/sync'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -195,6 +205,7 @@ export interface FileRouteTypes {
     | '/articles'
     | '/admin/applications'
     | '/admin/scholarships'
+    | '/admin/sync'
     | '/admin'
   id:
     | '__root__'
@@ -213,6 +224,7 @@ export interface FileRouteTypes {
     | '/articles/'
     | '/_authenticated/admin/applications'
     | '/_authenticated/admin/scholarships'
+    | '/_authenticated/admin/sync'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -344,6 +356,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminScholarshipsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/sync': {
+      id: '/_authenticated/admin/sync'
+      path: '/admin/sync'
+      fullPath: '/admin/sync'
+      preLoaderRoute: typeof AuthenticatedAdminSyncRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -351,6 +370,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
   AuthenticatedAdminScholarshipsRoute: typeof AuthenticatedAdminScholarshipsRoute
+  AuthenticatedAdminSyncRoute: typeof AuthenticatedAdminSyncRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -358,6 +378,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
   AuthenticatedAdminScholarshipsRoute: AuthenticatedAdminScholarshipsRoute,
+  AuthenticatedAdminSyncRoute: AuthenticatedAdminSyncRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
