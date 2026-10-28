@@ -63,7 +63,7 @@ export const Route = createFileRoute("/articles/$slug")({
 
   component: ArticlePage,
   errorComponent: ({ error }) => (
-    <ArticleMessage title="This guide didn't load" body={error.message} />
+    <ArticleMessage title="This guide didn't load" body={error instanceof Error ? error.message : "Unknown error"} />
   ),
   notFoundComponent: () => (
     <ArticleMessage title="Guide not found" body="This article may have been unpublished." />
