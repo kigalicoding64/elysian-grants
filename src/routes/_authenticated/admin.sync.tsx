@@ -83,7 +83,10 @@ function SyncDesk() {
       status: "published" as const,
     }));
     const { error } = await supabase.from("scholarships").insert(rows);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     list.forEach((i) => update(i.key, { status: "published" }));
     setSelected(new Set());
     qc.invalidateQueries();
