@@ -16,13 +16,13 @@ export type SyncCandidate = {
 };
 
 export type SyncDetails = {
-  about_institution?: string;
-  coverage_summary?: string;
-  coverage_tags?: string[];
-  eligibility?: string;
-  financial_criteria?: string;
-  required_documents?: string;
-  student_responsibilities?: string;
+  about_institution?: string | undefined;
+  coverage_summary?: string | undefined;
+  coverage_tags?: string[] | undefined;
+  eligibility?: string | undefined;
+  financial_criteria?: string | undefined;
+  required_documents?: string | undefined;
+  student_responsibilities?: string | undefined;
 };
 
 const GATEWAY = "https://connector-gateway.lovable.dev/firecrawl/v2";
