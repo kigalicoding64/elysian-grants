@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -9,7 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
-import { scanPortal, type SyncCandidate } from "@/lib/sync.functions";
+import { scanPortal, syncSourceBatch, type SyncCandidate } from "@/lib/sync.functions";
+import { SYNC_SOURCES, type SourceGroup } from "@/lib/sync-sources";
+import { Progress } from "@/components/ui/progress";
+import { RefreshCw, Square } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/sync")({
   head: () => ({
@@ -32,16 +35,21 @@ const PRESETS = [
   "https://hec.gov.rw",
 ];
 
-type Item = SyncCandidate & { key: string; status: "new" | "published" | "dismissed" };
+type Item = SyncCandidate & { key: string; status: "new" | "published" | "dismissed"; id?: string };
+
+const BATCH = 4;
 
 function SyncDesk() {
   const scan = useServerFn(scanPortal);
+  const syncBatch = useServerFn(syncSourceBatch);
   const qc = useQueryClient();
   const [url, setUrl] = useState("");
   const [mode, setMode] = useState<"page" | "portal">("portal");
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulk, setBulk] = useState<{ done: number; total: number; found: number; current: string; failed: number } | null>(null);
+  const stopRef = useRef(false);
 
   const existing = useQuery({
     queryKey: ["sync-existing-titles"],
@@ -50,6 +58,58 @@ function SyncDesk() {
       return new Set((data ?? []).map((r) => r.title.toLowerCase().trim()));
     },
   });
+
+  const loadSaved = async () => {
+    const { data } = await supabase
+      .from("sync_candidates")
+      .select("*")
+      .eq("status", "new")
+      .order("created_at", { ascending: false })
+      .limit(500);
+    const saved: Item[] = (data ?? []).map((r) => ({
+      id: r.id,
+      key: r.id,
+      title: r.title,
+      university: r.university,
+      country: r.country,
+      degree_levels: r.degree_levels,
+      funding_type: r.funding_type === "partial" ? "partial" : "full",
+      coverage_details: r.coverage_details ?? "",
+      deadline: r.deadline,
+      official_link: r.official_link,
+      source_url: r.source_url,
+      details: (r.details as SyncCandidate["details"]) ?? null,
+      status: "new",
+    }));
+    setItems((prev) => [...prev.filter((p) => !p.id), ...saved]);
+  };
+
+  useEffect(() => {
+    loadSaved();
+  }, []);
+
+  const runAll = async (group?: SourceGroup) => {
+    const list = group ? SYNC_SOURCES.filter((s) => s.group === group) : SYNC_SOURCES;
+    stopRef.current = false;
+    setBulk({ done: 0, total: list.length, found: 0, current: "", failed: 0 });
+    let found = 0;
+    let failed = 0;
+    for (let i = 0; i < list.length; i += BATCH) {
+      if (stopRef.current) break;
+      const chunk = list.slice(i, i + BATCH);
+      setBulk({ done: i, total: list.length, found, current: chunk.map((c) => c.url.split("/")[0]).join(", "), failed });
+      try {
+        const r = await syncBatch({ data: { sources: chunk } });
+        found += r.added;
+        failed += r.failed.length;
+      } catch {
+        failed += chunk.length;
+      }
+    }
+    setBulk((b) => (b ? { ...b, done: stopRef.current ? b.done : b.total, found, failed, current: "" } : b));
+    await loadSaved();
+    toast.success(`Sync finished — ${found} new opportunities ready for review`);
+  };
 
   const run = async (target = url) => {
     if (!target.trim()) return;
@@ -70,6 +130,16 @@ function SyncDesk() {
   const update = (key: string, patch: Partial<Item>) =>
     setItems((p) => p.map((i) => (i.key === key ? { ...i, ...patch } : i)));
 
+  const markSaved = async (list: Item[], status: "published" | "dismissed") => {
+    const ids = list.map((i) => i.id).filter((x): x is string => !!x);
+    if (ids.length) await supabase.from("sync_candidates").update({ status }).in("id", ids);
+  };
+
+  const dismiss = async (i: Item) => {
+    update(i.key, { status: "dismissed" });
+    await markSaved([i], "dismissed");
+  };
+
   const publish = async (list: Item[]) => {
     const rows = list.map((i) => ({
       title: i.title,
@@ -80,6 +150,7 @@ function SyncDesk() {
       coverage_details: i.coverage_details || null,
       official_link: i.official_link,
       deadline: i.deadline,
+      details: i.details ?? null,
       status: "published" as const,
     }));
     const { error } = await supabase.from("scholarships").insert(rows);
@@ -88,12 +159,15 @@ function SyncDesk() {
       return;
     }
     list.forEach((i) => update(i.key, { status: "published" }));
+    await markSaved(list, "published");
     setSelected(new Set());
     qc.invalidateQueries();
     toast.success(`${rows.length} scholarship(s) now featured on the website`);
   };
 
   const pending = useMemo(() => items.filter((i) => i.status === "new"), [items]);
+  const govCount = SYNC_SOURCES.filter((s) => s.group === "government").length;
+  const schCount = SYNC_SOURCES.length - govCount;
 
   return (
     <AdminShell>
@@ -103,6 +177,41 @@ function SyncDesk() {
           <p className="text-sm text-muted-foreground">
             Enter any public portal (e.g. studyinchina.cn) — we read its active announcements so you can review and feature them.
           </p>
+        </div>
+
+        <div className="neu-flat space-y-4 rounded-2xl p-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="font-semibold">Get all new updates</h2>
+              <p className="text-sm text-muted-foreground">
+                Checks {govCount} government scholarship portals and {schCount} scholarship & university websites. Found listings are saved here for review.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {bulk && bulk.done < bulk.total ? (
+                <Button variant="outline" onClick={() => (stopRef.current = true)}>
+                  <Square className="size-4" /> Stop
+                </Button>
+              ) : (
+                <>
+                  <Button size="lg" onClick={() => runAll()} disabled={loading}>
+                    <RefreshCw className="size-4" /> Sync all {SYNC_SOURCES.length} sources
+                  </Button>
+                  <Button variant="outline" onClick={() => runAll("government")} disabled={loading}>Government only</Button>
+                </>
+              )}
+            </div>
+          </div>
+          {bulk && (
+            <div className="space-y-1">
+              <Progress value={(bulk.done / bulk.total) * 100} />
+              <p className="text-xs text-muted-foreground">
+                {bulk.done}/{bulk.total} sources checked · {bulk.found} new found · {bulk.failed} unreachable
+                {bulk.current && ` · now reading ${bulk.current}`}
+              </p>
+              {bulk.done < bulk.total && <p className="text-xs text-muted-foreground">Keep this page open while it runs. A full sync can take 30–60 minutes.</p>}
+            </div>
+          )}
         </div>
 
         <div className="neu-flat space-y-4 rounded-2xl p-5">
@@ -195,6 +304,37 @@ function SyncDesk() {
                       </select>
                     </div>
                     {i.coverage_details && <p className="text-sm text-muted-foreground">{i.coverage_details}</p>}
+                    {i.details && (
+                      <details className="neu-pressed rounded-xl p-3 text-sm">
+                        <summary className="cursor-pointer font-medium">Full details found</summary>
+                        <dl className="mt-2 space-y-2">
+                          {(
+                            [
+                              ["Institution & location", i.details.about_institution],
+                              ["What is covered", i.details.coverage_summary],
+                              ["Eligibility", i.details.eligibility],
+                              ["Financial criteria", i.details.financial_criteria],
+                              ["Required documents", i.details.required_documents],
+                              ["How to apply / student duties", i.details.student_responsibilities],
+                            ] as const
+                          )
+                            .filter(([, v]) => v)
+                            .map(([k, v]) => (
+                              <div key={k}>
+                                <dt className="text-xs font-semibold uppercase text-muted-foreground">{k}</dt>
+                                <dd>{v}</dd>
+                              </div>
+                            ))}
+                          {i.details.coverage_tags?.length ? (
+                            <div className="flex flex-wrap gap-1">
+                              {i.details.coverage_tags.map((t) => (
+                                <span key={t} className="rounded-full bg-secondary px-2 py-0.5 text-xs">{t}</span>
+                              ))}
+                            </div>
+                          ) : null}
+                        </dl>
+                      </details>
+                    )}
                     <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                       <span>{i.degree_levels.join(", ") || "Degree not stated"}</span>
                       <a href={i.official_link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline">
@@ -209,7 +349,7 @@ function SyncDesk() {
                         <Button size="sm" onClick={() => publish([i])}>
                           <Star className="size-4" /> Feature
                         </Button>
-                        <Button size="sm" variant="ghost" onClick={() => update(i.key, { status: "dismissed" })}>
+                        <Button size="sm" variant="ghost" onClick={() => dismiss(i)}>
                           <X className="size-4" /> Dismiss
                         </Button>
                       </>
