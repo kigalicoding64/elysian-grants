@@ -17,8 +17,11 @@ export function toScholarshipDetail(s: Scholarship): ScholarshipDetail {
         ? `${levels[0]} study`
         : `${levels.slice(0, -1).join(", ")} and ${levels[levels.length - 1]} study`;
   const tags = coverageTags(s.coverage_details);
+  const d = (s.details ?? {}) as Record<string, unknown>;
+  const x = (k: string) => (typeof d[k] === "string" && (d[k] as string).trim() ? (d[k] as string) : null);
+  const extraTags = Array.isArray(d["coverage_tags"]) ? (d["coverage_tags"] as string[]) : [];
 
-  return {
+  const base: ScholarshipDetail = {
     id: s.id,
     title: s.title,
     slug: s.id,
@@ -57,5 +60,17 @@ export function toScholarshipDetail(s: Scholarship): ScholarshipDetail {
       deadline: deadlineLabel(s.deadline),
       verified: true,
     },
+  };
+  return {
+    ...base,
+    institution: { ...base.institution, about: x("about_institution") ?? base.institution.about },
+    coverageAndBenefits: {
+      summary: x("coverage_summary") ?? base.coverageAndBenefits.summary,
+      tags: extraTags.length ? extraTags : base.coverageAndBenefits.tags,
+    },
+    eligibilityAndRequirements: { description: x("eligibility") ?? base.eligibilityAndRequirements.description },
+    financialThresholds: { description: x("financial_criteria") ?? base.financialThresholds.description },
+    requiredCertificates: { description: x("required_documents") ?? base.requiredCertificates.description },
+    studentResponsibilities: { description: x("student_responsibilities") ?? base.studentResponsibilities.description },
   };
 }

@@ -229,6 +229,7 @@ export type Database = {
           created_at: string
           deadline: string | null
           degree_levels: string[]
+          details: Json | null
           funding_type: string
           hero_banner_url: string | null
           id: string
@@ -245,6 +246,7 @@ export type Database = {
           created_at?: string
           deadline?: string | null
           degree_levels?: string[]
+          details?: Json | null
           funding_type?: string
           hero_banner_url?: string | null
           id?: string
@@ -261,12 +263,64 @@ export type Database = {
           created_at?: string
           deadline?: string | null
           degree_levels?: string[]
+          details?: Json | null
           funding_type?: string
           hero_banner_url?: string | null
           id?: string
           image_url?: string | null
           official_link?: string | null
           slug?: string | null
+          status?: string
+          title?: string
+          university?: string
+        }
+        Relationships: []
+      }
+      sync_candidates: {
+        Row: {
+          country: string
+          coverage_details: string | null
+          created_at: string
+          deadline: string | null
+          degree_levels: string[]
+          details: Json | null
+          funding_type: string
+          id: string
+          official_link: string
+          source_group: string | null
+          source_url: string
+          status: string
+          title: string
+          university: string
+        }
+        Insert: {
+          country?: string
+          coverage_details?: string | null
+          created_at?: string
+          deadline?: string | null
+          degree_levels?: string[]
+          details?: Json | null
+          funding_type?: string
+          id?: string
+          official_link: string
+          source_group?: string | null
+          source_url: string
+          status?: string
+          title: string
+          university?: string
+        }
+        Update: {
+          country?: string
+          coverage_details?: string | null
+          created_at?: string
+          deadline?: string | null
+          degree_levels?: string[]
+          details?: Json | null
+          funding_type?: string
+          id?: string
+          official_link?: string
+          source_group?: string | null
+          source_url?: string
           status?: string
           title?: string
           university?: string

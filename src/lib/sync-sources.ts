@@ -1,0 +1,122 @@
+/**
+ * Curated public scholarship sources scanned by "Sync all sources".
+ * Domains only — the scanner adds https:// and searches each site for scholarship pages.
+ * Admins can extend these lists; every entry must be a real, public website.
+ */
+export type SourceGroup = "government" | "scholarship";
+
+const government = [
+  // Rwanda & East Africa
+  "hec.gov.rw", "mineduc.gov.rw", "rp.ac.rw", "ur.ac.rw", "helb.co.ke", "education.go.ke",
+  "hesb.go.ug", "heslb.go.tz", "moe.gov.et",
+  // China / Asia
+  "campuschina.org", "studyinchina.edu.cn", "csc.edu.cn", "studyinjapan.go.jp", "mext.go.jp",
+  "jasso.go.jp", "studyinkorea.go.kr", "niied.go.kr", "studyintaiwan.org", "moe.gov.tw",
+  "iccr.gov.in", "a2ascholarships.iccr.gov.in", "studyinindia.gov.in", "studyinthailand.org",
+  "tica-thaigov.mfa.go.th", "moe.gov.sg", "mohe.gov.my", "studymalaysia.com", "hec.gov.pk",
+  "studyinbrunei.gov.bn", "mofa.go.jp", "jica.go.jp", "kgsp.or.kr", "studyinkazakhstan.kz",
+  // Middle East
+  "turkiyeburslari.gov.tr", "ytb.gov.tr", "studyinsaudi.moe.gov.sa", "moe.gov.sa", "mohe.gov.om",
+  "moe.gov.ae", "qatar-foundation.org", "edu.gov.qa", "studyinisrael.org.il", "che.org.il",
+  // Europe
+  "daad.de", "study-in-germany.de", "campusfrance.org", "stipendiumhungaricum.hu",
+  "tempus.hu", "si.se", "studyinsweden.se", "studyinnorway.no", "hkdir.no", "studyindenmark.dk",
+  "ufm.dk", "studyinfinland.fi", "oph.fi", "studyinholland.nl", "nuffic.nl", "studyinbelgium.be",
+  "vliruos.be", "ares-ac.be", "studyinaustria.at", "oead.at", "swissuniversities.ch",
+  "sbfi.admin.ch", "studyinpoland.pl", "nawa.gov.pl", "studyin.cz", "msmt.cz", "studyinestonia.ee",
+  "archimedes.ee", "studyinlithuania.lt", "smpf.lt", "studyinlatvia.lv", "viaa.gov.lv",
+  "studyinportugal.edu.pt", "gov.ie", "hea.ie", "studyinireland.ie", "studyinitaly.it",
+  "esteri.it", "studyinspain.info", "aecid.es", "studyinromania.gov.ro", "edu.ro",
+  "studyinslovakia.sk", "saia.sk", "studyinslovenia.si", "cmepius.si", "studyincroatia.hr",
+  "studyingreece.edu.gr", "iky.gr", "studyinrussia.ru", "education-in-russia.com",
+  "studyinserbia.rs", "studyinbulgaria.bg", "studyinluxembourg.lu", "studyiniceland.is",
+  "erasmus-plus.ec.europa.eu", "eacea.ec.europa.eu", "marie-sklodowska-curie-actions.ec.europa.eu",
+  // UK & Commonwealth
+  "chevening.org", "cscuk.fcdo.gov.uk", "marshallscholarship.org", "gov.uk/government/organisations/foreign-commonwealth-development-office",
+  "britishcouncil.org", "studyuk.britishcouncil.org", "saltirescholarship.gov.scot", "gwscholarships.wales",
+  // Americas
+  "fulbrightprogram.org", "foreign.fulbrightonline.org", "exchanges.state.gov", "educationusa.state.gov",
+  "humphreyfellowship.org", "mandelafellows.org", "yali.state.gov", "educanada.ca",
+  "scholarships-bourses.gc.ca", "vanier.gc.ca", "banting.fellowships-bourses.gc.ca",
+  "oas.org/en/scholarships", "gob.mx/amexcid", "conacyt.mx", "capes.gov.br", "cnpq.br",
+  "anid.cl", "minciencias.gov.co", "icetex.gov.co", "argentina.gob.ar/educacion",
+  // Oceania
+  "dfat.gov.au/people-to-people/australia-awards", "australiaawards.gov.au", "studyaustralia.gov.au",
+  "education.gov.au", "mfat.govt.nz", "studyinnewzealand.govt.nz", "nzscholarships.govt.nz",
+  // Africa (other)
+  "nsfas.org.za", "nrf.ac.za", "studyinmorocco.ma", "amci.ma", "egypt-scholarships.mohe.gov.eg",
+  "studyinegypt.gov.eg", "tetfund.gov.ng", "psgsf.gov.ng", "scholarships.gov.gh", "getfund.gov.gh",
+  "mesrs.dz", "mes.tn", "auda-nepad.org", "au.int", "afdb.org",
+];
+
+const scholarship = [
+  "mastercardfdn.org", "scholarshipdb.net", "scholarshipportal.com", "opportunitiesforafricans.com",
+  "afterschoolafrica.com", "scholars4dev.com", "opportunitydesk.org", "youthop.com",
+  "studyportals.com", "mastersportal.com", "phdportal.com", "findaphd.com", "findamasters.com",
+  "jobs.ac.uk", "euraxess.ec.europa.eu", "profellow.com", "internationalscholarships.com",
+  "iefa.org", "scholarships.com", "fastweb.com", "intstudy.com", "topuniversities.com/scholarships",
+  "timeshighereducation.com/student", "gatescambridge.org", "rhodeshouse.ox.ac.uk", "clarendon.ox.ac.uk",
+  "cambridgetrust.org", "ucl.ac.uk/scholarships", "imperial.ac.uk/study/fees-and-funding",
+  "ed.ac.uk/student-funding", "manchester.ac.uk/study/international/finance-and-scholarships",
+  "kcl.ac.uk/study/funding", "lse.ac.uk/study-at-lse/Graduate/fees-and-funding",
+  "warwick.ac.uk/services/dc/schols_fund", "bristol.ac.uk/students/support/finances/scholarships",
+  "sussex.ac.uk/study/fees-funding", "soas.ac.uk/study/fees-and-funding",
+  "birmingham.ac.uk/postgraduate/funding", "leeds.ac.uk/scholarships", "gla.ac.uk/scholarships",
+  "ethz.ch/students/en/studies/financial/scholarships", "epfl.ch/education/studies/en/financing-study",
+  "unige.ch/sciences-societe/en/excellence-scholarships", "uva.nl/en/education/fees-and-funding",
+  "tudelft.nl/en/education/practical-matters/scholarships", "leidenuniv.nl/en/scholarships",
+  "rug.nl/education/scholarships", "utwente.nl/en/education/scholarship-finder",
+  "eur.nl/en/education/practical-matters/scholarships", "ku.dk/studies/masters/tuition-fees-and-scholarships",
+  "lunduniversity.lu.se/admissions/tuition-fees-scholarships", "kth.se/en/studies/master/tuition-fees-scholarships",
+  "uu.se/en/study/scholarships", "aalto.fi/en/study-at-aalto/scholarships-and-tuition-fees",
+  "helsinki.fi/en/admissions-and-education/scholarships", "kuleuven.be/english/scholarships",
+  "ugent.be/en/education/scholarships", "tum.de/en/studies/fees-and-financial-aid",
+  "lmu.de/en/study/important-contacts/scholarships", "uni-heidelberg.de/en/study/scholarships",
+  "fu-berlin.de/en/studium/scholarships", "sciencespo.fr/students/en/fees-funding",
+  "polytechnique.edu/en/scholarships", "psl.eu/en/education/scholarships", "unibo.it/en/study/scholarships",
+  "polimi.it/en/students/tuition-fees-scholarships", "unipd.it/en/scholarships", "uniroma1.it/en/scholarships",
+  "ceu.edu/financial-aid", "elte.hu/en/scholarships", "uj.edu.pl/en/scholarships",
+  "harvard.edu/financial-aid", "mit.edu/admissions-aid", "stanford.edu/admission-aid",
+  "knight-hennessy.stanford.edu", "yale.edu/financial-aid", "princeton.edu/financial-aid",
+  "columbia.edu/content/financial-aid", "uchicago.edu/financial-aid", "upenn.edu/financial-aid",
+  "cornell.edu/financial-aid", "duke.edu/financial-aid", "jhu.edu/financial-aid", "nyu.edu/financial-aid",
+  "berkeley.edu/financial-aid", "ucla.edu/financial-aid", "umich.edu/financial-aid",
+  "cmu.edu/sfs", "africa.cmu.edu/admissions/scholarships", "amherst.edu/admission/financial_aid",
+  "berea.edu/admissions/international", "utoronto.ca/lester-b-pearson-scholarship",
+  "mcgill.ca/studentaid/scholarships-aid", "ubc.ca/international-scholars", "uwaterloo.ca/graduate-studies-postdoctoral-affairs/awards",
+  "yorku.ca/scholarships", "carleton.ca/awards", "unimelb.edu.au/scholarships", "sydney.edu.au/scholarships",
+  "anu.edu.au/study/scholarships", "unsw.edu.au/study/scholarships", "monash.edu/study/fees-scholarships",
+  "uq.edu.au/scholarships", "adelaide.edu.au/scholarships", "uwa.edu.au/study/scholarships",
+  "auckland.ac.nz/en/study/scholarships-and-awards", "otago.ac.nz/study/scholarships",
+  "nus.edu.sg/oam/scholarships", "ntu.edu.sg/admissions/scholarships", "hku.hk/scholarships",
+  "cuhk.edu.hk/scholarships", "hkust.edu.hk/scholarships", "tsinghua.edu.cn/en/Admissions/Scholarships",
+  "pku.edu.cn/admissions/scholarships", "schwarzmanscholars.org", "yenchingacademy.pku.edu.cn",
+  "fudan.edu.cn/en/admissions", "zju.edu.cn/english/admissions", "sjtu.edu.cn/admissions",
+  "u-tokyo.ac.jp/en/prospective-students/scholarships.html", "kyoto-u.ac.jp/en/education-campus/scholarships",
+  "kaist.ac.kr/en/html/edu/scholarship", "snu.ac.kr/en/admissions/scholarships", "yonsei.ac.kr/en_sc/admission/scholarship",
+  "kaust.edu.sa/en/study/financial-support", "aku.edu/admissions/financial-assistance", "aims.ac.za",
+  "nexteinstein.org", "uct.ac.za/students/fees-funding", "wits.ac.za/students/financial-aid",
+  "sun.ac.za/english/learning-teaching/student-affairs/student-funding", "up.ac.za/student-funding",
+  "ashesi.edu.gh/admissions/financial-aid", "alueducation.com/financial-aid", "auca.ac.rw",
+  "ughe.org/admissions", "kepler.org/admissions", "cmu-africa.org", "aims.ac.rw",
+  "aims-senegal.org", "pauwes-cop.net", "pau-au.africa", "rufforum.org", "carnegie.org",
+  "aauw.org/resources/programs/fellowships-grants", "wellcome.org/grant-funding", "gatesfoundation.org",
+  "akdn.org/our-agencies/aga-khan-foundation/international-scholarship-programme",
+  "isdb.org/scholarships", "worldbank.org/en/programs/scholarships", "jjwbgsp.org",
+  "opec.org/opec_web/en/about_us/scholarship", "ofid.org", "commonwealth.int", "acu.ac.uk",
+  "rotary.org/en/our-programs/scholarships", "zonta.org/Web/Programs/Education/Amelia_Earhart_Fellowship",
+  "schwarzman.org", "obama.org/leaders", "mo.ibrahim.foundation/fellowships", "allan-gray.org",
+  "equityfoundation.org", "kofiannanfoundation.org", "tonyelumelufoundation.org", "acumen.org/fellowships",
+  "echoinggreen.org/fellowship", "ashoka.org", "fulbright.org.uk", "studyportals.com/scholarships",
+  "erasmusmundus.eu", "emjm-catalogue.ec.europa.eu", "joint-master.eu", "heinrich-boell-stiftung.de",
+  "kas.de/en/web/begabtenfoerderung-und-kultur", "fes.de/en/scholarships", "rosalux.de/en/foundation/scholarships",
+  "hss.de/stipendien", "freiheit.org/scholarships", "humboldt-foundation.de", "eiffel.campusfrance.org",
+  "vliruos.be/en/scholarships", "orangeknowledge.nl", "nuffic.nl/en/subjects/orange-knowledge-programme",
+  "swedishinstitute.se/scholarships", "danida.dk", "norad.no", "sida.se", "jdsscholarship.org",
+  "adb.org/work-with-us/careers/japan-scholarship-program", "afdb.org/en/topics-and-sectors/initiatives-partnerships/japan-africa-dream-scholarship-jads-program",
+];
+
+export const SYNC_SOURCES: { url: string; group: SourceGroup }[] = [
+  ...government.map((url) => ({ url, group: "government" as const })),
+  ...scholarship.map((url) => ({ url, group: "scholarship" as const })),
+];
