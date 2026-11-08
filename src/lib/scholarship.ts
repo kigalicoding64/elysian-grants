@@ -12,6 +12,7 @@ export type Scholarship = {
   status: "published" | "draft";
   image_url?: string | null;
   hero_banner_url?: string | null;
+  details?: Record<string, unknown> | null;
   created_at: string;
 };
 
