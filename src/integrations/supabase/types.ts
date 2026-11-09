@@ -19,39 +19,66 @@ export type Database = {
           app_type: string
           created_at: string
           email: string | null
+          fee_currency: string | null
+          fee_local: number | null
+          fee_usd: number
           full_name: string | null
           id: string
+          momo_reference: string | null
           official_app_id: string | null
+          paid_at: string | null
+          payment_phone: string | null
+          payment_requested_at: string | null
+          payment_status: string
           phone: string | null
           proof_url: string | null
           scholarship_id: string | null
           status: string
+          tier: string
           user_id: string
         }
         Insert: {
           app_type?: string
           created_at?: string
           email?: string | null
+          fee_currency?: string | null
+          fee_local?: number | null
+          fee_usd?: number
           full_name?: string | null
           id?: string
+          momo_reference?: string | null
           official_app_id?: string | null
+          paid_at?: string | null
+          payment_phone?: string | null
+          payment_requested_at?: string | null
+          payment_status?: string
           phone?: string | null
           proof_url?: string | null
           scholarship_id?: string | null
           status?: string
+          tier?: string
           user_id: string
         }
         Update: {
           app_type?: string
           created_at?: string
           email?: string | null
+          fee_currency?: string | null
+          fee_local?: number | null
+          fee_usd?: number
           full_name?: string | null
           id?: string
+          momo_reference?: string | null
           official_app_id?: string | null
+          paid_at?: string | null
+          payment_phone?: string | null
+          payment_requested_at?: string | null
+          payment_status?: string
           phone?: string | null
           proof_url?: string | null
           scholarship_id?: string | null
           status?: string
+          tier?: string
           user_id?: string
         }
         Relationships: [

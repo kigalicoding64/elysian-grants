@@ -8,6 +8,20 @@
       "when": 1794138026599,
       "tag": "0000_sync_candidates_and_details",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794263127254,
+      "tag": "0001_application_payments",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794263141938,
+      "tag": "0002_application_payment_guard",
+      "breakpoints": true
     }
   ]
 }

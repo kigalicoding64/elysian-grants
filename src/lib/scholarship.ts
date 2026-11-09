@@ -32,6 +32,14 @@ export type Application = {
   official_app_id: string | null;
   proof_url: string | null;
   created_at: string;
+  tier?: "review" | "managed";
+  fee_usd?: number;
+  fee_local?: number | null;
+  fee_currency?: string | null;
+  payment_status?: "unbilled" | "pending" | "paid" | "failed" | "waived";
+  momo_reference?: string | null;
+  payment_requested_at?: string | null;
+  paid_at?: string | null;
   scholarships?: Pick<Scholarship, "title" | "university" | "deadline"> | null;
 };
 
