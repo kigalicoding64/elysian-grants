@@ -1,5 +1,10 @@
 # ElScholarship roadmap
 
+## Current request: finish scholarship sync
+- [ ] Persist URL scans and preserve all six extracted detail topics.
+- [ ] Report failed reads and saves; correct progress/stop and prevent overlapping actions.
+- [ ] Verify authenticated scan, review, and feature flow.
+
 ## In progress
 - [x] Neumorphic design tokens + utilities (src/styles.css)
 - [x] Buttons / inputs / header / scholarship card / auth page
