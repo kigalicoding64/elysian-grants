@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { activeOpportunities, publicSourceUrl } from "./sync-validation";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export type SyncCandidate = {
@@ -76,11 +77,12 @@ async function fc(path: string, body: unknown) {
       "X-Connection-Api-Key": key,
     },
     body: JSON.stringify(body),
+    signal: AbortSignal.timeout(120_000),
   });
   if (!res.ok) {
     const text = await res.text();
     console.error(`Firecrawl ${path} failed [${res.status}]: ${text}`);
-    throw new Error(`Scanner request failed (${res.status})`);
+    throw new Error(`Scanner request failed [${res.status}]: ${text}`);
   }
   return res.json();
 }
@@ -100,32 +102,19 @@ function pickDetails(o: Record<string, unknown>): SyncDetails | null {
 }
 
 async function extract(url: string): Promise<SyncCandidate[]> {
-  try {
-    const r = await fc("/scrape", {
-      url,
-      formats: [{ type: "json", schema: SCHEMA, prompt: PROMPT }],
-      onlyMainContent: true,
-    });
-    const json = r.json ?? r.data?.json;
-    const list = (json?.opportunities ?? []) as Partial<SyncCandidate>[];
-    return list
-      .filter((o) => o.title)
-      .map((o) => ({
-        title: String(o.title).trim(),
-        university: (o.university || "").trim(),
-        country: (o.country || "").trim(),
-        degree_levels: (o.degree_levels ?? []).filter(Boolean),
-        funding_type: o.funding_type === "partial" ? "partial" : "full",
-        coverage_details: (o.coverage_details || "").trim(),
-        deadline: o.deadline && /^\d{4}-\d{2}-\d{2}$/.test(o.deadline) ? o.deadline : null,
-        official_link: o.official_link?.startsWith("http") ? o.official_link : url,
-        source_url: url,
-        details: pickDetails(o as Record<string, unknown>),
-      }));
-  } catch (e) {
-    console.error("extract failed", url, e);
-    return [];
-  }
+  const r = await fc("/scrape", {
+    url,
+    formats: [{ type: "json", schema: SCHEMA, prompt: `${PROMPT} Today's UTC date is ${new Date().toISOString().slice(0, 10)}.` }],
+    onlyMainContent: true,
+  });
+  if (r.success === false) throw new Error(r.error || "Website read failed");
+  const json = r.json ?? r.data?.json;
+  return activeOpportunities(json?.opportunities, url, new Date().toISOString().slice(0, 10)).map((o) => ({
+    title: o.title, university: o.university, country: o.country,
+    degree_levels: o.degree_levels, funding_type: o.funding_type,
+    coverage_details: o.coverage_details, deadline: o.deadline,
+    official_link: o.official_link, source_url: url, details: pickDetails(o),
+  }));
 }
 
 export const scanPortal = createServerFn({ method: "POST" })
@@ -142,27 +131,33 @@ export const scanPortal = createServerFn({ method: "POST" })
     });
     if (!isAdmin) throw new Error("Forbidden");
 
-    let url = data.url.trim();
-    if (!/^https?:\/\//i.test(url)) url = `https://${url}`;
-
-    const pages = [url];
-    if (data.mode === "portal") {
-      const m = await fc("/map", { url, search: "scholarship", limit: 40 });
-      const links: string[] = (m.links ?? m.data?.links ?? [])
-        .map((l: string | { url: string }) => (typeof l === "string" ? l : l.url))
-        .filter((l: string) => /scholar|grant|fellow|funding|admission|announce|news|notice/i.test(l));
-      for (const l of links) if (!pages.includes(l) && pages.length < 8) pages.push(l);
+    const url = publicSourceUrl(data.url);
+    const pages = data.mode === "portal" ? await discover(url, 8) : [url];
+    const results: SyncCandidate[] = [];
+    const failed: string[] = [];
+    for (let i = 0; i < pages.length; i += 6) {
+      const chunk = await Promise.allSettled(pages.slice(i, i + 6).map(extract));
+      chunk.forEach((r, index) => {
+        if (r.status === "fulfilled") results.push(...r.value);
+        else { const page = pages[i + index]; if (page) failed.push(page); console.error(r.reason); }
+      });
     }
-
-    const results = await Promise.all(pages.map(extract));
+    if (failed.length === pages.length) throw new Error("No pages could be read. Check the website address and scanner connection usage.");
     const seen = new Set<string>();
-    const candidates = results.flat().filter((c) => {
-      const k = c.title.toLowerCase();
-      if (seen.has(k)) return false;
-      seen.add(k);
+    const candidates = results.filter((c) => {
+      const key = `${c.official_link}|${c.title.toLowerCase().trim()}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
       return true;
     });
-    return { scannedPages: pages.length, candidates };
+    let added = 0;
+    if (candidates.length) {
+      const { data: inserted, error } = await context.supabase.from("sync_candidates")
+        .upsert(candidates.map(c => ({ ...c, source_group: "manual" })), { onConflict: "official_link,title", ignoreDuplicates: true }).select("id");
+      if (error) throw new Error(`Could not save scan results: ${error.message}`);
+      added = inserted?.length ?? 0;
+    }
+    return { scannedPages: pages.length, candidates, added, failed };
   });
 
 async function discover(url: string, maxPages: number) {
@@ -172,7 +167,9 @@ async function discover(url: string, maxPages: number) {
     const links: string[] = (m.links ?? m.data?.links ?? [])
       .map((l: string | { url: string }) => (typeof l === "string" ? l : l.url))
       .filter((l: string) => /scholar|grant|fellow|funding|bourse|stipend|award/i.test(l));
-    for (const l of links) if (!pages.includes(l) && pages.length < maxPages) pages.push(l);
+    for (const l of links) {
+      try { const safe = publicSourceUrl(l); if (!pages.includes(safe) && pages.length < maxPages) pages.push(safe); } catch { /* skip invalid links */ }
+    }
   } catch {
     /* site map unavailable — scan home page only */
   }
@@ -193,11 +190,15 @@ export const syncSourceBatch = createServerFn({ method: "POST" })
 
     const perSource = await Promise.all(
       data.sources.map(async (s) => {
-        const url = /^https?:\/\//i.test(s.url) ? s.url : `https://${s.url}`;
+        const url = publicSourceUrl(s.url);
         try {
           const pages = await discover(url, 3);
-          const found = (await Promise.all(pages.map(extract))).flat();
-          return { url: s.url, group: s.group, found, ok: true };
+          const found: SyncCandidate[] = [];
+          let failures = 0;
+          for (const page of pages) {
+            try { found.push(...await extract(page)); } catch (error) { failures++; console.error(error); }
+          }
+          return { url: s.url, group: s.group, found, ok: failures === 0 };
         } catch {
           return { url: s.url, group: s.group, found: [] as SyncCandidate[], ok: false };
         }
@@ -236,7 +237,7 @@ export const syncSourceBatch = createServerFn({ method: "POST" })
         .from("sync_candidates")
         .upsert(rows, { onConflict: "official_link,title", ignoreDuplicates: true })
         .select("id");
-      if (error) console.error("sync upsert failed", error);
+      if (error) throw new Error(`Could not save scan results: ${error.message}`);
       added = inserted?.length ?? 0;
     }
     return { added, failed: perSource.filter((r) => !r.ok).map((r) => r.url) };
