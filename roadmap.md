@@ -1,11 +1,12 @@
 # ElScholarship roadmap
 
 ## Current request: finish scholarship sync
-- [ ] Persist URL scans and preserve all six extracted detail topics.
-- [ ] Report failed reads and saves; correct progress/stop and prevent overlapping actions.
-- [ ] Verify authenticated scan, review, and feature flow.
+- [x] Persist URL scans and preserve all six extracted detail topics.
+- [x] Report failed reads and saves; correct progress/stop and prevent overlapping actions.
+- [x] Verify authenticated scan, review, and feature flow (real Chevening scan, refresh, feature, and signed-out slug page).
+- Full-catalog run remains unverified: it requires a long, credit-consuming scan with the page kept open.
 
-## In progress
+## Earlier platform scope (not part of the current sync request)
 - [x] Neumorphic design tokens + utilities (src/styles.css)
 - [x] Buttons / inputs / header / scholarship card / auth page
 - [ ] Footer, scholarship detail page, dashboard + admin shells
