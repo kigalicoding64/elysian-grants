@@ -166,11 +166,15 @@ function SyncDesk() {
     }
     setSaving(true);
     try {
+    const { data: published, error: checkError } = await supabase.from("scholarships").select("title").eq("status", "published");
+    if (checkError) throw new Error(checkError.message);
+    const titles = new Set((published ?? []).map(row => row.title.toLowerCase().trim()));
+    if (list.some(i => titles.has(i.title.toLowerCase().trim()))) throw new Error("This scholarship is already featured. Dismiss the duplicate review instead.");
     const rows = list.map((i) => ({
       title: i.title,
-      university: i.university || "To be confirmed",
-      country: i.country || "Global",
-      degree_levels: i.degree_levels.length ? i.degree_levels : ["Master's"],
+      university: i.university.trim(),
+      country: i.country.trim(),
+      degree_levels: i.degree_levels,
       funding_type: i.funding_type,
       coverage_details: i.coverage_details || null,
       official_link: i.official_link,
@@ -333,7 +337,18 @@ function SyncDesk() {
                         <option value="partial">Partial</option>
                       </select>
                     </div>
-                    {i.coverage_details && <p className="text-sm text-muted-foreground">{i.coverage_details}</p>}
+                    <div className="flex flex-wrap gap-3 text-sm">
+                      {["Undergraduate", "Master's", "PhD"].map(degree => (
+                        <label key={degree} className="flex items-center gap-2">
+                          <Checkbox disabled={i.status !== "new"} checked={i.degree_levels.includes(degree)} onCheckedChange={checked => update(i.key, { degree_levels: checked ? [...i.degree_levels, degree] : i.degree_levels.filter(d => d !== degree) })} />
+                          {degree}
+                        </label>
+                      ))}
+                    </div>
+                    <Input aria-label="Official announcement link" value={i.official_link} disabled={i.status !== "new"} onChange={e => update(i.key, { official_link: e.target.value })} />
+                    <label className="block text-xs text-muted-foreground">Coverage
+                      <textarea aria-label="Coverage" className="neu-pressed mt-1 min-h-20 w-full rounded-lg p-3 text-sm text-foreground" value={i.coverage_details} disabled={i.status !== "new"} onChange={e => update(i.key, { coverage_details: e.target.value })} />
+                    </label>
                     {i.details && (
                       <details className="neu-pressed rounded-xl p-3 text-sm">
                         <summary className="cursor-pointer font-medium">Full details found</summary>
@@ -352,7 +367,11 @@ function SyncDesk() {
                             .map(([k, v]) => (
                               <div key={k}>
                                 <dt className="text-xs font-semibold uppercase text-muted-foreground">{k}</dt>
-                                <dd>{v}</dd>
+                                <dd><textarea aria-label={k} className="mt-1 min-h-24 w-full rounded-lg bg-background p-2 text-sm" value={v ?? ""} disabled={i.status !== "new"} onChange={e => {
+                                  const fields: Record<string, string> = { "Institution & location": "about_institution", "What is covered": "coverage_summary", "Eligibility": "eligibility", "Financial criteria": "financial_criteria", "Required documents": "required_documents", "How to apply / student duties": "student_responsibilities" };
+                                  const field = fields[k];
+                                  if (field) update(i.key, { details: { ...i.details, [field]: e.target.value } });
+                                }} /></dd>
                               </div>
                             ))}
                           {i.details.coverage_tags?.length ? (
