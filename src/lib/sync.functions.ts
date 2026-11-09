@@ -139,7 +139,7 @@ export const scanPortal = createServerFn({ method: "POST" })
       const chunk = await Promise.allSettled(pages.slice(i, i + 6).map(extract));
       chunk.forEach((r, index) => {
         if (r.status === "fulfilled") results.push(...r.value);
-        else { failed.push(pages[i + index]); console.error(r.reason); }
+        else { const page = pages[i + index]; if (page) failed.push(page); console.error(r.reason); }
       });
     }
     if (failed.length === pages.length) throw new Error("No pages could be read. Check the website address and scanner connection usage.");

@@ -19,6 +19,10 @@ const opportunity = z.object({
   funding_type: z.enum(['full', 'partial']).default('partial'),
   coverage_details: z.string().default(''), deadline: z.string().nullish(),
   official_link: z.string().optional(),
+  about_institution: z.string().optional(), coverage_summary: z.string().optional(),
+  eligibility: z.string().optional(), financial_criteria: z.string().optional(),
+  required_documents: z.string().optional(), student_responsibilities: z.string().optional(),
+  coverage_tags: z.array(z.string()).optional(),
 }).passthrough();
 
 export function activeOpportunities(raw: unknown, source: string, today: string) {

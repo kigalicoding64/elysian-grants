@@ -1,11 +1,12 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, it as test } from 'node:test';
+import assert from 'node:assert/strict';
 import { activeOpportunities, publicSourceUrl } from './sync-validation';
 
 describe('public scholarship scans', () => {
   test('only public website addresses are accepted', () => {
-    expect(publicSourceUrl('studyinchina.cn')).toBe('https://studyinchina.cn/');
+    assert.equal(publicSourceUrl('studyinchina.cn'), 'https://studyinchina.cn/');
     for (const url of ['localhost', '127.0.0.1', '10.0.0.1', 'http://[::1]', 'https://user:password@example.org']) {
-      expect(() => publicSourceUrl(url)).toThrow();
+      assert.throws(() => publicSourceUrl(url));
     }
   });
   test('expired announcements are excluded, including deadline-day opportunities', () => {
@@ -14,11 +15,11 @@ describe('public scholarship scans', () => {
       { title: 'Today', deadline: '2026-11-09' },
       { title: 'Future', deadline: '2026-11-10' },
     ], 'https://hec.gov.rw/', '2026-11-09');
-    expect(rows.map(row => row.title)).toEqual(['Today', 'Future']);
+    assert.deepEqual(rows.map(row => row.title), ['Today', 'Future']);
   });
   test('all six extracted detail fields survive normalization', () => {
     const details = { about_institution: 'Institution', coverage_summary: 'Coverage', eligibility: 'Eligibility', financial_criteria: 'Income', required_documents: 'Certificates', student_responsibilities: 'Steps' };
     const rows = activeOpportunities([{ title: 'Scholarship', ...details }], 'https://hec.gov.rw/', '2026-11-09');
-    for (const [key, value] of Object.entries(details)) expect(rows[0]?.[key]).toBe(value);
+    for (const key of Object.keys(details) as Array<keyof typeof details>) assert.equal(rows[0]?.[key], details[key]);
   });
 });
