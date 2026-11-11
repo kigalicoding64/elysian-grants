@@ -60,7 +60,6 @@ export const Route = createFileRoute("/articles/$slug")({
               "@type": "Organization",
               name: "ElScholarship",
             },
-            },
           }),
         },
       ],
