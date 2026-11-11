@@ -32,10 +32,13 @@ describe("upcoming scholarship discovery", () => {
     assert.equal(matchesDiscovery(row("2026-11-10"), "full", "2026-11-11"), false);
   });
   it("showcase uses live rows in deadline order with at most six awards", () => {
-    const rows = Array.from({ length: 9 }, (_, i) => row(`2026-11-${20 - i}`));
+    const rows = Array.from({ length: 9 }, (_, i) => row(`2026-11-${20 - i}`, { title: `Award ${i}` }));
     const result = upcomingShowcase([row("2026-10-01"), ...rows, row(null)], "2026-11-11");
     assert.equal(result.length, 6);
     assert.equal(result[0]?.deadline, "2026-11-12");
     assert.equal(result[5]?.deadline, "2026-11-17");
+  });
+  it("highlights each matching title and institution once without changing stored listings", () => {
+    assert.equal(upcomingShowcase([row("2026-11-20"), row("2026-11-20")], "2026-11-11").length, 1);
   });
 });

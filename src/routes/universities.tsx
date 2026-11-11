@@ -44,10 +44,7 @@ function UniversitiesPage() {
   const [term, setTerm] = useState("");
   const [country, setCountry] = useState("all");
 
-  const { data } = useSuspenseQuery(universitiesQuery);
-  const isLoading = false;
-  const isError = false;
-  const error = null;
+  const { data, isLoading, isError, error } = useSuspenseQuery(universitiesQuery);
 
   const countries = useMemo(
     () => Array.from(new Set((data ?? []).map((u) => u.country))).sort(),

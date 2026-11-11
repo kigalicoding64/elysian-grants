@@ -26,7 +26,13 @@ export function matchesDiscovery(s: Scholarship, mode: DiscoveryFilter, today: s
 }
 
 export function upcomingShowcase(rows: Scholarship[], today: string): Scholarship[] {
+  const seen = new Set<string>();
   return rows.filter((s) => isActiveOpportunity(s, today)).sort((a, b) =>
     (a.deadline ?? "9999").localeCompare(b.deadline ?? "9999") || a.title.localeCompare(b.title),
-  ).slice(0, 6);
+  ).filter((s) => {
+    const key = `${s.title.trim().toLowerCase()}|${s.university.trim().toLowerCase()}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 6);
 }

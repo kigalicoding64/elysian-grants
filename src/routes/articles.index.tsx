@@ -36,10 +36,7 @@ function ArticlesPage() {
   const [term, setTerm] = useState("");
   const [category, setCategory] = useState("All");
 
-  const { data } = useSuspenseQuery(articlesQuery);
-  const isLoading = false;
-  const isError = false;
-  const error = null;
+  const { data, isLoading, isError, error } = useSuspenseQuery(articlesQuery);
 
   const categories = useMemo(
     () => ["All", ...Array.from(new Set((data ?? []).map((a) => a.category))).sort()],

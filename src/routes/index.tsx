@@ -132,7 +132,7 @@ function IndexComponent() {
         <div className="container relative mx-auto max-w-7xl px-4 sm:px-6">
           <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+              <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3.5 py-1 text-xs font-semibold uppercase text-gold">
                 <Sparkles className="size-3.5" /> Managed Global Mobility Concierge
               </div>
 
