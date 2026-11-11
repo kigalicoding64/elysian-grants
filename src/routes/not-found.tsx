@@ -3,6 +3,15 @@ import { Button } from "@/components/ui/button";
 import { GraduationCap, Home, Search, ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/not-found")({
+  head: () => ({ meta: [
+    { title: "Page unavailable — ElScholarship" },
+    { name: "description", content: "This ElScholarship page is unavailable. Explore scholarship opportunities and application guides." },
+    { property: "og:title", content: "Page unavailable — ElScholarship" },
+    { property: "og:description", content: "Explore scholarships and application guides on ElScholarship." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+    { name: "robots", content: "noindex, follow" },
+  ] }),
   component: NotFoundPage,
 });
 

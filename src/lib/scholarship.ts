@@ -1,3 +1,5 @@
+import type { Json } from "@/integrations/supabase/types";
+
 export type Scholarship = {
   id: string;
   slug: string | null;
@@ -12,7 +14,7 @@ export type Scholarship = {
   status: "published" | "draft";
   image_url?: string | null;
   hero_banner_url?: string | null;
-  details?: Record<string, unknown> | null;
+  details?: Record<string, Json | undefined> | null;
   created_at: string;
 };
 

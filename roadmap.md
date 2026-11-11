@@ -1,5 +1,11 @@
 # ElScholarship roadmap
 
+## Approved request: upcoming scholarships and search visibility
+- [ ] Highlight live active/upcoming listings with deadline, intake, Rwanda and funding filters.
+- [ ] Render public scholarship and guide content for crawlers; correct route metadata and structured data.
+- [ ] Repair sitemap conflicts and retain five-minute freshness without invented modification dates.
+- [ ] Test public browsing on mobile/desktop and publish the approved updates.
+
 ## Current request: finish scholarship sync
 - [x] Persist URL scans and preserve all six extracted detail topics.
 - [x] Report failed reads and saves; correct progress/stop and prevent overlapping actions.

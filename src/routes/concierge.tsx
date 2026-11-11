@@ -27,7 +27,11 @@ export const Route = createFileRoute("/concierge")({
         property: "og:description",
         content: "A dedicated officer prepares, reviews, and submits your scholarship application for you with official proof.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://elysian-grants.lovable.app/concierge" },
+      { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://elysian-grants.lovable.app/concierge" }],
   }),
   component: ConciergePage,
 });

@@ -41,8 +41,7 @@ export function ScholarshipCard({
   const closed = days !== null && days < 0;
   const statusTag = scholarshipStatusTag(scholarship.deadline);
 
-  const shareUrl =
-    typeof window !== "undefined" ? `${window.location.origin}/?scholarship=${scholarship.id}` : "";
+  const shareUrl = `https://elysian-grants.lovable.app/scholarships/${encodeURIComponent(scholarship.slug || scholarship.id)}`;
   const shareLinks = buildShareLinks(shareUrl, scholarship.title);
 
   async function copyLink() {
@@ -56,7 +55,7 @@ export function ScholarshipCard({
   }
 
   return (
-    <article className="neu-flat group relative flex flex-col justify-between rounded-3xl p-6 transition-transform duration-300 hover:-translate-y-1">
+    <article className="neu-flat group relative flex min-w-0 flex-col justify-between rounded-3xl p-6 transition-transform duration-300 hover:-translate-y-1">
       {/* Top Header Row */}
       <div>
         <div className="flex items-center justify-between gap-2 pb-3.5">

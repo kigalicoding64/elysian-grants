@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Search, SlidersHorizontal, Sparkles, GraduationCap, Globe2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,8 @@ import { ScholarshipCard } from "@/components/scholarship-card";
 import { ApplyModal } from "@/components/apply-modal";
 import { AdBanner } from "@/components/ui/ad-banner";
 import { UniversityMarqueeTicker } from "@/components/UniversityMarqueeTicker";
-import { supabase } from "@/integrations/supabase/client";
+import { scholarshipsQuery } from "@/lib/public-content-queries";
+import { kigaliDate, isActiveOpportunity, matchesDiscovery, upcomingShowcase, type DiscoveryFilter } from "@/lib/opportunity-discovery";
 import {
   DEGREE_LEVELS,
   REGIONS,
@@ -26,9 +27,10 @@ import {
 const SITE_URL = "https://elysian-grants.lovable.app";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
+  loader: async ({ context }) => ({ scholarships: await context.queryClient.ensureQueryData(scholarshipsQuery), today: kigaliDate() }),
+  head: ({ loaderData }) => ({
     meta: [
-      { title: "ElScholarship — Scholarships in Rwanda & Fully Funded Scholarships for Rwandan Students" },
+      { title: "Scholarships for Rwandan Students 2026/2027 — ElScholarship" },
       {
         name: "description",
         content:
@@ -57,6 +59,7 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/` }],
     scripts: [
+      { type: "application/ld+json", children: JSON.stringify({ "@context": "https://schema.org", "@type": "ItemList", name: "Active and upcoming scholarships", itemListElement: upcomingShowcase(loaderData?.scholarships ?? [], loaderData?.today ?? kigaliDate()).map((item, i) => ({ "@type": "ListItem", position: i + 1, name: item.title, url: `${SITE_URL}/scholarships/${encodeURIComponent(item.slug || item.id)}` })) }) },
       {
         type: "application/ld+json",
         children: JSON.stringify({
@@ -76,6 +79,8 @@ export const Route = createFileRoute("/")({
 });
 
 function IndexComponent() {
+  const { today } = Route.useLoaderData();
+  const [discovery, setDiscovery] = useState<DiscoveryFilter>("active");
   const [search, setSearch] = useState("");
   const [degreeFilter, setDegreeFilter] = useState<string>("all");
   const [regionFilter, setRegionFilter] = useState<string>("all");
@@ -83,20 +88,10 @@ function IndexComponent() {
   const [selectedScholarship, setSelectedScholarship] = useState<Scholarship | null>(null);
   const [applyModalOpen, setApplyModalOpen] = useState(false);
 
-  // Fetch Published Scholarships
-  const { data: rawScholarships = [], isLoading } = useQuery({
-    queryKey: ["scholarships"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("scholarships")
-        .select("*")
-        .eq("status", "published")
-        .order("deadline", { ascending: true, nullsFirst: false });
-
-      if (error) throw error;
-      return data as Scholarship[];
-    },
-  });
+  const { data: rawScholarships } = useSuspenseQuery(scholarshipsQuery);
+  const isLoading = false;
+  const activeCount = rawScholarships.filter((s) => isActiveOpportunity(s, today)).length;
+  const showcase = upcomingShowcase(rawScholarships, today);
 
   // Filter & Sort Logic
   const processedScholarships = useMemo(() => {
@@ -118,12 +113,12 @@ function IndexComponent() {
 
       const matchesFunding = fundingFilter === "all" || item.funding_type === fundingFilter;
 
-      return matchesSearch && matchesDegree && matchesRegion && matchesFunding;
+      return matchesSearch && matchesDegree && matchesRegion && matchesFunding && matchesDiscovery(item, discovery, today);
     });
 
     // 2. Sort by Status & Urgency (Open -> Closing Soon -> Closed -> Rolling)
     return sortScholarshipsByUrgency(filtered);
-  }, [rawScholarships, search, degreeFilter, regionFilter, fundingFilter]);
+  }, [rawScholarships, search, degreeFilter, regionFilter, fundingFilter, discovery, today]);
 
   const handleManagedApply = (scholarship: Scholarship) => {
     setSelectedScholarship(scholarship);
@@ -137,7 +132,7 @@ function IndexComponent() {
         <div className="container relative mx-auto max-w-7xl px-4 sm:px-6">
           <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+              <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3.5 py-1 text-xs font-semibold uppercase text-gold">
                 <Sparkles className="size-3.5" /> Managed Global Mobility Concierge
               </div>
 
@@ -221,6 +216,20 @@ function IndexComponent() {
 
       <UniversityMarqueeTicker />
 
+      <section className="border-b border-border bg-background">
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+          <p className="text-xs font-semibold uppercase text-primary">2026 / 2027 scholarship calendar</p>
+          <h2 className="mt-2 text-2xl font-bold text-foreground">Active &amp; upcoming scholarships</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">Explore scholarships in Rwanda and international university funding. Compare undergraduate, master’s and PhD opportunities, check each institution’s eligibility requirements, and follow the official application deadline.</p>
+          <p className="mt-3 text-sm font-semibold text-primary">{activeCount} published opportunities with upcoming deadlines or no fixed closing date</p>
+          <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {showcase.map((scholarship) => <ScholarshipCard key={scholarship.id} scholarship={scholarship} onManagedApply={handleManagedApply} />)}
+          </div>
+          {showcase.length === 0 && <p className="mt-6 text-muted-foreground">No upcoming opportunities are published yet.</p>}
+          <p className="mt-6 text-xs text-muted-foreground">A future deadline does not confirm applications have opened. Check the official announcement before applying. No fixed deadline does not guarantee a rolling intake.</p>
+        </div>
+      </section>
+
       {/* Trust pillars */}
       <section className="border-b border-border bg-card">
         <div className="container mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 md:grid-cols-3">
@@ -250,6 +259,11 @@ function IndexComponent() {
 
       {/* Main Content Area */}
       <main className="container mx-auto max-w-7xl px-4 pt-10 sm:px-6">
+        <div role="group" aria-label="Scholarship quick filters" className="mb-6 flex flex-wrap gap-2">
+          {([ ["active", "Active & upcoming"], ["closing", "Closing in 30 days"], ["winter", "Jan–Feb 2027 deadlines"], ["rwanda", "Rwanda & HEC mentions"], ["full", "Fully funded"], ["all", "All, including closed"] ] as const).map(([value, label]) => (
+            <Button key={value} variant={discovery === value ? "default" : "outline"} size="sm" aria-pressed={discovery === value} onClick={() => setDiscovery(value)} className="h-auto min-h-9 whitespace-normal text-xs">{label}</Button>
+          ))}
+        </div>
         {/* Filter Toolbar */}
         <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
