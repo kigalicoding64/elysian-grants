@@ -1,12 +1,15 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowRight, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchArticles, formatDate } from "@/lib/content";
 
+import { articlesQuery } from "@/lib/public-content-queries";
+
 export const Route = createFileRoute("/articles/")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(articlesQuery),
   head: () => ({
     meta: [
       { title: "Scholarship Guides & Insights — ElScholarship" },
@@ -20,7 +23,11 @@ export const Route = createFileRoute("/articles/")({
         property: "og:description",
         content: "Editorial guides for students applying to fully funded scholarships.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://elysian-grants.lovable.app/articles" },
+      { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://elysian-grants.lovable.app/articles" }],
   }),
   component: ArticlesPage,
 });
@@ -29,10 +36,10 @@ function ArticlesPage() {
   const [term, setTerm] = useState("");
   const [category, setCategory] = useState("All");
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["articles"],
-    queryFn: fetchArticles,
-  });
+  const { data } = useSuspenseQuery(articlesQuery);
+  const isLoading = false;
+  const isError = false;
+  const error = null;
 
   const categories = useMemo(
     () => ["All", ...Array.from(new Set((data ?? []).map((a) => a.category))).sort()],

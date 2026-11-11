@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { AdBanner } from "@/components/ui/ad-banner";
 import { ApplyModal } from "@/components/apply-modal";
-import { supabase } from "@/integrations/supabase/client";
+import { scholarshipQuery } from "@/lib/public-content-queries";
 import { useSavedScholarship, useUpvotedScholarship } from "@/lib/engagement";
 import { heroImageFor } from "@/lib/hero";
 import { faqItems, timelineSteps } from "@/lib/scholarship-guide";
@@ -64,22 +64,15 @@ function SectionCard({
 const SITE_URL = "https://elysian-grants.lovable.app";
 
 export const Route = createFileRoute("/scholarships/$slug")({
-  loader: async ({ params }) => {
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      params.slug,
-    );
-    const { data } = await supabase
-      .from("scholarships")
-      .select("*")
-      .eq(isUuid ? "id" : "slug", params.slug)
-      .eq("status", "published")
-      .maybeSingle();
-    return { scholarship: (data as Scholarship | null) ?? null };
+  loader: async ({ params, context }) => {
+    const scholarship = await context.queryClient.ensureQueryData(scholarshipQuery(params.slug));
+    if (!scholarship) throw notFound();
+    return { scholarship };
   },
   head: ({ params, loaderData }) => {
     const s = loaderData?.scholarship ?? null;
-    const url = `${SITE_URL}/scholarships/${params.slug}`;
-    const cover = s?.image_url ?? heroImageFor(params.slug);
+    const url = `${SITE_URL}/scholarships/${encodeURIComponent(s?.slug || params.slug)}`;
+    const cover = s?.hero_banner_url || s?.image_url || heroImageFor(params.slug);
     const hero = cover.startsWith("http") ? cover : `${SITE_URL}${cover}`;
     const title = s
       ? `${s.title} — ${s.funding_type === "full" ? "Fully Funded" : "Partial"} ${s.degree_levels[0] ?? "Scholarship"} at ${s.university}, ${s.country}`
@@ -89,7 +82,7 @@ export const Route = createFileRoute("/scholarships/$slug")({
           s.funding_type === "full" ? "Fully funded" : "Partial funding"
         } for ${s.degree_levels.join(", ") || "students"}. ${
           s.coverage_details ? s.coverage_details.slice(0, 110) + ". " : ""
-        }Open to Rwandan students — eligibility, deadline and how to apply with ElScholarship managed support in Kigali.`.slice(
+        }Check nationality eligibility, deadlines and application options with guidance for students in Rwanda.`.slice(
           0,
           300,
         )
@@ -113,7 +106,7 @@ export const Route = createFileRoute("/scholarships/$slug")({
         { title },
         { name: "description", content: description },
         { name: "keywords", content: keywords },
-        { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
+        { name: "robots", content: s ? "index, follow, max-image-preview:large, max-snippet:-1" : "noindex" },
         { name: "geo.region", content: "RW" },
         { name: "geo.placename", content: "Kigali, Rwanda" },
         { property: "og:title", content: title },
@@ -136,18 +129,18 @@ export const Route = createFileRoute("/scholarships/$slug")({
           type: "application/ld+json",
           children: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "FinancialProduct",
+            "@type": "WebPage",
             name: s?.title ?? "Verified scholarship",
             description,
             url,
             image: hero,
-            areaServed: ["Rwanda", "East Africa", s?.country].filter(Boolean),
-            provider: {
+
+            about: {
               "@type": "Organization",
               name: s?.university ?? "ElScholarship",
               address: s?.country,
             },
-            ...(s?.deadline ? { availabilityEnds: s.deadline } : {}),
+
           }),
         },
         {
@@ -175,21 +168,9 @@ function ScholarshipDetailPage() {
   const { active: isSaved, toggle: toggleSaved } = useSavedScholarship(slug);
   const { active: isUpvoted, toggle: toggleUpvote } = useUpvotedScholarship(slug);
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["scholarship", slug],
-    queryFn: async () => {
-      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
-      const { data, error } = await supabase
-        .from("scholarships")
-        .select("*")
-        .eq(isUuid ? "id" : "slug", slug)
-        .eq("status", "published")
-        .maybeSingle();
-      if (error) throw error;
-      return data as Scholarship | null;
-    },
-  });
-
+  const { data } = useSuspenseQuery(scholarshipQuery(slug));
+  const isLoading = false;
+  const error = null;
 
   if (isLoading) {
     return (

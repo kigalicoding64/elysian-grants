@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Building2, ExternalLink, MapPin, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,10 @@ import {
 } from "@/components/ui/select";
 import { fetchUniversities } from "@/lib/content";
 
+import { universitiesQuery } from "@/lib/public-content-queries";
+
 export const Route = createFileRoute("/universities")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(universitiesQuery),
   head: () => ({
     meta: [
       { title: "University Directory — ElScholarship" },
@@ -28,7 +31,11 @@ export const Route = createFileRoute("/universities")({
         property: "og:description",
         content: "Verified universities, faculties and tuition ranges in one directory.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://elysian-grants.lovable.app/universities" },
+      { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://elysian-grants.lovable.app/universities" }],
   }),
   component: UniversitiesPage,
 });
@@ -37,10 +44,10 @@ function UniversitiesPage() {
   const [term, setTerm] = useState("");
   const [country, setCountry] = useState("all");
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["universities"],
-    queryFn: fetchUniversities,
-  });
+  const { data } = useSuspenseQuery(universitiesQuery);
+  const isLoading = false;
+  const isError = false;
+  const error = null;
 
   const countries = useMemo(
     () => Array.from(new Set((data ?? []).map((u) => u.country))).sort(),

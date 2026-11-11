@@ -1,28 +1,35 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ArrowLeft } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdBanner } from "@/components/ui/ad-banner";
-import { fetchArticleBySlug, formatDate } from "@/lib/content";
+import { formatDate } from "@/lib/content";
+import { articleQuery } from "@/lib/public-content-queries";
 import { heroImageFor } from "@/lib/hero";
 
 const SITE_URL = "https://elysian-grants.lovable.app";
 
 export const Route = createFileRoute("/articles/$slug")({
-  head: ({ params }) => {
+  loader: async ({ params, context }) => {
+    const article = await context.queryClient.ensureQueryData(articleQuery(params.slug));
+    if (!article) throw notFound();
+    return article;
+  },
+  head: ({ params, loaderData }) => {
     const url = `${SITE_URL}/articles/${params.slug}`;
-    const readable = params.slug.replace(/-/g, " ");
-    const hero = heroImageFor(params.slug);
-    const description = "Scholarship guidance from the ElScholarship editorial team.";
+    const readable = loaderData?.meta_title || loaderData?.title || "Scholarship guide unavailable";
+    const cover = loaderData?.featured_image || heroImageFor(params.slug);
+    const hero = cover.startsWith("https://") ? cover : `${SITE_URL}${cover}`;
+    const description = loaderData?.meta_description || loaderData?.summary || "Scholarship application guidance for students in Rwanda from ElScholarship.";
     return {
       meta: [
         { title: `${readable} — ElScholarship` },
         { name: "description", content: description },
         {
           name: "keywords",
-          content: "Scholarships, Study Guides, University Grants, Education, Study Abroad",
+          content: (loaderData?.target_keywords ?? ["scholarship applications Rwanda", "study abroad funding"]).join(", "),
         },
         { property: "og:title", content: `${readable} — ElScholarship` },
         { property: "og:description", content: description },
@@ -33,7 +40,8 @@ export const Route = createFileRoute("/articles/$slug")({
         { property: "og:image:height", content: "630" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: hero },
-        { property: "article:author", content: "ElScholarship Team" },
+        { property: "article:author", content: loaderData?.author || "ElScholarship Team" },
+        { name: "robots", content: loaderData ? "index, follow, max-image-preview:large" : "noindex" },
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
@@ -42,18 +50,16 @@ export const Route = createFileRoute("/articles/$slug")({
           children: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "BlogPosting",
-            headline: readable,
+            headline: loaderData?.title || readable,
+            ...(loaderData?.published_at ? { datePublished: loaderData.published_at } : {}),
             description,
             mainEntityOfPage: url,
             image: hero,
-            author: { "@type": "Organization", name: "ElScholarship Team" },
+            author: { "@type": "Organization", name: loaderData?.author || "ElScholarship Team" },
             publisher: {
               "@type": "Organization",
               name: "ElScholarship",
-              logo: {
-                "@type": "ImageObject",
-                url: `${SITE_URL}/elscholaship-logo.jpg`,
-              },
+            },
             },
           }),
         },
@@ -84,14 +90,10 @@ function ArticleMessage({ title, body }: { title: string; body: string }) {
 
 function ArticlePage() {
   const { slug } = Route.useParams();
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["article", slug],
-    queryFn: async () => {
-      const article = await fetchArticleBySlug(slug);
-      if (!article) throw notFound();
-      return article;
-    },
-  });
+  const { data } = useSuspenseQuery(articleQuery(slug));
+  const isLoading = false;
+  const isError = false;
+  const error = null;
 
   if (isLoading) {
     return (

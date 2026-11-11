@@ -25,7 +25,11 @@ export const Route = createFileRoute("/how-it-works")({
         property: "og:description",
         content: "Discover, prepare, apply, and track fully funded scholarships with absolute transparency.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://elysian-grants.lovable.app/how-it-works" },
+      { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://elysian-grants.lovable.app/how-it-works" }],
   }),
   component: HowItWorks,
 });
