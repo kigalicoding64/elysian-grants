@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ScholarshipCard } from "@/components/scholarship-card";
+import { ServicePricing, PricingSummary } from "@/components/service-pricing";
 import { ApplyModal } from "@/components/apply-modal";
 import { AdBanner } from "@/components/ui/ad-banner";
 import { UniversityMarqueeTicker } from "@/components/UniversityMarqueeTicker";
@@ -205,6 +206,7 @@ function IndexComponent() {
                   </li>
                 ))}
               </ol>
+              <div className="mt-6"><PricingSummary /></div>
               <p className="mt-6 border-t border-border pt-4 text-[11px] leading-relaxed text-muted-foreground">
                 No agency fee is charged before an eligibility review is completed and shared with
                 you in writing.
@@ -213,6 +215,8 @@ function IndexComponent() {
           </div>
         </div>
       </section>
+
+      <ServicePricing />
 
       <UniversityMarqueeTicker />
 

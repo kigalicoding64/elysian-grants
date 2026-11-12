@@ -9,6 +9,7 @@ import {
   ShieldCheck, 
   UserCheck 
 } from "lucide-react";
+import { ServicePricing } from "@/components/service-pricing";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/how-it-works")({
@@ -62,31 +63,6 @@ const PROCESS_STEPS = [
     title: "Submission & Real-time Tracking",
     tagline: "Complete transparency from review to decision.",
     body: "Track every stage of your application live from your student dashboard. Receive official application reference numbers, confirmation receipts, and status updates until the final university decision is released.",
-  },
-];
-
-const PATHWAYS = [
-  {
-    title: "Direct Self-Apply",
-    badge: "Free Route",
-    description: "Ideal for students who want full hands-on control over their submissions.",
-    features: [
-      "Access to verified scholarship directory & criteria",
-      "Direct links to official university admission portals",
-      "Free document checklist and deadline calendar",
-      "Community insights and application guides",
-    ],
-  },
-  {
-    title: "Managed Concierge",
-    badge: "Recommended",
-    description: "Ideal for busy students seeking expert file preparation & guaranteed submission.",
-    features: [
-      "Dedicated scholarship officer handles your entire file",
-      "Thorough document vetting and feedback before submission",
-      "Official portal registration and application filing on your behalf",
-      "Submission proof, reference ID, and dashboard pipeline tracking",
-    ],
   },
 ];
 
@@ -250,49 +226,7 @@ function HowItWorks() {
         </div>
       </section>
 
-      {/* Application Routes Comparison */}
-      <section className="border-y border-slate-200 bg-slate-50 py-16 dark:border-slate-800 dark:bg-slate-900/50">
-        <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
-              Choose Your Application Pathway
-            </h2>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-              Select the option that best fits your schedule and level of support needed.
-            </p>
-          </div>
-
-          <div className="mt-10 grid gap-8 md:grid-cols-2">
-            {PATHWAYS.map((path) => (
-              <div
-                key={path.title}
-                className="flex flex-col rounded-xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900"
-              >
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">
-                    {path.title}
-                  </h3>
-                  <span className="rounded-full bg-amber-500/10 px-3 py-1 text-[11px] font-bold text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
-                    {path.badge}
-                  </span>
-                </div>
-                <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-                  {path.description}
-                </p>
-
-                <ul className="mt-6 space-y-3">
-                  {path.features.map((feat) => (
-                    <li key={feat} className="flex items-start gap-3 text-xs text-slate-700 dark:text-slate-300">
-                      <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-500" />
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ServicePricing />
 
       {/* Comprehensive Document Vault Breakdown */}
       <section className="border-b border-slate-200 bg-white py-16 dark:border-slate-800 dark:bg-slate-950">
