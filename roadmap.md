@@ -1,5 +1,10 @@
 # ElScholarship roadmap
 
+## Current request: visible service pricing
+- [ ] Show direct, review, and managed prices on public pages and application dialog.
+- [ ] Save the chosen paid service and verify prices and application selection.
+- [ ] Verify desktop/mobile pricing visibility; payment integration remains outside this request.
+
 ## Approved request: upcoming scholarships and search visibility
 - [ ] Highlight live active/upcoming listings with deadline, intake, Rwanda and funding filters.
 - [ ] Render public scholarship and guide content for crawlers; correct route metadata and structured data.

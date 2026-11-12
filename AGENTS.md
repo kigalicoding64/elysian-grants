@@ -13,3 +13,4 @@
 - Use authenticated, role-checked sync functions and at most six concurrent outbound reads, so scans respect authorization and the published runtime's connection budget.
 - Public content loaders use shared query options and paginated publishable-client server reads, so real listings and guide text render during SSR without exposing privileged credentials.
 - The TanStack sitemap handler is the sole sitemap source; use page-specific publication/change dates or omit lastmod, so generated dates never misrepresent content freshness.
+- Public service prices share the browser-safe pricing constants and reusable pricing displays; application choices persist in the existing tier field to prevent conflicting fees.
