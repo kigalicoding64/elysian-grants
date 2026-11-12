@@ -34,6 +34,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { TIER_FEES_USD, TIER_LABELS, type ServiceTier } from "@/lib/pricing";
 import { DOC_TYPES, type Scholarship } from "@/lib/scholarship";
 
+const DOC_TIPS: Record<(typeof DOC_TYPES)[number], string> = {
+  "Academic Transcripts": "Upload certified, stamped copies of every year. Strong or improving grades stand out — add an official translation if not in English.",
+  "Statement of Purpose": "Be specific: your goals, why this program, and how you will give back to Rwanda. Use real examples, keep it within the word limit, and proofread.",
+  "Passport / National ID": "Scan the photo page clearly in colour. Make sure it is valid for at least 6 months after the program start date.",
+  "English Test Scores": "Submit IELTS/TOEFL/Duolingo results meeting the minimum score. If you studied in English, a Medium of Instruction letter may be accepted.",
+};
+
 const profileSchema = z.object({
   full_name: z.string().trim().min(2, "Please provide your full legal name").max(100),
   email: z.string().trim().email("Enter a valid email address").max(255),
@@ -119,8 +126,14 @@ export function ApplyModal({
     );
   }
 
+  const missingDocs = DOC_TYPES.filter((t) => !files[t]);
+
   async function submit() {
     if (!user || !scholarship) return;
+    if (missingDocs.length > 0) {
+      toast.error(`Please upload all required documents: ${missingDocs.join(", ")}`);
+      return;
+    }
     setBusy(true);
     try {
       const { data: application, error } = await supabase
@@ -321,7 +334,7 @@ export function ApplyModal({
                   >
                     <div className="flex items-center justify-between mb-1.5">
                       <Label htmlFor={`file-${type}`} className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <FileText className="size-3.5 text-slate-400" /> {type}
+                        <FileText className="size-3.5 text-slate-400" /> {type} <span className="text-destructive">*</span>
                       </Label>
                       {fileSelected ? (
                         <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
@@ -330,8 +343,10 @@ export function ApplyModal({
                       ) : null}
                     </div>
 
+                    <p className="mb-2 text-[11px] leading-relaxed text-muted-foreground">💡 {DOC_TIPS[type]}</p>
                     <Input
                       id={`file-${type}`}
+                      required
                       type="file"
                       accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
                       className="h-9 text-xs border-slate-200 bg-white file:mr-3 file:rounded-md file:border-0 file:bg-slate-100 file:px-2.5 file:py-1 file:text-xs file:font-semibold file:text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:file:bg-slate-800 dark:file:text-slate-300"
@@ -342,6 +357,9 @@ export function ApplyModal({
               })}
             </div>
 
+            {missingDocs.length > 0 && (
+              <p className="text-xs font-medium text-destructive">All documents are required. Missing: {missingDocs.length} of {DOC_TYPES.length}.</p>
+            )}
             <div className="flex gap-2.5 pt-2">
               <Button 
                 variant="outline" 
@@ -353,7 +371,7 @@ export function ApplyModal({
               <Button 
                 className="flex-1 bg-slate-900 font-semibold text-amber-400 hover:bg-slate-800 dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400" 
                 onClick={submit} 
-                disabled={busy}
+                disabled={busy || missingDocs.length > 0}
               >
                 {busy ? <Loader2 className="size-4 animate-spin mr-1" /> : <ShieldCheck className="size-4 mr-1" />}
                 Submit File
