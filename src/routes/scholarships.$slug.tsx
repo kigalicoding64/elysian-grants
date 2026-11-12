@@ -20,6 +20,7 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { AdBanner } from "@/components/ui/ad-banner";
+import { PricingSummary } from "@/components/service-pricing";
 import { ApplyModal } from "@/components/apply-modal";
 import { scholarshipQuery } from "@/lib/public-content-queries";
 import { useSavedScholarship, useUpvotedScholarship } from "@/lib/engagement";
@@ -278,6 +279,7 @@ function ScholarshipDetailPage() {
             </span>
           </div>
 
+          <PricingSummary />
           <div className="mt-7 flex flex-wrap gap-3">
             <Button onClick={() => setApplyOpen(true)} className="text-sm text-[#047857]">
               Apply Now
@@ -458,6 +460,7 @@ function ScholarshipDetailPage() {
                 <ShieldCheck className="size-3.5" /> Verified by ElScholarship advisors
               </p>
 
+              <div className="mt-5"><PricingSummary /></div>
               <div className="mt-5 space-y-2.5">
                 <Button onClick={() => setApplyOpen(true)} className="w-full text-sm text-[#047857]">
                   Apply Now

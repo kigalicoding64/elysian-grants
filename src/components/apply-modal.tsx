@@ -29,6 +29,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/useAuth";
+import { PricingSummary } from "@/components/service-pricing";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { TIER_FEES_USD, TIER_LABELS, type ServiceTier } from "@/lib/pricing";
 import { DOC_TYPES, type Scholarship } from "@/lib/scholarship";
 
 const profileSchema = z.object({
@@ -51,6 +54,7 @@ export function ApplyModal({
   const queryClient = useQueryClient();
   
   const [step, setStep] = useState(1);
+  const [tier, setTier] = useState<ServiceTier>("managed");
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({ full_name: "", email: "", phone: "" });
   const [files, setFiles] = useState<Record<string, File | null>>({});
@@ -69,6 +73,7 @@ export function ApplyModal({
 
   function reset() {
     setStep(1);
+    setTier("managed");
     setFiles({});
     setBusy(false);
   }
@@ -92,6 +97,8 @@ export function ApplyModal({
             </div>
           </DialogHeader>
 
+          <PricingSummary />
+          {scholarship?.official_link && <Button asChild variant="outline"><a href={scholarship.official_link} target="_blank" rel="noopener noreferrer">Direct Self-Application — Free</a></Button>}
           <div className="mt-4 flex flex-col gap-2.5">
             <Button
               className="w-full bg-slate-900 font-semibold text-amber-400 hover:bg-slate-800 dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400"
@@ -125,6 +132,8 @@ export function ApplyModal({
           email: form.email,
           phone: form.phone,
           app_type: "managed",
+          tier,
+          fee_usd: TIER_FEES_USD[tier],
           status: "DOC_REVIEW",
         })
         .select()
@@ -172,7 +181,7 @@ export function ApplyModal({
         {/* Header Title Block */}
         <DialogHeader className="text-left space-y-1 pb-4 border-b border-slate-100 dark:border-slate-900">
           <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-amber-600 dark:text-amber-400 uppercase">
-            <Sparkles className="size-3.5" /> Managed Concierge Application
+            <Sparkles className="size-3.5" /> Scholarship Application Support
           </div>
           <DialogTitle className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
             {scholarship?.title ?? "Scholarship Application"}
@@ -181,6 +190,23 @@ export function ApplyModal({
             {scholarship?.university} • {scholarship?.country}
           </DialogDescription>
         </DialogHeader>
+
+        {step === 1 && (
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-foreground">Choose your service</h3>
+            {scholarship?.official_link && <Button asChild variant="outline" className="h-auto w-full whitespace-normal"><a href={scholarship.official_link} target="_blank" rel="noopener noreferrer">Direct Self-Application — Free</a></Button>}
+            <RadioGroup aria-label="Application service" value={tier} onValueChange={(value) => { if (value === "review" || value === "managed") setTier(value); }}>
+              {(["review", "managed"] as const).map((value) => (
+                <Label key={value} htmlFor={`service-${value}`} className="flex cursor-pointer items-start gap-3 rounded-lg bg-muted p-3 text-foreground">
+                  <RadioGroupItem id={`service-${value}`} value={value} className="mt-1 shrink-0" />
+                  <span className="min-w-0 text-sm"><span className="block font-semibold">{TIER_LABELS[value]} — ${value === "review" ? TIER_FEES_USD[value].toFixed(2) : TIER_FEES_USD[value]}</span><span className="mt-1 block text-xs text-muted-foreground">{value === "review" ? "We review and advise; you submit yourself." : "We prepare and submit; you receive official proof."}</span></span>
+                </Label>
+              ))}
+            </RadioGroup>
+            <p className="text-xs text-muted-foreground">No payment required today. The selected service fee is payable after the initial eligibility check. RWF amount is confirmed at payment.</p>
+          </div>
+        )}
+        {step === 2 && <p className="text-sm font-semibold text-foreground">{TIER_LABELS[tier]} — ${TIER_FEES_USD[tier].toFixed(2)} · Payment after eligibility check</p>}
 
         {/* Executive Step Indicator */}
         <div className="my-2 flex items-center justify-between border-b border-slate-100 pb-4 dark:border-slate-900">
@@ -348,7 +374,7 @@ export function ApplyModal({
                 Application Received
               </h4>
               <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                Your dossier has entered <strong className="text-slate-700 dark:text-slate-300">Document Review</strong>. A concierge officer will contact you within 24 hours.
+                {TIER_LABELS[tier]} (${TIER_FEES_USD[tier].toFixed(2)}) requested. No payment has been collected. Your dossier has entered <strong className="text-slate-700 dark:text-slate-300">Document Review</strong>. A concierge officer will contact you within 24 hours.
               </p>
             </div>
 

@@ -11,21 +11,22 @@ import {
   ShieldCheck, 
   UserCheck 
 } from "lucide-react";
+import { ServicePricing, PricingSummary } from "@/components/service-pricing";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/concierge")({
   head: () => ({
     meta: [
-      { title: "Managed Concierge Applications — ElScholarship" },
+      { title: "Managed Applications $25 & Document Review $12.50 — ElScholarship" },
       {
         name: "description",
         content:
           "Let ElScholarship officers review your documents, prepare your file, and submit your scholarship application to the university portal on your behalf.",
       },
-      { property: "og:title", content: "Managed Concierge Applications — ElScholarship" },
+      { property: "og:title", content: "Managed Applications $25 & Document Review $12.50 — ElScholarship" },
       {
         property: "og:description",
-        content: "A dedicated officer prepares, reviews, and submits your scholarship application for you with official proof.",
+        content: "Full managed applications cost $25 per application; document review and guidelines cost $12.50. Direct self-application is free.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://elysian-grants.lovable.app/concierge" },
@@ -155,6 +156,7 @@ function ConciergePage() {
           <p className="mt-4 max-w-2xl text-base text-slate-300">
             Hand over your document vault once. We vet your eligibility, polish your file, submit directly to official university portals, and attach submission receipts to your dashboard.
           </p>
+          <div className="mt-6 rounded-lg bg-background p-4"><PricingSummary /></div>
           <div className="mt-8 flex flex-wrap gap-4">
             <Button asChild variant="default">
               <Link to="/">Browse Scholarships to Apply</Link>
@@ -165,6 +167,8 @@ function ConciergePage() {
           </div>
         </div>
       </section>
+
+      <ServicePricing />
 
       {/* 5-Step Pipeline Section */}
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6">
