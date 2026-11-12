@@ -40,7 +40,7 @@ export const Route = createFileRoute("/")({
       {
         name: "keywords",
         content:
-          "scholarships in Rwanda, scholarships for Rwandan students, fully funded scholarships Rwanda, Kigali scholarships, HEC Rwanda, Mastercard Foundation Rwanda, study abroad Rwanda, bourse Rwanda, scholarship organisation Rwanda, East Africa scholarships",
+          "scholarships in Rwanda, scholarships for Rwandan students, fully funded scholarships Rwanda, Kigali scholarships, HEC Rwanda, Mastercard Foundation Rwanda, study abroad Rwanda, bourse Rwanda, scholarship organisation Rwanda, East Africa scholarships, fully funded scholarships 2026, fully funded scholarships 2027, scholarships for international students, scholarships for African students, masters scholarships 2026, PhD scholarships fully funded, undergraduate scholarships abroad, Chevening scholarship, DAAD scholarship, Erasmus Mundus, Chinese Government Scholarship CSC, Turkiye Burslari, Stipendium Hungaricum, MEXT Japan scholarship, Commonwealth scholarship, Fulbright Rwanda, study in Canada scholarship, study in UK scholarship, study in Germany free, no IELTS scholarships, scholarship application help, buruse za kwiga mu mahanga",
       },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { name: "geo.region", content: "RW" },
