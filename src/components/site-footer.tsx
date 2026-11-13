@@ -166,15 +166,15 @@ export function SiteFooter() {
         <div className="mt-12 flex flex-col items-center justify-between border-t border-slate-100 pt-6 text-xs text-slate-400 sm:flex-row dark:border-slate-800">
           <p>© {new Date().getFullYear()} ElScholarship. All rights reserved.</p>
           <div className="mt-4 flex gap-6 sm:mt-0">
-            <a href="#" className="hover:text-slate-600 dark:hover:text-slate-300">
+            <Link to="/privacy" className="hover:text-slate-600 dark:hover:text-slate-300">
               Privacy Policy
-            </a>
-            <a href="#" className="hover:text-slate-600 dark:hover:text-slate-300">
+            </Link>
+            <Link to="/terms" className="hover:text-slate-600 dark:hover:text-slate-300">
               Terms of Service
-            </a>
-            <a href="#" className="hover:text-slate-600 dark:hover:text-slate-300">
+            </Link>
+            <Link to="/contact" className="hover:text-slate-600 dark:hover:text-slate-300">
               Contact Support
-            </a>
+            </Link>
           </div>
         </div>
       </div>
