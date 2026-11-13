@@ -3,6 +3,7 @@ import {
   Outlet,
   createRootRouteWithContext,
   HeadContent,
+  useRouterState,
   Scripts,
 } from "@tanstack/react-router";
 import { Toaster } from "sonner";
@@ -37,34 +38,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.png", type: "image/png" },
 
     ],
-    scripts: [
-      /* Google AdSense Script */
-      {
-        async: true,
-        src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`,
-        crossOrigin: "anonymous",
-      },
-      /* Step 1: Adcash Main Library Script */
-      {
-        id: "aclib",
-        type: "text/javascript",
-        src: "//acscdn.com/script/aclib.js",
-        async: true,
-      },
-      /* Monetag Script */
-      {
-        async: true,
-        src: "https://cdn.pagead2.googlesyndication.com/pagead/js/monetag.js",
-        crossOrigin: "anonymous",
-      },
-      /* Quge5 Ad Tag Script */
-      {
-        async: true,
-        src: "https://quge5.com/88/tag.min.js",
-        "data-zone": "279088",
-        "data-cfasync": "false",
-      },
-    ],
   }),
   notFoundComponent: NotFoundPage,
   shellComponent: RootShell,
@@ -87,37 +60,6 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
         
-        {/* Step 2: Adcash Tags Execution Script */}
-        <script
-          type="text/javascript"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.addEventListener('load', function() {
-                if (typeof aclib !== 'undefined') {
-                  aclib.runAutoTag({
-                    zoneId: 'ixqpd77w14'
-                  });
-                  aclib.runAutoTag({
-                    zoneId: '12124710'
-                  });
-                }
-              });
-            `,
-          }}
-        />
-
-        {/* Monetag Ad Initialization */}
-        <script
-          type="text/javascript"
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (typeof monetag !== 'undefined') {
-                monetag.render();
-              }
-            `,
-          }}
-        />
-
         {/* Structured Data (JSON-LD Organization Schema) */}
         <script
           type="application/ld+json"
@@ -126,6 +68,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
       </head>
       <body className="flex min-h-full flex-col bg-slate-50 antialiased dark:bg-slate-950">
         {children}
+        <AdScripts />
         <Scripts />
       </body>
     </html>
@@ -146,5 +89,32 @@ function RootComponent() {
         <Toaster position="top-right" richColors />
       </div>
     </QueryClientProvider>
+  );
+}
+
+const AD_FREE_PREFIXES = ["/admin", "/dashboard", "/auth"];
+
+export function isAdFreePath(pathname: string) {
+  return AD_FREE_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+}
+
+function AdScripts() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  if (isAdFreePath(pathname)) {
+    return (
+      <style>{`ins.adsbygoogle,.google-auto-placed,.adsbygoogle-noablate,iframe[id^="aswift"],[id^="mntg"],[class*="monetag"]{display:none!important}`}</style>
+    );
+  }
+  return (
+    <>
+      <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`} crossOrigin="anonymous" />
+      <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js" async />
+      <script async src="https://quge5.com/88/tag.min.js" data-zone="279088" data-cfasync="false" />
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `window.addEventListener('load',function(){if(typeof aclib!=='undefined'){aclib.runAutoTag({zoneId:'ixqpd77w14'});aclib.runAutoTag({zoneId:'12124710'});}});`,
+        }}
+      />
+    </>
   );
 }
