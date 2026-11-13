@@ -6,6 +6,9 @@ const BASE_URL = "https://elysian-grants.lovable.app";
 const STATIC_PATHS = [
   "/",
   "/how-it-works",
+  "/contact",
+  "/privacy",
+  "/terms",
   "/concierge",
   "/universities",
   "/articles",

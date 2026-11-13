@@ -13,9 +13,12 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ConciergeRouteImport } from './routes/concierge'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as NotFoundRouteImport } from './routes/not-found'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as UniversitiesRouteImport } from './routes/universities'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
@@ -46,6 +49,11 @@ const ConciergeRoute = ConciergeRouteImport.update({
   path: '/concierge',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
@@ -56,9 +64,19 @@ const NotFoundRoute = NotFoundRouteImport.update({
   path: '/not-found',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UniversitiesRoute = UniversitiesRouteImport.update({
@@ -118,9 +136,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/concierge': typeof ConciergeRoute
+  '/contact': typeof ContactRoute
   '/how-it-works': typeof HowItWorksRoute
   '/not-found': typeof NotFoundRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/universities': typeof UniversitiesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/articles/$slug': typeof ArticlesSlugRoute
@@ -136,9 +157,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/concierge': typeof ConciergeRoute
+  '/contact': typeof ContactRoute
   '/how-it-works': typeof HowItWorksRoute
   '/not-found': typeof NotFoundRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/universities': typeof UniversitiesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/articles/$slug': typeof ArticlesSlugRoute
@@ -156,9 +180,12 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/concierge': typeof ConciergeRoute
+  '/contact': typeof ContactRoute
   '/how-it-works': typeof HowItWorksRoute
   '/not-found': typeof NotFoundRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/universities': typeof UniversitiesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/articles/$slug': typeof ArticlesSlugRoute
@@ -176,9 +203,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/concierge'
+    | '/contact'
     | '/how-it-works'
     | '/not-found'
+    | '/privacy'
     | '/sitemap.xml'
+    | '/terms'
     | '/universities'
     | '/dashboard'
     | '/articles/$slug'
@@ -194,9 +224,12 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/concierge'
+    | '/contact'
     | '/how-it-works'
     | '/not-found'
+    | '/privacy'
     | '/sitemap.xml'
+    | '/terms'
     | '/universities'
     | '/dashboard'
     | '/articles/$slug'
@@ -213,9 +246,12 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/concierge'
+    | '/contact'
     | '/how-it-works'
     | '/not-found'
+    | '/privacy'
     | '/sitemap.xml'
+    | '/terms'
     | '/universities'
     | '/_authenticated/dashboard'
     | '/articles/$slug'
@@ -233,9 +269,12 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
   ConciergeRoute: typeof ConciergeRoute
+  ContactRoute: typeof ContactRoute
   HowItWorksRoute: typeof HowItWorksRoute
   NotFoundRoute: typeof NotFoundRoute
+  PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TermsRoute: typeof TermsRoute
   UniversitiesRoute: typeof UniversitiesRoute
   ArticlesSlugRoute: typeof ArticlesSlugRoute
   ScholarshipsSlugRoute: typeof ScholarshipsSlugRoute
@@ -272,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConciergeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-it-works': {
       id: '/how-it-works'
       path: '/how-it-works'
@@ -286,11 +332,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotFoundRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/universities': {
@@ -400,9 +460,12 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
   ConciergeRoute: ConciergeRoute,
+  ContactRoute: ContactRoute,
   HowItWorksRoute: HowItWorksRoute,
   NotFoundRoute: NotFoundRoute,
+  PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TermsRoute: TermsRoute,
   UniversitiesRoute: UniversitiesRoute,
   ArticlesSlugRoute: ArticlesSlugRoute,
   ScholarshipsSlugRoute: ScholarshipsSlugRoute,
