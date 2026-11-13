@@ -27,7 +27,10 @@ function ContactPage() {
   function submit(e: React.FormEvent) {
     e.preventDefault();
     const r = schema.safeParse(form);
-    if (!r.success) return toast.error(r.error.issues[0].message);
+    if (!r.success) {
+      toast.error(r.error.issues[0]?.message ?? "Check the form");
+      return;
+    }
     const subject = encodeURIComponent(`Support request from ${r.data.name}`);
     const body = encodeURIComponent(`${r.data.message}\n\n— ${r.data.name} (${r.data.email})`);
     window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
