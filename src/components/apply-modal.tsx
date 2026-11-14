@@ -307,6 +307,11 @@ export function ApplyModal({
                   toast.error(parsed.error.issues[0]?.message ?? "Please verify your information");
                   return;
                 }
+                const phoneErr = validatePhone(phoneCountry, form.phone);
+                if (phoneErr) {
+                  toast.error(phoneErr);
+                  return;
+                }
                 setStep(2);
               }}
             >
