@@ -114,6 +114,15 @@ const scholarship = [
   "vliruos.be/en/scholarships", "orangeknowledge.nl", "nuffic.nl/en/subjects/orange-knowledge-programme",
   "swedishinstitute.se/scholarships", "danida.dk", "norad.no", "sida.se", "jdsscholarship.org",
   "adb.org/work-with-us/careers/japan-scholarship-program", "afdb.org/en/topics-and-sectors/initiatives-partnerships/japan-africa-dream-scholarship-jads-program",
+  // ScholarshipTab listing pages (aggregator — always verify the official link before featuring)
+  "scholarshiptab.com", "scholarshiptab.com/best-scholarships", "scholarshiptab.com/postgraduate/fully-funded",
+  "scholarshiptab.com/undergraduate/fully-funded", "scholarshiptab.com/scholarships-in/united-kingdom",
+  "scholarshiptab.com/scholarships-in/united-states", "scholarshiptab.com/scholarships-in/canada",
+  "scholarshiptab.com/scholarships-in/australia", "scholarshiptab.com/scholarships-in/germany",
+  "scholarshiptab.com/scholarships-in/korea", "scholarshiptab.com/scholarships-in/japan",
+  "scholarshiptab.com/scholarships-in/china", "scholarshiptab.com/scholarships-in/turkey",
+  "scholarshiptab.com/scholarships-in/hungary", "scholarshiptab.com/scholarships-in/france",
+  "scholarshiptab.com/scholarships-in/netherlands",
 ];
 
 export const SYNC_SOURCES: { url: string; group: SourceGroup }[] = [
