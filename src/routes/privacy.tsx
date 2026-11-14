@@ -37,7 +37,7 @@ function PrivacyPage() {
       </section>
       <section>
         <h2>Your choices</h2>
-        <p>You can view and update your details from your dashboard, and ask us to delete your account and documents at any time by contacting <a href="mailto:support@elscholarship.com">support@elscholarship.com</a>.</p>
+        <p>You can view and update your details from your dashboard, and ask us to delete your account and documents at any time by contacting our <a href="/contact">Contact page</a> or WhatsApp at +250 794 433 166.</p>
       </section>
     </LegalPage>
   );

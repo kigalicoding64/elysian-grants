@@ -536,9 +536,9 @@ export function SiteFooter() {
             <span className="flex items-center gap-1.5">
               <Globe2 className="size-3.5" /> Global Access
             </span>
-            <span className="flex items-center gap-1.5">
-              <Mail className="size-3.5" /> support@elscholarship.com
-            </span>
+            <a href="/contact" className="flex items-center gap-1.5 hover:text-white">
+              <Mail className="size-3.5" /> Contact us
+            </a>
           </div>
         </div>
       </div>
