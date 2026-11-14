@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { GraduationCap, KanbanSquare, LayoutDashboard, RefreshCw, ShieldAlert } from "lucide-react";
+import { Inbox, GraduationCap, KanbanSquare, LayoutDashboard, RefreshCw, ShieldAlert } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { useIsAdmin, useSession } from "@/hooks/useAuth";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,6 +10,7 @@ const LINKS = [
   { to: "/admin/scholarships", label: "Scholarship CMS", icon: GraduationCap, exact: false },
   { to: "/admin/applications", label: "Concierge Pipeline", icon: KanbanSquare, exact: false },
   { to: "/admin/sync", label: "Sync & Review", icon: RefreshCw, exact: false },
+  { to: "/admin/messages", label: "Messages", icon: Inbox, exact: false },
 ] as const;
 
 export function AdminShell({ children }: { children: ReactNode }) {

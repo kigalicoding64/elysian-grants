@@ -27,6 +27,7 @@ import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as ScholarshipsSlugRouteImport } from './routes/scholarships.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
+import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin.messages'
 import { Route as AuthenticatedAdminScholarshipsRouteImport } from './routes/_authenticated/admin.scholarships'
 import { Route as AuthenticatedAdminSyncRouteImport } from './routes/_authenticated/admin.sync'
 
@@ -120,6 +121,12 @@ const AuthenticatedAdminApplicationsRoute =
     path: '/admin/applications',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminMessagesRoute =
+  AuthenticatedAdminMessagesRouteImport.update({
+    id: '/admin/messages',
+    path: '/admin/messages',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminScholarshipsRoute =
   AuthenticatedAdminScholarshipsRouteImport.update({
     id: '/admin/scholarships',
@@ -149,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
   '/articles/': typeof ArticlesIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
   '/admin/sync': typeof AuthenticatedAdminSyncRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -170,6 +178,7 @@ export interface FileRoutesByTo {
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
   '/articles': typeof ArticlesIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
   '/admin/sync': typeof AuthenticatedAdminSyncRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -193,6 +202,7 @@ export interface FileRoutesById {
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
   '/articles/': typeof ArticlesIndexRoute
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/_authenticated/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/_authenticated/admin/scholarships': typeof AuthenticatedAdminScholarshipsRoute
   '/_authenticated/admin/sync': typeof AuthenticatedAdminSyncRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -216,6 +226,7 @@ export interface FileRouteTypes {
     | '/scholarships/$slug'
     | '/articles/'
     | '/admin/applications'
+    | '/admin/messages'
     | '/admin/scholarships'
     | '/admin/sync'
     | '/admin/'
@@ -237,6 +248,7 @@ export interface FileRouteTypes {
     | '/scholarships/$slug'
     | '/articles'
     | '/admin/applications'
+    | '/admin/messages'
     | '/admin/scholarships'
     | '/admin/sync'
     | '/admin'
@@ -259,6 +271,7 @@ export interface FileRouteTypes {
     | '/scholarships/$slug'
     | '/articles/'
     | '/_authenticated/admin/applications'
+    | '/_authenticated/admin/messages'
     | '/_authenticated/admin/scholarships'
     | '/_authenticated/admin/sync'
     | '/_authenticated/admin/'
@@ -409,6 +422,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminApplicationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/messages': {
+      id: '/_authenticated/admin/messages'
+      path: '/admin/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AuthenticatedAdminMessagesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/scholarships': {
       id: '/_authenticated/admin/scholarships'
       path: '/admin/scholarships'
@@ -429,6 +449,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
+  AuthenticatedAdminMessagesRoute: typeof AuthenticatedAdminMessagesRoute
   AuthenticatedAdminScholarshipsRoute: typeof AuthenticatedAdminScholarshipsRoute
   AuthenticatedAdminSyncRoute: typeof AuthenticatedAdminSyncRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -437,6 +458,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
+  AuthenticatedAdminMessagesRoute: AuthenticatedAdminMessagesRoute,
   AuthenticatedAdminScholarshipsRoute: AuthenticatedAdminScholarshipsRoute,
   AuthenticatedAdminSyncRoute: AuthenticatedAdminSyncRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,

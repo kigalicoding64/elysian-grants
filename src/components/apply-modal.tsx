@@ -17,6 +17,8 @@ import {
   Sparkles
 } from "lucide-react";
 import { z } from "zod";
+import { PhoneInput } from "@/components/phone-input";
+import { formatPhone, validatePhone } from "@/lib/phone";
 import {
   Dialog,
   DialogContent,
@@ -44,7 +46,7 @@ const DOC_TIPS: Record<(typeof DOC_TYPES)[number], string> = {
 const profileSchema = z.object({
   full_name: z.string().trim().min(2, "Please provide your full legal name").max(100),
   email: z.string().trim().email("Enter a valid email address").max(255),
-  phone: z.string().trim().min(6, "Enter a valid phone or WhatsApp number").max(30),
+  phone: z.string().trim().min(1, "Enter your phone or WhatsApp number").max(30),
 });
 
 export function ApplyModal({
@@ -64,6 +66,7 @@ export function ApplyModal({
   const [tier, setTier] = useState<ServiceTier>("managed");
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({ full_name: "", email: "", phone: "" });
+  const [phoneCountry, setPhoneCountry] = useState("RW");
   const [files, setFiles] = useState<Record<string, File | null>>({});
 
   // Auto-fill user information if authenticated
@@ -143,7 +146,7 @@ export function ApplyModal({
           scholarship_id: scholarship.id,
           full_name: form.full_name,
           email: form.email,
-          phone: form.phone,
+          phone: formatPhone(phoneCountry, form.phone) ?? form.phone,
           app_type: "managed",
           tier,
           fee_usd: TIER_FEES_USD[tier],
@@ -287,13 +290,12 @@ export function ApplyModal({
               <Label htmlFor="apply-phone" className="text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
                 <Phone className="size-3.5 text-slate-400" /> Phone / WhatsApp Number
               </Label>
-              <Input
+              <PhoneInput
                 id="apply-phone"
-                maxLength={30}
-                placeholder="+1 (555) 000-0000"
-                className="h-10 border-slate-200 bg-slate-50/50 text-sm focus-visible:ring-amber-500 dark:border-slate-800 dark:bg-slate-900"
+                country={phoneCountry}
                 value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                onCountryChange={setPhoneCountry}
+                onChange={(v) => setForm({ ...form, phone: v })}
               />
             </div>
 
@@ -303,6 +305,11 @@ export function ApplyModal({
                 const parsed = profileSchema.safeParse(form);
                 if (!parsed.success) {
                   toast.error(parsed.error.issues[0]?.message ?? "Please verify your information");
+                  return;
+                }
+                const phoneErr = validatePhone(phoneCountry, form.phone);
+                if (phoneErr) {
+                  toast.error(phoneErr);
                   return;
                 }
                 setStep(2);
